@@ -87,14 +87,50 @@ export async function signOut() {
 export async function getUser() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  
+
   if (!user) return null
 
-  const { data: profile } = await supabase
+  const { data: profile, error: profileError } = await supabase
     .from('users')
     .select('*')
     .eq('id', user.id)
     .single()
+
+  // If profile doesn't exist, create it
+  if (!profile) {
+    const displayName = user.user_metadata?.display_name ||
+                        user.user_metadata?.full_name ||
+                        user.user_metadata?.name ||
+                        user.email?.split('@')[0] ||
+                        'User'
+
+    const universityDomain = user.email?.split('@')[1] || ''
+
+    const { data: newProfile, error: insertError } = await supabase
+      .from('users')
+      .insert({
+        id: user.id,
+        email: user.email || '',
+        display_name: displayName,
+        university_domain: universityDomain,
+      })
+      .select()
+      .single()
+
+    if (insertError) {
+      console.error('Profile creation error in getUser:', insertError)
+      // Return a minimal user object so the app still works
+      return {
+        id: user.id,
+        email: user.email || '',
+        display_name: displayName,
+        university_domain: universityDomain,
+        created_at: new Date().toISOString()
+      }
+    }
+
+    return newProfile
+  }
 
   return profile
 }
