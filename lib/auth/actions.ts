@@ -35,8 +35,8 @@ export async function signIn(formData: FormData) {
     .eq('id', data.user.id)
     .single()
 
-  // Create profile if it doesn't exist
-  if (!existingProfile && !profileError) {
+  // Create profile if it doesn't exist (profileError means no record found)
+  if (!existingProfile) {
     const displayName = data.user.user_metadata?.display_name ||
                         data.user.user_metadata?.full_name ||
                         data.user.user_metadata?.name ||
@@ -55,12 +55,20 @@ export async function signIn(formData: FormData) {
 
     if (insertError) {
       console.error('Profile creation error:', insertError)
+      // Don't fail login if profile creation fails
     }
   }
 
   revalidatePath('/', 'layout')
   revalidatePath('/marketplace', 'page')
-  redirect('/marketplace')
+
+  try {
+    redirect('/marketplace')
+  } catch (error) {
+    // redirect() throws a NEXT_REDIRECT error which is expected behavior
+    // Re-throw it so Next.js can handle it
+    throw error
+  }
 }
 
 export async function signOut() {
