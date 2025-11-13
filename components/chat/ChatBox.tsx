@@ -98,7 +98,9 @@ export default function ChatBox({ listingId, sellerId, currentUserId, isOwner = 
       ? (selectedBuyer || sellerId) // Seller replying to selected buyer
       : sellerId // Buyer sending to seller
 
+    console.log('Sending message:', { listingId, receiverId, messageLength: newMessage.length })
     const result = await sendMessage(listingId, receiverId, newMessage)
+    console.log('Send message result:', result)
 
     if (!result.error) {
       trackEvent('send_message', {
@@ -106,6 +108,9 @@ export default function ChatBox({ listingId, sellerId, currentUserId, isOwner = 
         message_length: newMessage.length,
       })
       setNewMessage('')
+    } else {
+      console.error('Failed to send message:', result.error)
+      alert(`Failed to send message: ${result.error}`)
     }
     setLoading(false)
   }

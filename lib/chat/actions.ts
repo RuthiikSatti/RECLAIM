@@ -17,6 +17,7 @@ export async function sendMessage(listingId: string, receiverId: string, body: s
       sender_id: user.id,
       receiver_id: receiverId,
       body,
+      read: false,
     })
     .select()
     .single()
