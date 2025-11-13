@@ -43,7 +43,7 @@ export default function EditListingForm({ listing }: EditListingFormProps) {
           name="title"
           required
           defaultValue={listing.title}
-          className="mt-1 block w-full border rounded px-3 py-2"
+          className="mt-1 block w-full border rounded px-3 py-2 text-black"
         />
       </div>
 
@@ -62,7 +62,7 @@ export default function EditListingForm({ listing }: EditListingFormProps) {
           required
           rows={4}
           defaultValue={listing.description}
-          className="mt-1 block w-full border rounded px-3 py-2"
+          className="mt-1 block w-full border rounded px-3 py-2 text-black"
         />
       </div>
 
@@ -72,7 +72,7 @@ export default function EditListingForm({ listing }: EditListingFormProps) {
           <select
             name="category"
             defaultValue={listing.category}
-            className="mt-1 block w-full border rounded px-3 py-2"
+            className="mt-1 block w-full border rounded px-3 py-2 text-black"
           >
             <option>Dorm and Decor</option>
             <option>Fun and Craft</option>
@@ -92,7 +92,7 @@ export default function EditListingForm({ listing }: EditListingFormProps) {
             step="0.01"
             min="0"
             defaultValue={priceInDollars}
-            className="mt-1 block w-full border rounded px-3 py-2"
+            className="mt-1 block w-full border rounded px-3 py-2 text-black"
           />
           <p className="text-xs text-black mt-1">Price will be stored in cents.</p>
         </div>

@@ -21,7 +21,7 @@ export default function CreateListingPage() {
         <form action={handleCreateListing} className="space-y-6 bg-white p-6 rounded shadow">
           <div>
             <label className="block text-sm font-medium text-black">Title</label>
-            <input name="title" required className="mt-1 block w-full border rounded px-3 py-2" />
+            <input name="title" required className="mt-1 block w-full border rounded px-3 py-2 text-black" />
           </div>
           {/* Photos uploader */}
           <div>
@@ -36,14 +36,14 @@ export default function CreateListingPage() {
               name="description"
               required
               rows={4}
-              className="mt-1 block w-full border rounded px-3 py-2"
+              className="mt-1 block w-full border rounded px-3 py-2 text-black"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-black">Category</label>
-              <select name="category" className="mt-1 block w-full border rounded px-3 py-2">
+              <select name="category" className="mt-1 block w-full border rounded px-3 py-2 text-black">
                 <option>Dorm and Decor</option>
                 <option>Fun and Craft</option>
                 <option>Transportation</option>
@@ -62,7 +62,7 @@ export default function CreateListingPage() {
                 step="0.01"
                 min="0"
                 defaultValue="0"
-                className="mt-1 block w-full border rounded px-3 py-2"
+                className="mt-1 block w-full border rounded px-3 py-2 text-black"
               />
               <p className="text-xs text-black mt-1">Price will be stored in cents.</p>
             </div>
