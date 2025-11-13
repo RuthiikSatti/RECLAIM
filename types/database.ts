@@ -24,8 +24,11 @@ export interface Message {
   sender_id: string;
   receiver_id: string;
   body: string;
+  read: boolean;
   created_at: string;
   sender?: User;
+  receiver?: User;
+  listing?: Listing;
 }
 
 export interface Report {

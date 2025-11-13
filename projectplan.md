@@ -40,6 +40,10 @@ All MVP features have been successfully implemented and are ready for testing an
 - ✅ Message history
 - ✅ Real-time message delivery
 - ✅ Responsive chat UI
+- ✅ Unified messages inbox page (/messages)
+- ✅ Unread message notifications in navbar
+- ✅ Message read/unread status tracking
+- ✅ Conversation list with last message preview
 
 #### 6. User Profiles ✅
 - ✅ User profile pages showing all listings
@@ -108,9 +112,11 @@ RECLAIM/
 │   ├── api/auth/signup/     # Signup API with .edu validation
 │   ├── admin/               # Admin moderation panel
 │   ├── create/              # Create listing page
+│   ├── edit/[id]/           # Edit listing page
 │   ├── item/[id]/           # Listing detail + chat
 │   ├── login/               # Login page
 │   ├── marketplace/         # Marketplace with search/filter
+│   ├── messages/            # Unified messages inbox
 │   ├── profile/[id]/        # User profile page
 │   ├── signup/              # Signup page
 │   ├── layout.tsx           # Root layout with Mixpanel
@@ -132,7 +138,9 @@ RECLAIM/
 ├── supabase/                # SQL migrations
 │   ├── schema.sql           # Table definitions
 │   ├── rls-policies.sql     # Security policies
-│   └── storage.sql          # Storage bucket setup
+│   ├── storage.sql          # Storage bucket setup
+│   └── migrations/          # Database migrations
+│       └── 20250113000000_add_read_field_to_messages.sql
 ├── types/                   # TypeScript types
 │   └── database.ts          # Database type definitions
 ├── middleware.ts            # Auth middleware

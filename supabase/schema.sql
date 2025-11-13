@@ -26,6 +26,7 @@ create table public.messages (
   sender_id uuid references public.users on delete cascade not null,
   receiver_id uuid references public.users on delete cascade not null,
   body text not null,
+  read boolean default false not null,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 

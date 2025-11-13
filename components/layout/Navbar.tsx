@@ -4,12 +4,14 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { getUnreadMessageCount } from '@/lib/chat/actions'
 import type { Session } from '@supabase/supabase-js'
 
 export default function Navbar() {
   const [supabase] = useState(() => createClient())
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
+  const [unreadCount, setUnreadCount] = useState(0)
   const router = useRouter()
 
   useEffect(() => {
@@ -21,6 +23,11 @@ export default function Navbar() {
         if (mounted) {
           setSession(data.session ?? null)
           setLoading(false)
+
+          // Load unread count if logged in
+          if (data.session) {
+            loadUnreadCount()
+          }
         }
       } catch (error) {
         console.error('Error loading session:', error)
@@ -30,20 +37,49 @@ export default function Navbar() {
       }
     }
 
+    async function loadUnreadCount() {
+      const { count } = await getUnreadMessageCount()
+      if (mounted) {
+        setUnreadCount(count)
+      }
+    }
+
     loadSession()
 
     const { data: listener } = supabase.auth.onAuthStateChange((_event: string, session: Session | null) => {
       if (mounted) {
         setSession(session ?? null)
         setLoading(false)
+        if (session) {
+          loadUnreadCount()
+        }
       }
     })
+
+    // Subscribe to new messages
+    const channel = supabase
+      .channel('navbar-messages')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'messages',
+        },
+        () => {
+          if (mounted && session) {
+            loadUnreadCount()
+          }
+        }
+      )
+      .subscribe()
 
     return () => {
       mounted = false
       // safe unsubscribe
       try {
         listener?.subscription?.unsubscribe?.()
+        supabase.removeChannel(channel)
       } catch (e) {
         // ignore
       }
@@ -76,9 +112,19 @@ export default function Navbar() {
             </Link>
 
             {!loading && session && (
-              <Link href="/create" className="text-black hover:text-blue-600">
-                Sell Item
-              </Link>
+              <>
+                <Link href="/create" className="text-black hover:text-blue-600">
+                  Sell Item
+                </Link>
+                <Link href="/messages" className="text-black hover:text-blue-600 relative">
+                  Messages
+                  {unreadCount > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
+                      {unreadCount > 9 ? '9+' : unreadCount}
+                    </span>
+                  )}
+                </Link>
+              </>
             )}
           </div>
 
