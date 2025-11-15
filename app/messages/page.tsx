@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { createClient } from '@/lib/supabase/client'
-import { getAllConversations, getMessages, sendMessage, markMessagesAsRead } from '@/lib/chat/actions'
+import { getAllConversations, getMessages, sendMessage, markMessagesAsRead, deleteMessage, editMessage } from '@/lib/chat/actions'
 import { trackEvent } from '@/lib/mixpanel/client'
 import Navbar from '@/components/layout/Navbar'
 import type { Message } from '@/types/database'
@@ -29,6 +29,12 @@ export default function MessagesPage() {
   const [loading, setLoading] = useState(true)
   const [sending, setSending] = useState(false)
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
+  const [hoveredMessageId, setHoveredMessageId] = useState<string | null>(null)
+  const [editingMessageId, setEditingMessageId] = useState<string | null>(null)
+  const [editedText, setEditedText] = useState('')
+  const [fadingBadges, setFadingBadges] = useState<Set<string>>(new Set())
+  const [otherUserTyping, setOtherUserTyping] = useState(false)
+  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
 
@@ -100,6 +106,34 @@ export default function MessagesPage() {
           loadConversations()
         }
       )
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'messages',
+          filter: 'listing_id=eq.' + selectedConversation.listingId,
+        },
+        (payload) => {
+          setMessages((prev) =>
+            prev.map((m) => (m.id === payload.new.id ? { ...m, ...payload.new } : m))
+          )
+          loadConversations()
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: 'DELETE',
+          schema: 'public',
+          table: 'messages',
+          filter: 'listing_id=eq.' + selectedConversation.listingId,
+        },
+        (payload) => {
+          setMessages((prev) => prev.filter((m) => m.id !== payload.old.id))
+          loadConversations()
+        }
+      )
       .subscribe()
 
     return () => {
@@ -131,6 +165,63 @@ export default function MessagesPage() {
       supabase.removeChannel(channel)
     }
   }, [currentUserId, supabase])
+
+  // Typing indicator listener
+  useEffect(() => {
+    if (!selectedConversation || !currentUserId) return
+
+    const channel = supabase
+      .channel('typing:' + selectedConversation.listingId)
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'typing_indicators',
+          filter: 'listing_id=eq.' + selectedConversation.listingId,
+        },
+        (payload) => {
+          // Show typing indicator if it's from the other user
+          if (payload.new.user_id === selectedConversation.otherUserId) {
+            setOtherUserTyping(true)
+
+            // Auto-hide after 3 seconds
+            if (typingTimeoutRef.current) {
+              clearTimeout(typingTimeoutRef.current)
+            }
+            typingTimeoutRef.current = setTimeout(() => {
+              setOtherUserTyping(false)
+            }, 3000)
+          }
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: 'DELETE',
+          schema: 'public',
+          table: 'typing_indicators',
+          filter: 'listing_id=eq.' + selectedConversation.listingId,
+        },
+        (payload) => {
+          if (payload.old.user_id === selectedConversation.otherUserId) {
+            setOtherUserTyping(false)
+            if (typingTimeoutRef.current) {
+              clearTimeout(typingTimeoutRef.current)
+            }
+          }
+        }
+      )
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current)
+      }
+      setOtherUserTyping(false)
+    }
+  }, [selectedConversation, currentUserId, supabase])
 
   async function loadConversations() {
     const result = await getAllConversations()
@@ -183,7 +274,94 @@ export default function MessagesPage() {
   }
 
   function handleSelectConversation(conversation: Conversation) {
+    // If the conversation has unread messages, trigger fade-out animation
+    if (conversation.unreadCount > 0) {
+      const key = `${conversation.listingId}-${conversation.otherUserId}`
+      setFadingBadges(prev => new Set(prev).add(key))
+
+      // Remove from fading set after animation completes
+      setTimeout(() => {
+        setFadingBadges(prev => {
+          const next = new Set(prev)
+          next.delete(key)
+          return next
+        })
+      }, 300) // Match animation duration
+    }
+
     setSelectedConversation(conversation)
+  }
+
+  async function handleDeleteMessage(messageId: string) {
+    if (!confirm('Are you sure you want to delete this message?')) {
+      return
+    }
+
+    const result = await deleteMessage(messageId)
+    if (!result.error) {
+      setMessages((prev) => prev.filter((m) => m.id !== messageId))
+      loadConversations() // Update last message in conversations
+      trackEvent('delete_message', { message_id: messageId })
+    } else {
+      alert('Failed to delete message: ' + result.error)
+    }
+  }
+
+  function handleStartEdit(message: any) {
+    setEditingMessageId(message.id)
+    setEditedText(message.body)
+  }
+
+  async function handleSaveEdit(messageId: string) {
+    if (!editedText.trim()) {
+      alert('Message cannot be empty')
+      return
+    }
+
+    const result = await editMessage(messageId, editedText)
+    if (!result.error) {
+      setMessages((prev) =>
+        prev.map((m) => (m.id === messageId ? { ...m, body: editedText } : m))
+      )
+      setEditingMessageId(null)
+      setEditedText('')
+      loadConversations() // Update last message in conversations
+      trackEvent('edit_message', { message_id: messageId })
+    } else {
+      alert('Failed to edit message: ' + result.error)
+    }
+  }
+
+  function handleCancelEdit() {
+    setEditingMessageId(null)
+    setEditedText('')
+  }
+
+  async function handleTyping() {
+    if (!selectedConversation || !currentUserId) return
+
+    try {
+      // Upsert typing indicator
+      await supabase
+        .from('typing_indicators')
+        .upsert({
+          listing_id: selectedConversation.listingId,
+          user_id: currentUserId,
+        }, {
+          onConflict: 'listing_id,user_id'
+        })
+
+      // Auto-delete after 2 seconds
+      setTimeout(async () => {
+        await supabase
+          .from('typing_indicators')
+          .delete()
+          .eq('listing_id', selectedConversation.listingId)
+          .eq('user_id', currentUserId)
+      }, 2000)
+    } catch (error) {
+      console.error('Error updating typing indicator:', error)
+    }
   }
 
   if (loading) {
@@ -246,8 +424,11 @@ export default function MessagesPage() {
                           <p className="font-semibold text-black text-sm truncate">
                             {conversation.listing?.title || 'Unknown Listing'}
                           </p>
-                          {conversation.unreadCount > 0 && (
-                            <span className="flex-shrink-0 min-w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center px-1.5 animate-fade-in">
+                          {(conversation.unreadCount > 0 || fadingBadges.has(`${conversation.listingId}-${conversation.otherUserId}`)) && (
+                            <span className={
+                              'flex-shrink-0 min-w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center px-1.5 ' +
+                              (fadingBadges.has(`${conversation.listingId}-${conversation.otherUserId}`) ? 'animate-fade-out' : 'animate-fade-in')
+                            }>
                               {conversation.unreadCount > 99 ? '99+' : conversation.unreadCount}
                             </span>
                           )}
@@ -297,39 +478,109 @@ export default function MessagesPage() {
                     {messages.length === 0 ? (
                       <p className="text-center text-gray-500">No messages yet</p>
                     ) : (
-                      messages.map((message) => (
+                      <>
+                      {messages.map((message) => (
                         <div
                           key={message.id}
                           className={
-                            'flex ' +
+                            'flex group ' +
                             (message.sender_id === currentUserId ? 'justify-end' : 'justify-start')
                           }
+                          onMouseEnter={() => setHoveredMessageId(message.id)}
+                          onMouseLeave={() => setHoveredMessageId(null)}
                         >
-                          <div
-                            className={
-                              'max-w-xs lg:max-w-md rounded-lg px-4 py-2 ' +
-                              (message.sender_id === currentUserId
-                                ? 'bg-blue-600 text-white'
-                                : 'bg-gray-100 text-black')
-                            }
-                          >
-                            <p className="text-sm break-words">{message.body}</p>
-                            <p
+                          <div className="flex items-start gap-2">
+                            {message.sender_id === currentUserId && (
+                              <div className={
+                                'flex gap-1 mt-1 transition-opacity duration-200 ' +
+                                (hoveredMessageId === message.id && editingMessageId !== message.id ? 'opacity-100' : 'opacity-0')
+                              }>
+                                <button
+                                  onClick={() => handleStartEdit(message)}
+                                  className="p-1 hover:bg-gray-200 rounded transition-colors"
+                                  title="Edit message"
+                                >
+                                  <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                  </svg>
+                                </button>
+                                <button
+                                  onClick={() => handleDeleteMessage(message.id)}
+                                  className="p-1 hover:bg-red-100 rounded transition-colors"
+                                  title="Delete message"
+                                >
+                                  <svg className="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                  </svg>
+                                </button>
+                              </div>
+                            )}
+                            <div
                               className={
-                                'text-xs mt-1 ' +
+                                'max-w-xs lg:max-w-md rounded-lg px-4 py-2 ' +
                                 (message.sender_id === currentUserId
-                                  ? 'text-blue-100'
-                                  : 'text-gray-500')
+                                  ? 'bg-blue-600 text-white'
+                                  : 'bg-gray-100 text-black')
                               }
                             >
-                              {new Date(message.created_at).toLocaleTimeString([], {
-                                hour: '2-digit',
-                                minute: '2-digit',
-                              })}
-                            </p>
+                              {editingMessageId === message.id ? (
+                                <div className="space-y-2">
+                                  <textarea
+                                    value={editedText}
+                                    onChange={(e) => setEditedText(e.target.value)}
+                                    className="w-full px-2 py-1 text-sm text-black border border-gray-300 rounded resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    rows={3}
+                                    autoFocus
+                                  />
+                                  <div className="flex gap-2 justify-end">
+                                    <button
+                                      onClick={handleCancelEdit}
+                                      className="px-2 py-1 text-xs bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
+                                    >
+                                      Cancel
+                                    </button>
+                                    <button
+                                      onClick={() => handleSaveEdit(message.id)}
+                                      className="px-2 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600"
+                                    >
+                                      Save
+                                    </button>
+                                  </div>
+                                </div>
+                              ) : (
+                                <>
+                                  <p className="text-sm break-words">{message.body}</p>
+                                  <p
+                                    className={
+                                      'text-xs mt-1 ' +
+                                      (message.sender_id === currentUserId
+                                        ? 'text-blue-100'
+                                        : 'text-gray-500')
+                                    }
+                                  >
+                                    {new Date(message.created_at).toLocaleTimeString([], {
+                                      hour: '2-digit',
+                                      minute: '2-digit',
+                                    })}
+                                  </p>
+                                </>
+                              )}
+                            </div>
                           </div>
                         </div>
-                      ))
+                      ))}
+                      {otherUserTyping && (
+                        <div className="flex justify-start">
+                          <div className="bg-gray-100 text-black rounded-lg px-4 py-2 max-w-xs">
+                            <div className="flex gap-1 items-center">
+                              <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                              <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                              <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      </>
                     )}
                     <div ref={messagesEndRef} />
                   </div>
@@ -340,7 +591,10 @@ export default function MessagesPage() {
                       <input
                         type="text"
                         value={newMessage}
-                        onChange={(e) => setNewMessage(e.target.value)}
+                        onChange={(e) => {
+                          setNewMessage(e.target.value)
+                          handleTyping()
+                        }}
                         placeholder="Type a message..."
                         className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black placeholder-gray-400"
                       />

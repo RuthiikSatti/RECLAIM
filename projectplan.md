@@ -44,6 +44,15 @@ All MVP features have been successfully implemented and are ready for testing an
 - ✅ Unread message notifications in navbar
 - ✅ Message read/unread status tracking
 - ✅ Conversation list with last message preview
+- ✅ Per-conversation unread message counts with badges
+- ✅ Delete message functionality with confirmation
+- ✅ Edit message functionality with inline editing
+- ✅ Message hover actions (edit/delete icons)
+- ✅ Smooth fade-out animation for unread badges
+- ✅ Auto-scroll to newest message
+- ✅ Typing indicator showing when other user is typing
+- ✅ Real-time updates for message edits and deletions
+- ✅ Mobile-responsive message UI
 
 #### 6. User Profiles ✅
 - ✅ User profile pages showing all listings
@@ -66,6 +75,8 @@ All MVP features have been successfully implemented and are ready for testing an
   - create_listing
   - view_listing
   - send_message
+  - delete_message
+  - edit_message
 
 #### 9. Database & Security ✅
 - ✅ Complete Supabase schema (users, listings, messages, reports)
@@ -140,7 +151,9 @@ RECLAIM/
 │   ├── rls-policies.sql     # Security policies
 │   ├── storage.sql          # Storage bucket setup
 │   └── migrations/          # Database migrations
-│       └── 20250113000000_add_read_field_to_messages.sql
+│       ├── 20250113000000_add_read_field_to_messages.sql
+│       ├── 20250114000000_update_message_policies.sql
+│       └── 20250114000001_add_typing_indicator.sql
 ├── types/                   # TypeScript types
 │   └── database.ts          # Database type definitions
 ├── middleware.ts            # Auth middleware

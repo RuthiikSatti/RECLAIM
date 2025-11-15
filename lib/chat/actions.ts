@@ -175,3 +175,81 @@ export async function markMessagesAsRead(listingId: string, otherUserId: string)
 
   return { success: true }
 }
+
+export async function deleteMessage(messageId: string) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) {
+    return { error: 'Unauthorized' }
+  }
+
+  // Get the message first to verify ownership
+  const { data: message } = await supabase
+    .from('messages')
+    .select('*')
+    .eq('id', messageId)
+    .single()
+
+  if (!message) {
+    return { error: 'Message not found' }
+  }
+
+  // Only the sender can delete their own messages
+  if (message.sender_id !== user.id) {
+    return { error: 'Unauthorized to delete this message' }
+  }
+
+  const { error } = await supabase
+    .from('messages')
+    .delete()
+    .eq('id', messageId)
+
+  if (error) {
+    return { error: error.message }
+  }
+
+  return { success: true }
+}
+
+export async function editMessage(messageId: string, newBody: string) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) {
+    return { error: 'Unauthorized' }
+  }
+
+  if (!newBody.trim()) {
+    return { error: 'Message cannot be empty' }
+  }
+
+  // Get the message first to verify ownership
+  const { data: message } = await supabase
+    .from('messages')
+    .select('*')
+    .eq('id', messageId)
+    .single()
+
+  if (!message) {
+    return { error: 'Message not found' }
+  }
+
+  // Only the sender can edit their own messages
+  if (message.sender_id !== user.id) {
+    return { error: 'Unauthorized to edit this message' }
+  }
+
+  const { data, error } = await supabase
+    .from('messages')
+    .update({ body: newBody })
+    .eq('id', messageId)
+    .select()
+    .single()
+
+  if (error) {
+    return { error: error.message }
+  }
+
+  return { message: data }
+}

@@ -43,9 +43,13 @@ create policy "Authenticated users can create messages"
   on public.messages for insert
   with check (auth.uid() = sender_id);
 
-create policy "Users can update messages where they are receiver"
+create policy "Users can update messages where they are receiver or sender"
   on public.messages for update
-  using (auth.uid() = receiver_id);
+  using (auth.uid() = receiver_id or auth.uid() = sender_id);
+
+create policy "Users can delete their own messages"
+  on public.messages for delete
+  using (auth.uid() = sender_id);
 
 -- Reports policies
 create policy "Users can view their own reports"
