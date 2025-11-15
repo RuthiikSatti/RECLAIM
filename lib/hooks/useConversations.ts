@@ -36,6 +36,7 @@ interface UseConversationsReturn {
   conversations: Conversation[]
   loading: boolean
   error: string | null
+  totalUnreadCount: number
   refetch: () => Promise<void>
 }
 
@@ -136,10 +137,14 @@ export function useConversations(): UseConversationsReturn {
     }
   }, [supabase, fetchConversations])
 
+  // Compute total unread count across all conversations
+  const totalUnreadCount = conversations.reduce((sum, conv) => sum + conv.unreadCount, 0)
+
   return {
     conversations,
     loading,
     error,
+    totalUnreadCount,
     refetch: fetchConversations
   }
 }

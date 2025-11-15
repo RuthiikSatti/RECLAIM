@@ -4,15 +4,17 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { getUnreadMessageCount } from '@/lib/chat/actions'
+import { useConversations } from '@/lib/hooks/useConversations'
 import type { Session } from '@supabase/supabase-js'
 
 export default function Navbar() {
   const [supabase] = useState(() => createClient())
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
-  const [unreadCount, setUnreadCount] = useState(0)
   const router = useRouter()
+
+  // Use enhanced conversations hook for real-time unread count
+  const { totalUnreadCount } = useConversations()
 
   useEffect(() => {
     let mounted = true
@@ -23,11 +25,6 @@ export default function Navbar() {
         if (mounted) {
           setSession(data.session ?? null)
           setLoading(false)
-
-          // Load unread count if logged in
-          if (data.session) {
-            loadUnreadCount()
-          }
         }
       } catch (error) {
         console.error('Error loading session:', error)
@@ -37,49 +34,20 @@ export default function Navbar() {
       }
     }
 
-    async function loadUnreadCount() {
-      const { count } = await getUnreadMessageCount()
-      if (mounted) {
-        setUnreadCount(count)
-      }
-    }
-
     loadSession()
 
     const { data: listener } = supabase.auth.onAuthStateChange((_event: string, session: Session | null) => {
       if (mounted) {
         setSession(session ?? null)
         setLoading(false)
-        if (session) {
-          loadUnreadCount()
-        }
       }
     })
-
-    // Subscribe to message changes (new messages and read status updates)
-    const channel = supabase
-      .channel('navbar-messages')
-      .on(
-        'postgres_changes',
-        {
-          event: '*', // Listen to INSERT and UPDATE events
-          schema: 'public',
-          table: 'messages',
-        },
-        () => {
-          if (mounted && session) {
-            loadUnreadCount()
-          }
-        }
-      )
-      .subscribe()
 
     return () => {
       mounted = false
       // safe unsubscribe
       try {
         listener?.subscription?.unsubscribe?.()
-        supabase.removeChannel(channel)
       } catch (e) {
         // ignore
       }
@@ -141,15 +109,18 @@ export default function Navbar() {
                   </svg>
                 </Link>
 
-                {/* Messages with Badge */}
+                {/* Messages with Red Dot */}
                 <Link href="/messages" className="relative text-gray-700 hover:text-black transition-colors">
+                  {/* Envelope Icon */}
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
-                  {unreadCount > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full min-w-[18px] h-[18px] flex items-center justify-center font-semibold">
-                      {unreadCount > 9 ? '9+' : unreadCount}
-                    </span>
+                  {/* Red Dot (no number) */}
+                  {totalUnreadCount > 0 && (
+                    <span
+                      className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white"
+                      aria-label="You have unread messages"
+                    />
                   )}
                 </Link>
 
