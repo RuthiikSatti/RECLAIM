@@ -99,51 +99,99 @@ export default function Navbar() {
                        'Profile'
 
   return (
-    <nav className="bg-white shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16 items-center">
-          <div className="flex gap-8 items-center">
-            <Link href="/" className="flex-shrink-0">
-              <h1 className="text-2xl font-bold text-blue-600">Reclaim</h1>
-            </Link>
+    <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        <div className="flex justify-between items-center h-20">
+          {/* Left: Logo */}
+          <Link href="/" className="flex-shrink-0">
+            <h1 className="text-3xl font-bold text-black tracking-tight">RECLAIM</h1>
+          </Link>
 
-            <Link href="/marketplace" className="text-black hover:text-blue-600">
-              Marketplace
-            </Link>
+          {/* Center: Search Bar */}
+          <div className="hidden md:flex flex-1 max-w-2xl mx-8">
+            <div className="relative w-full">
+              <input
+                type="text"
+                placeholder="Search..."
+                className="w-full px-4 py-2.5 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-400 text-gray-700 placeholder-gray-400"
+              />
+              <button className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </button>
+            </div>
+          </div>
 
-            {!loading && session && (
+          {/* Right: Icons */}
+          <div className="flex items-center gap-6">
+            {!loading && session ? (
               <>
-                <Link href="/create" className="text-black hover:text-blue-600">
-                  Sell Item
+                {/* Marketplace Link - Hidden on mobile */}
+                <Link href="/marketplace" className="hidden lg:flex items-center text-gray-700 hover:text-black transition-colors">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                  </svg>
                 </Link>
-                <Link href="/messages" className="text-black hover:text-blue-600 relative">
-                  Messages
+
+                {/* Sell Item */}
+                <Link href="/create" className="hidden lg:flex items-center text-gray-700 hover:text-black transition-colors">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  </svg>
+                </Link>
+
+                {/* Messages with Badge */}
+                <Link href="/messages" className="relative text-gray-700 hover:text-black transition-colors">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                  </svg>
                   {unreadCount > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full min-w-5 h-5 flex items-center justify-center font-bold px-1.5 animate-fade-in">
-                      {unreadCount > 99 ? '99+' : unreadCount}
+                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full min-w-[18px] h-[18px] flex items-center justify-center font-semibold">
+                      {unreadCount > 9 ? '9+' : unreadCount}
                     </span>
                   )}
                 </Link>
-              </>
-            )}
-          </div>
 
-          <div className="flex gap-4 items-center">
-            {!loading && session ? (
-              <>
-                <Link href={`/profile/${session.user.id}`} className="text-black hover:text-blue-600">
-                  {displayName}
-                </Link>
-                <button onClick={handleSignOut} className="text-black hover:text-blue-600 px-3 py-2">
-                  Sign out
-                </button>
+                {/* Profile Dropdown */}
+                <div className="relative group">
+                  <button className="flex items-center gap-2 text-gray-700 hover:text-black transition-colors">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                    <div className="hidden lg:flex flex-col items-start">
+                      <span className="text-xs text-gray-500">Hello</span>
+                      <span className="text-sm font-medium leading-none">{displayName}</span>
+                    </div>
+                    <svg className="hidden lg:block w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+
+                  {/* Dropdown Menu */}
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                    <Link href={`/profile/${session.user.id}`} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                      My Profile
+                    </Link>
+                    <Link href="/marketplace" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 lg:hidden">
+                      Marketplace
+                    </Link>
+                    <Link href="/create" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 lg:hidden">
+                      Sell Item
+                    </Link>
+                    <hr className="my-2 border-gray-200" />
+                    <button onClick={handleSignOut} className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                      Sign Out
+                    </button>
+                  </div>
+                </div>
               </>
             ) : (
               <>
-                <Link href="/login" className="text-black hover:text-blue-600 px-3 py-2">
+                <Link href="/login" className="text-gray-700 hover:text-black font-medium transition-colors">
                   Sign in
                 </Link>
-                <Link href="/signup" className="bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded-lg">
+                <Link href="/signup" className="bg-black text-white hover:bg-gray-800 px-6 py-2.5 rounded-lg font-medium transition-colors">
                   Sign up
                 </Link>
               </>
