@@ -1,9 +1,11 @@
 /**
  * Stripe Checkout Session API Route
  *
- * Creates a Stripe Checkout Session for purchasing a listing.
+ * TEMPORARILY DISABLED - Stripe integration on hold until business registration
  *
- * Flow:
+ * TODO: Enable after LLC setup and Stripe account activation
+ *
+ * Original Flow (when re-enabled):
  * 1. Buyer clicks "Buy Now" on a listing
  * 2. Frontend calls this endpoint with listingId
  * 3. Server creates Stripe Checkout Session
@@ -14,18 +16,28 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import Stripe from 'stripe'
-import { createClient } from '@/lib/supabase/server'
+// import Stripe from 'stripe' // DISABLED - Uncomment when ready
+// import { createClient } from '@/lib/supabase/server' // DISABLED
 
-// Initialize Stripe with secret key
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-10-29.clover'
-})
+// DISABLED - Stripe initialization
+// const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+//   apiVersion: '2025-10-29.clover'
+// })
 
 // Platform fee percentage (e.g., 10% = 0.10)
-const PLATFORM_FEE_PERCENTAGE = 0.10
+// const PLATFORM_FEE_PERCENTAGE = 0.10
 
 export async function POST(request: NextRequest) {
+  // DISABLED - Payments not available
+  return NextResponse.json(
+    {
+      error: 'Payments are currently disabled',
+      message: 'Payment processing is not yet available. We are finalizing business registration and payment setup. Please check back soon!'
+    },
+    { status: 503 } // Service Unavailable
+  )
+
+  /* DISABLED - Original payment flow
   try {
     // Check if payments are enabled
     const paymentsEnabled = process.env.FEATURE_PAYMENTS_ENABLED === 'true'
@@ -165,4 +177,5 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     )
   }
+  */
 }

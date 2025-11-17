@@ -31,8 +31,10 @@ Built with Next.js 15, TypeScript, Tailwind CSS, and Supabase.
 - 🔍 **Advanced Search & Filtering** (By category, price, condition)
 - 📊 **Admin Moderation** (Report listings, CSV export)
 
-### Payment Features (Currently Disabled)
-- 💳 **Stripe Integration** (Test mode only, feature-flagged)
+### Payment Features (Temporarily Disabled)
+> ⚠️ **Note:** Stripe payment integration is temporarily disabled until official business registration is complete. Users can browse and message sellers, but cannot complete purchases yet.
+
+- 💳 **Stripe Integration** (On hold - pending LLC formation)
 - 📧 **Email Notifications** (Order confirmations, shipping updates)
 - 🔔 **In-app Notifications** (Real-time alerts)
 - 📦 **Order Tracking** (Shipping status, tracking numbers)
@@ -48,7 +50,7 @@ Built with Next.js 15, TypeScript, Tailwind CSS, and Supabase.
 - **Authentication:** Supabase Auth
 - **Storage:** Supabase Storage
 - **Real-time:** Supabase Realtime
-- **Payments:** Stripe (test mode only)
+- **Payments:** Stripe (temporarily disabled - pending business registration)
 - **Email:** Resend
 - **Deployment:** Vercel
 - **Analytics:** Mixpanel
@@ -61,7 +63,7 @@ Built with Next.js 15, TypeScript, Tailwind CSS, and Supabase.
 
 - Node.js 18+ and npm
 - Supabase account (free tier works)
-- Stripe account (test mode)
+- ~~Stripe account~~ (not required - payments temporarily disabled)
 - (Optional) Resend account for emails
 
 ### Installation

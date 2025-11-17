@@ -3,16 +3,14 @@
 /**
  * BuyButton Component
  *
- * Handles the purchase flow for a listing.
+ * Redirects users to the "Payments Coming Soon" page.
+ * Stripe integration temporarily disabled until business registration is complete.
  *
- * Flow:
- * 1. User clicks "Buy Now"
- * 2. Component calls /api/stripe/create-checkout-session
- * 3. Redirects user to Stripe Checkout
- * 4. After payment, Stripe redirects to success page
+ * TODO: Enable Stripe checkout after LLC setup and Stripe account activation
  */
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import type { Listing } from '@/types/database'
 
@@ -22,6 +20,7 @@ interface BuyButtonProps {
 }
 
 export default function BuyButton({ listing, className = '' }: BuyButtonProps) {
+  const router = useRouter()
   const [supabase] = useState(() => createClient())
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -47,7 +46,11 @@ export default function BuyButton({ listing, className = '' }: BuyButtonProps) {
         return
       }
 
-      // Call API to create checkout session
+      // TODO: Enable Stripe checkout after LLC setup
+      // Redirect to payments coming soon page
+      router.push('/payments-coming-soon')
+
+      /* DISABLED - Stripe checkout integration
       const response = await fetch('/api/stripe/create-checkout-session', {
         method: 'POST',
         headers: {
@@ -61,19 +64,18 @@ export default function BuyButton({ listing, className = '' }: BuyButtonProps) {
       const data = await response.json()
 
       if (!response.ok) {
-        // Handle payments disabled specifically
         if (response.status === 503) {
           throw new Error(data.message || 'Payments are currently unavailable')
         }
         throw new Error(data.error || 'Failed to create checkout session')
       }
 
-      // Redirect to Stripe Checkout
       if (data.url) {
         window.location.href = data.url
       } else {
         throw new Error('No checkout URL returned')
       }
+      */
 
     } catch (err: any) {
       console.error('Purchase error:', err)
@@ -107,7 +109,7 @@ export default function BuyButton({ listing, className = '' }: BuyButtonProps) {
       )}
 
       <p className="text-xs text-gray-500 mt-2 text-center">
-        Secure payment powered by Stripe
+        Secure payments coming soon
       </p>
     </div>
   )
