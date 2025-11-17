@@ -27,6 +27,18 @@ const PLATFORM_FEE_PERCENTAGE = 0.10
 
 export async function POST(request: NextRequest) {
   try {
+    // Check if payments are enabled
+    const paymentsEnabled = process.env.FEATURE_PAYMENTS_ENABLED === 'true'
+    if (!paymentsEnabled) {
+      return NextResponse.json(
+        {
+          error: 'Payments are currently disabled',
+          message: 'Payment processing is not yet available. Please check back later or contact support.'
+        },
+        { status: 503 } // Service Unavailable
+      )
+    }
+
     const body = await request.json()
     const { listingId } = body
 
@@ -72,8 +84,8 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Calculate amounts (in cents)
-    const amountCents = Math.round(listing.price * 100)
+    // Calculate amounts (price is already in cents in database)
+    const amountCents = listing.price // Price is stored in cents
     const platformFeeCents = Math.round(amountCents * PLATFORM_FEE_PERCENTAGE)
     const sellerAmountCents = amountCents - platformFeeCents
 

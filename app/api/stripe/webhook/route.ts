@@ -17,7 +17,9 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
-import { createClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
+import { sendBuyerConfirmation, sendSellerNotification } from '@/lib/email/sendEmail'
+import { notifyBuyerPaymentSuccess, notifySellerItemSold } from '@/lib/notifications/createNotification'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2025-10-29.clover'
@@ -50,7 +52,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create Supabase client with service role key for admin operations
-    const supabase = await createClient()
+    const supabase = await createServiceClient()
 
     // Handle different event types
     switch (event.type) {
@@ -94,6 +96,7 @@ export async function POST(request: NextRequest) {
                   buyer_email: session.customer_details?.email || metadata.buyerEmail,
                   buyer_name: session.customer_details?.name || metadata.buyerName,
                   payment_method: session.payment_method_types?.[0] || 'card',
+                  buyer_shipping_address: (session as any).shipping_details?.address || session.customer_details?.address,
                 })
 
               if (createError) {
@@ -103,6 +106,9 @@ export async function POST(request: NextRequest) {
           }
         } else {
           console.log('Order updated successfully:', order.id)
+
+          // Send notifications and emails on successful payment
+          await sendPaymentNotifications(supabase, order)
         }
 
         break
@@ -169,3 +175,85 @@ export async function POST(request: NextRequest) {
 
 // Disable body parsing for webhook to work properly
 export const dynamic = 'force-dynamic'
+
+/**
+ * Send payment success notifications to buyer and seller
+ */
+async function sendPaymentNotifications(supabase: any, order: any) {
+  try {
+    // Fetch listing details
+    const { data: listing } = await supabase
+      .from('listings')
+      .select('title, price')
+      .eq('id', order.listing_id)
+      .single()
+
+    // Fetch buyer details
+    const { data: buyer } = await supabase
+      .from('users')
+      .select('email, display_name')
+      .eq('id', order.buyer_id)
+      .single()
+
+    // Fetch seller details
+    const { data: seller } = await supabase
+      .from('users')
+      .select('email, display_name')
+      .eq('id', order.seller_id)
+      .single()
+
+    if (!listing || !buyer || !seller) {
+      console.error('Missing data for notifications:', { listing, buyer, seller })
+      return
+    }
+
+    // 1. Send buyer confirmation email
+    await sendBuyerConfirmation({
+      buyerEmail: buyer.email,
+      buyerName: buyer.display_name || order.buyer_name || 'Customer',
+      orderId: order.id,
+      listingTitle: listing.title,
+      listingPrice: order.amount_cents,
+      sellerName: seller.display_name || 'Seller',
+      sellerEmail: seller.email,
+      orderDate: order.created_at,
+    })
+
+    // 2. Send seller notification email
+    await sendSellerNotification({
+      sellerEmail: seller.email,
+      sellerName: seller.display_name || 'Seller',
+      orderId: order.id,
+      listingTitle: listing.title,
+      listingPrice: order.amount_cents,
+      buyerName: buyer.display_name || order.buyer_name || 'Customer',
+      buyerEmail: buyer.email,
+      buyerShippingAddress: order.buyer_shipping_address,
+      orderDate: order.created_at,
+    })
+
+    // 3. Create in-app notification for buyer
+    await notifyBuyerPaymentSuccess({
+      buyerId: order.buyer_id,
+      orderId: order.id,
+      listingId: order.listing_id,
+      listingTitle: listing.title,
+      amount: order.amount_cents,
+    })
+
+    // 4. Create in-app notification for seller
+    await notifySellerItemSold({
+      sellerId: order.seller_id,
+      orderId: order.id,
+      listingId: order.listing_id,
+      listingTitle: listing.title,
+      amount: order.amount_cents,
+      buyerName: buyer.display_name || order.buyer_name || 'Customer',
+    })
+
+    console.log('All payment notifications sent successfully for order:', order.id)
+  } catch (error) {
+    console.error('Error sending payment notifications:', error)
+    // Don't throw - we don't want to fail the webhook if notifications fail
+  }
+}

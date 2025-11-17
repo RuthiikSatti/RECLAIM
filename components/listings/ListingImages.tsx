@@ -98,7 +98,6 @@ export default function ListingImages({ listingId, altText = 'Listing image' }: 
           alt={`${altText} - Image ${selectedImage + 1}`}
           fill
           className="object-cover"
-          loading="lazy"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
           priority={selectedImage === 0}
         />

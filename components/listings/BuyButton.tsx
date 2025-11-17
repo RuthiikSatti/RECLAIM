@@ -61,6 +61,10 @@ export default function BuyButton({ listing, className = '' }: BuyButtonProps) {
       const data = await response.json()
 
       if (!response.ok) {
+        // Handle payments disabled specifically
+        if (response.status === 503) {
+          throw new Error(data.message || 'Payments are currently unavailable')
+        }
         throw new Error(data.error || 'Failed to create checkout session')
       }
 
@@ -94,7 +98,7 @@ export default function BuyButton({ listing, className = '' }: BuyButtonProps) {
             Processing...
           </span>
         ) : (
-          `Buy Now - $${listing.price.toFixed(2)}`
+          `Buy Now - $${(listing.price / 100).toFixed(2)}`
         )}
       </button>
 

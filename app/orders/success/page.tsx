@@ -26,6 +26,8 @@ function OrderSuccessContent() {
 
   useEffect(() => {
     let mounted = true
+    let pollAttempts = 0
+    const maxPollAttempts = 10 // Poll for max 30 seconds (10 attempts × 3 seconds)
 
     async function fetchOrder() {
       if (!sessionId) {
@@ -39,22 +41,33 @@ function OrderSuccessContent() {
           .from('orders')
           .select('*, buyer:users!buyer_id(*), seller:users!seller_id(*), listing:listings(*)')
           .eq('stripe_checkout_session_id', sessionId)
-          .single()
+          .maybeSingle() // Use maybeSingle instead of single to handle no results gracefully
 
         if (!mounted) return
 
         if (fetchError) {
           console.error('Error fetching order:', fetchError)
-          setError('Order not found. It may take a few moments to process.')
-        } else {
+          // Don't set error immediately, might just be webhook delay
+          if (pollAttempts >= maxPollAttempts) {
+            setError('Order not found. Please check your email for confirmation or contact support.')
+            setLoading(false)
+          }
+        } else if (data) {
           setOrder(data as Order)
+          setLoading(false)
+        } else {
+          // No data found yet
+          console.log('Order not found yet, attempt:', pollAttempts)
+          if (pollAttempts >= maxPollAttempts) {
+            setError('Order is processing. Check your email for confirmation.')
+            setLoading(false)
+          }
         }
       } catch (err: any) {
         if (!mounted) return
         console.error('Error:', err)
-        setError('Failed to load order details')
-      } finally {
-        if (mounted) {
+        if (pollAttempts >= maxPollAttempts) {
+          setError('Failed to load order details. Please check your email.')
           setLoading(false)
         }
       }
@@ -64,8 +77,15 @@ function OrderSuccessContent() {
 
     // Poll for order if not found immediately (webhook might be delayed)
     const pollInterval = setInterval(() => {
-      if (!order && !error) {
+      pollAttempts++
+      if (!order && !error && pollAttempts < maxPollAttempts) {
         fetchOrder()
+      } else if (pollAttempts >= maxPollAttempts) {
+        clearInterval(pollInterval)
+        if (!order && !error) {
+          setError('Order is still processing. Check your email for confirmation.')
+          setLoading(false)
+        }
       }
     }, 3000)
 
@@ -73,7 +93,7 @@ function OrderSuccessContent() {
       mounted = false
       clearInterval(pollInterval)
     }
-  }, [sessionId, supabase, order, error])
+  }, [sessionId, supabase])
 
   return (
     <div className="min-h-screen bg-gray-50">

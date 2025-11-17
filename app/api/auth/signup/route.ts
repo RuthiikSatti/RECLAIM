@@ -1,5 +1,5 @@
-import { createClient, createServiceClient } from '@/lib/supabase/server'
-import { isEduEmail, extractUniversityDomain } from '@/lib/utils/helpers'
+import { createClient } from '@/lib/supabase/server'
+import { isEduEmail } from '@/lib/utils/helpers'
 import { NextResponse } from 'next/server'
 
 export async function POST(request: Request) {
@@ -17,6 +17,7 @@ export async function POST(request: Request) {
     const supabase = await createClient()
 
     // Sign up user
+    // The display_name metadata is used by the database trigger to create the profile
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email,
       password,
@@ -31,26 +32,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: authError.message }, { status: 400 })
     }
 
-    // Create user profile using service role to bypass RLS
-    if (authData.user) {
-      const serviceSupabase = await createServiceClient()
-      const { error: profileError } = await serviceSupabase
-        .from('users')
-        .insert({
-          id: authData.user.id,
-          email: email,
-          display_name: displayName,
-          university_domain: extractUniversityDomain(email),
-        })
-
-      if (profileError) {
-        console.error('Profile creation error:', profileError)
-        return NextResponse.json({
-          error: 'Account created but profile setup failed. Please contact support.',
-          details: profileError.message
-        }, { status: 400 })
-      }
-    }
+    // Profile creation is now handled automatically by the database trigger
+    // on auth.users INSERT. No need for manual profile creation.
 
     return NextResponse.json({
       message: 'Signup successful! Please check your email to verify your account.',
