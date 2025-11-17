@@ -11,10 +11,10 @@ import { notifyBuyerOrderShipped } from '@/lib/notifications/createNotification'
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<Record<string, string>> }
 ) {
   try {
-    const orderId = params.id
+    const { id: orderId } = await params
     const body = await request.json()
     const { tracking_number, shipping_carrier } = body
 
@@ -84,8 +84,7 @@ export async function POST(
       orderId: order.id,
       listingId: order.listing_id,
       listingTitle: order.listing?.title || 'Item',
-      trackingNumber: tracking_number,
-      carrier: shipping_carrier
+      trackingNumber: tracking_number
     })
 
     return NextResponse.json({
@@ -105,10 +104,10 @@ export async function POST(
 // Mark order as delivered
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<Record<string, string>> }
 ) {
   try {
-    const orderId = params.id
+    const { id: orderId } = await params
 
     // Get authenticated user
     const supabase = await createClient()
