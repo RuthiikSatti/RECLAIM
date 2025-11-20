@@ -62,8 +62,12 @@ export default async function Home() {
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      {/* Transition Container */}
+      <div className="relative h-full overflow-hidden">
+        {/* Page Panel with Transition */}
+        <div className="absolute left-0 top-0 w-full h-full opacity-100 flex flex-col transition-all duration-[400ms] ease-[cubic-bezier(0.25,0.1,0.25,1)]">
+          {/* Hero Section */}
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="text-center">
           <h1 className="text-5xl font-bold text-black mb-6">
             Your Campus Marketplace
@@ -118,6 +122,8 @@ export default async function Home() {
               Report inappropriate listings and trade with confidence
             </p>
           </div>
+          </div>
+        </div>
         </div>
       </div>
     </div>
