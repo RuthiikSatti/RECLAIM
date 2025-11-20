@@ -31,7 +31,6 @@ export interface FilterOptions {
   colors?: string[]
   sizes?: string[]
   materials?: string[]
-  verifiedSellersOnly?: boolean
 }
 
 export interface SortConfig {
@@ -44,11 +43,10 @@ export interface SortConfig {
 // ============================================================================
 
 const CONDITION_RANK: Record<ListingCondition, number> = {
-  'New': 5,
-  'Like New': 4,
-  'Used': 3,
-  'Refurbished': 2,
-  'For Parts': 1
+  'New': 4,
+  'Like New': 3,
+  'Used': 2,
+  'Refurbished': 1
 }
 
 // ============================================================================
@@ -111,15 +109,7 @@ function applySellerRatingFilter(listings: Listing[], minRating?: number): Listi
   )
 }
 
-/**
- * Apply verified sellers filter
- */
-function applyVerifiedSellerFilter(listings: Listing[], verifiedOnly?: boolean): Listing[] {
-  if (!verifiedOnly) return listings
-  return listings.filter(listing =>
-    listing.user?.verified_seller === true
-  )
-}
+// Verified sellers filter removed - no longer needed
 
 /**
  * Apply features filter (must have ALL selected features)
@@ -195,7 +185,7 @@ function sortByPrice(listings: Listing[], direction: 'asc' | 'desc'): Listing[] 
 }
 
 /**
- * Sort by condition (New → Like New → Used → Refurbished → For Parts)
+ * Sort by condition (New → Like New → Used → Refurbished)
  */
 function sortByCondition(listings: Listing[]): Listing[] {
   return [...listings].sort((a, b) => {
@@ -246,7 +236,6 @@ export function applyFilters(
   filtered = applyConditionFilter(filtered, filters.conditions)
   filtered = applyPriceFilter(filtered, filters.minPrice, filters.maxPrice)
   filtered = applySellerRatingFilter(filtered, filters.sellerRating)
-  filtered = applyVerifiedSellerFilter(filtered, filters.verifiedSellersOnly)
   filtered = applyFeaturesFilter(filtered, filters.features)
   filtered = applyBrandFilter(filtered, filters.brands)
   filtered = applyColorFilter(filtered, filters.colors)
@@ -345,7 +334,6 @@ export function getActiveFilterCount(filters: FilterOptions): number {
   if (filters.minPrice !== undefined) count++
   if (filters.maxPrice !== undefined) count++
   if (filters.sellerRating) count++
-  if (filters.verifiedSellersOnly) count++
   if (filters.features && filters.features.length > 0) count += filters.features.length
   if (filters.brands && filters.brands.length > 0) count += filters.brands.length
   if (filters.colors && filters.colors.length > 0) count += filters.colors.length

@@ -26,10 +26,11 @@ const CATEGORIES = [
   'Tech and Gadgets',
   'Books',
   'Clothing and Accessories',
-  'Giveaways'
+  'Giveaways',
+  'Other'
 ]
 
-const CONDITIONS: ListingCondition[] = ['New', 'Like New', 'Used', 'Refurbished', 'For Parts']
+const CONDITIONS: ListingCondition[] = ['New', 'Like New', 'Used', 'Refurbished']
 
 const SORT_OPTIONS: { value: SortOption; label: string; icon: string }[] = [
   { value: 'newest', label: 'Newest First', icon: '🕒' },
@@ -87,14 +88,6 @@ export default function EnhancedSearchFilter({
   // Handle seller rating filter
   const handleSellerRatingChange = (rating: number | undefined) => {
     onFiltersChange({ ...filters, sellerRating: rating })
-  }
-
-  // Handle verified sellers toggle
-  const handleVerifiedToggle = () => {
-    onFiltersChange({
-      ...filters,
-      verifiedSellersOnly: !filters.verifiedSellersOnly
-    })
   }
 
   // Handle array filter toggle (brands, features, etc.)
@@ -252,18 +245,6 @@ export default function EnhancedSearchFilter({
               </button>
             )
           })}
-
-          <button
-            onClick={handleVerifiedToggle}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-              filters.verifiedSellersOnly
-                ? 'bg-green-600 text-white shadow-sm'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
-          >
-            <span className="mr-1.5">{filters.verifiedSellersOnly ? '✓' : ''}</span>
-            Verified Sellers Only
-          </button>
         </div>
       </div>
 

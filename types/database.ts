@@ -11,7 +11,7 @@ export interface User {
   stripe_onboarding_completed?: boolean;
 }
 
-export type ListingCondition = 'New' | 'Like New' | 'Used' | 'Refurbished' | 'For Parts';
+export type ListingCondition = 'New' | 'Like New' | 'Used' | 'Refurbished';
 
 export interface Listing {
   id: string;
@@ -62,7 +62,8 @@ export type ListingCategory =
   | 'Tech and Gadgets'
   | 'Books'
   | 'Clothing and Accessories'
-  | 'Giveaways';
+  | 'Giveaways'
+  | 'Other';
 
 export type OrderStatus = 'pending' | 'paid' | 'processing' | 'completed' | 'refunded' | 'cancelled';
 

@@ -51,6 +51,7 @@ export default function CreateListingPage() {
                 <option>Books</option>
                 <option>Clothing and Accessories</option>
                 <option>Giveaways</option>
+                <option>Other</option>
               </select>
             </div>
 
