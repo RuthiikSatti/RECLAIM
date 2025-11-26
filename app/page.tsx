@@ -5,48 +5,52 @@ export default async function Home() {
   const user = await getUser()
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[#f5f5f5]">
       {/* Navigation */}
-      <nav className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-8 py-6">
+      <nav className="bg-white">
+        <div className="px-12 py-6">
           <div className="flex items-center justify-between">
             {/* Left - Logo */}
-            <div className="flex items-center gap-8">
-              <Link href="/" className="flex items-center gap-2">
-                <h1 className="text-2xl font-black tracking-tight text-black">RECLAIM</h1>
-                <span className="text-sm font-normal tracking-wide text-black">MARKETPLACE</span>
-              </Link>
+            <div className="flex items-center gap-3">
+              <span className="text-[28px] font-black tracking-[-0.02em] text-black">RECLAIM</span>
+              <span className="text-[11px] font-light tracking-[0.15em] uppercase text-black">MARKETPLACE</span>
             </div>
 
             {/* Right - Icons */}
-            <div className="flex items-center gap-6">
-              <Link href="/marketplace" className="text-black hover:text-gray-600 transition-colors" aria-label="Search">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            <div className="flex items-center gap-8">
+              <Link href="/marketplace" className="text-black hover:opacity-60 transition-opacity" aria-label="Search">
+                <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                  <circle cx="11" cy="11" r="8"/>
+                  <path d="m21 21-4.35-4.35"/>
                 </svg>
               </Link>
               {user && (
-                <Link href="/create" className="text-black hover:text-gray-600 transition-colors" aria-label="Create listing">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                <Link href="/create" className="text-black hover:opacity-60 transition-opacity" aria-label="Create listing">
+                  <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                    <line x1="12" y1="5" x2="12" y2="19"/>
+                    <line x1="5" y1="12" x2="19" y2="12"/>
                   </svg>
                 </Link>
               )}
               {user && (
-                <Link href="/messages" className="text-black hover:text-gray-600 transition-colors" aria-label="Messages">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                <Link href="/messages" className="text-black hover:opacity-60 transition-opacity" aria-label="Messages">
+                  <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                    <rect x="2" y="4" width="20" height="16" rx="2"/>
+                    <path d="m2 7 8.5 5.5a2 2 0 0 0 2 0L22 7"/>
                   </svg>
                 </Link>
               )}
-              <Link href={user ? `/profile/${user.id}` : "/login"} className="text-black hover:text-gray-600 transition-colors" aria-label="Profile">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              <Link href={user ? `/profile/${user.id}` : "/login"} className="text-black hover:opacity-60 transition-opacity" aria-label="Profile">
+                <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                  <circle cx="12" cy="8" r="5"/>
+                  <path d="M20 21a8 8 0 1 0-16 0"/>
                 </svg>
               </Link>
-              <Link href="/marketplace" className="text-black hover:text-gray-600 transition-colors" aria-label="Cart">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+              <Link href="/marketplace" className="text-black hover:opacity-60 transition-opacity" aria-label="Cart">
+                <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                  <circle cx="9" cy="21" r="1"/>
+                  <circle cx="20" cy="21" r="1"/>
+                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
                 </svg>
               </Link>
             </div>
@@ -55,18 +59,18 @@ export default async function Home() {
       </nav>
 
       {/* Hero Section */}
-      <div className="bg-white">
-        <div className="max-w-7xl mx-auto px-8 py-32 min-h-[calc(100vh-100px)] flex flex-col items-center justify-center">
-          <div className="text-center">
-            <p className="text-sm tracking-widest text-black mb-12">For students, by students</p>
+      <div className="bg-[#f5f5f5]">
+        <div className="px-12 pt-32 pb-40 min-h-[calc(100vh-88px)] flex flex-col items-center justify-center">
+          <div className="text-center max-w-5xl">
+            <p className="text-[13px] font-normal tracking-[0.05em] text-black mb-16">For students, by students</p>
 
-            <h1 className="text-[5rem] md:text-[7rem] lg:text-[8.5rem] font-black leading-[0.9] tracking-tight text-black mb-16">
+            <h1 className="text-[100px] leading-[0.85] font-black tracking-[-0.03em] text-black mb-20" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
               YOUR UNIVERSITY<br />MARKETPLACE
             </h1>
 
             <Link
               href="/marketplace"
-              className="inline-block bg-black text-white px-16 py-5 text-base font-medium tracking-wide hover:bg-gray-800 transition-colors"
+              className="inline-block bg-black text-white px-20 py-5 text-[14px] font-medium tracking-[0.02em] hover:bg-gray-900 transition-colors"
             >
               Browse Marketplace
             </Link>
@@ -77,11 +81,13 @@ export default async function Home() {
       {/* Floating Cart Icon */}
       <Link
         href="/marketplace"
-        className="fixed bottom-8 right-8 bg-black text-white p-4 hover:bg-gray-800 transition-colors z-50"
+        className="fixed bottom-10 right-10 bg-black text-white w-16 h-16 flex items-center justify-center hover:bg-gray-900 transition-colors shadow-lg"
         aria-label="View cart"
       >
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+          <circle cx="9" cy="21" r="1"/>
+          <circle cx="20" cy="21" r="1"/>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
         </svg>
       </Link>
     </div>
