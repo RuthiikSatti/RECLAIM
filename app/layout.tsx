@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import MixpanelProvider from "@/components/analytics/MixpanelProvider";
 import HeaderWrapper from "@/components/HeaderWrapper";
+import SimpleFooter from "@/components/homepage/SimpleFooter";
 
 export const metadata: Metadata = {
   title: "Reclaim - Campus Marketplace",
@@ -22,6 +23,7 @@ export default function RootLayout({
         <MixpanelProvider />
         <HeaderWrapper />
         {children}
+        <SimpleFooter />
       </body>
     </html>
   );

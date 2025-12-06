@@ -14,7 +14,6 @@ import Hero from '@/components/homepage/Hero'
 import FeatureSlider from '@/components/homepage/FeatureSlider'
 import CategoryGrid from '@/components/homepage/CategoryGrid'
 import NewsletterSignup from '@/components/homepage/NewsletterSignup'
-import SimpleFooter from '@/components/homepage/SimpleFooter'
 
 export default async function Home() {
   return (
@@ -54,9 +53,6 @@ export default async function Home() {
 
       {/* Newsletter Signup */}
       <NewsletterSignup />
-
-      {/* Footer */}
-      <SimpleFooter />
     </main>
   )
 }
