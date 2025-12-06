@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { getUser } from '@/lib/auth/actions'
-import FloatingChatWidget from '@/components/chat/FloatingChatWidget'
+import FloatingChatWidget from '@/components/chat/FloatingChatWidgetLoader'
 import ReportButton from '@/components/listings/ReportButton'
 import BuyButton from '@/components/listings/BuyButton'
 import ViewListingTracker from '@/components/analytics/ViewListingTracker'
