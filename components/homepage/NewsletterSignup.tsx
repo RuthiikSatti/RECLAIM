@@ -40,8 +40,8 @@ export default function NewsletterSignup() {
   return (
     <section className="w-full py-16 sm:py-20 bg-gray-50">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Heading */}
-        <h2 className="text-[clamp(1.75rem,4vw,2.5rem)] font-black tracking-[0.15em] text-center text-gray-900 mb-8 sm:mb-10" style={{ fontFamily: '"Marianina FY", system-ui, -apple-system, sans-serif' }}>
+        {/* Heading - Using maintanker-title utility */}
+        <h2 className="maintanker-title tracking-maintanker text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-gray-900 mb-8 sm:mb-10">
           SIGN UP TO RECLAIM MAIL
         </h2>
 

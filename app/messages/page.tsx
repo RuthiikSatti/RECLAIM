@@ -184,7 +184,15 @@ export default function MessagesPage() {
   }
 
   return (
-    <div className="flex h-screen bg-white">
+    <div className="min-h-screen bg-gray-50 py-8 px-4">
+      {/* Page Title */}
+      <h1 className="maintanker-title tracking-maintanker text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-8 text-black">
+        MESSAGES
+      </h1>
+
+      {/* Messaging Container */}
+      <div className="max-w-7xl mx-auto bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+        <div className="flex h-[calc(100vh-200px)] bg-white">
       {/* Mobile: Show either conversation list OR message view */}
       <div className="flex md:hidden w-full">
         {!showMobileConversationView ? (
@@ -450,6 +458,8 @@ export default function MessagesPage() {
               </div>
             </div>
           )}
+        </div>
+      </div>
         </div>
       </div>
     </div>

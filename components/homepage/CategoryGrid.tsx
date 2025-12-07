@@ -77,8 +77,8 @@ export default function CategoryGrid() {
   return (
     <section className="w-full py-16 sm:py-24 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Heading */}
-        <h2 className="text-[clamp(2rem,5vw,3.5rem)] font-black tracking-[0.2em] text-center text-gray-900 mb-8 sm:mb-12" style={{ fontFamily: '"Marianina FY", system-ui, -apple-system, sans-serif' }}>
+        {/* Heading - Using maintanker-title utility */}
+        <h2 className="maintanker-title tracking-maintanker text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-gray-900 mb-8 sm:mb-12">
           CATEGORIES
         </h2>
 

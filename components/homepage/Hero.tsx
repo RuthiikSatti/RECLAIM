@@ -51,12 +51,12 @@ export default function Hero({
           {subtitle}
         </p>
 
-        {/* Headline */}
-        <h1 className="font-display text-center font-black tracking-tight text-gray-900 mb-8 sm:mb-12 leading-[0.9] max-w-5xl">
-          <span className="block text-[clamp(3rem,8vw,7rem)]">
+        {/* Headline - Using maintanker-title utility */}
+        <h1 className="maintanker-title tracking-maintanker text-gray-900 mb-8 sm:mb-12">
+          <span className="block text-[clamp(3.5rem,9vw,8rem)]">
             YOUR UNIVERSITY
           </span>
-          <span className="block text-[clamp(3rem,8vw,7rem)]">
+          <span className="block text-[clamp(3.5rem,9vw,8rem)]">
             MARKETPLACE
           </span>
         </h1>
