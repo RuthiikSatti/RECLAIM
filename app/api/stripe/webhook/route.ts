@@ -11,6 +11,8 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 
+export const runtime = 'nodejs'
+
 /**
  * Disabled webhook endpoint
  * Returns 503 Service Unavailable

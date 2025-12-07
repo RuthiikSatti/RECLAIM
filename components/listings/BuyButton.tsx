@@ -3,15 +3,14 @@
 /**
  * BuyButton Component
  *
- * Redirects users to the "Payments Coming Soon" page.
- * Stripe integration temporarily disabled until business registration is complete.
- *
- * TODO: Enable Stripe checkout after LLC setup and Stripe account activation
+ * Provides "Add to Cart" and "Buy Now" buttons for listings.
+ * Buy Now redirects to cart page for checkout.
  */
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { addToCart } from '@/lib/cart/actions'
 import type { Listing } from '@/types/database'
 
 interface BuyButtonProps {
@@ -22,19 +21,57 @@ interface BuyButtonProps {
 export default function BuyButton({ listing, className = '' }: BuyButtonProps) {
   const router = useRouter()
   const [supabase] = useState(() => createClient())
-  const [loading, setLoading] = useState(false)
+  const [buyLoading, setBuyLoading] = useState(false)
+  const [cartLoading, setCartLoading] = useState(false)
+  const [added, setAdded] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const handlePurchase = async () => {
+  const handleAddToCart = async () => {
     try {
-      setLoading(true)
+      setCartLoading(true)
       setError(null)
 
       // Check if user is authenticated
       const { data: { user } } = await supabase.auth.getUser()
 
       if (!user) {
-        // Redirect to login with return URL
+        window.location.href = `/login?returnUrl=${encodeURIComponent(`/item/${listing.id}`)}`
+        return
+      }
+
+      // Prevent adding your own listing
+      if (user.id === listing.user_id) {
+        setError('You cannot add your own listing to cart')
+        setCartLoading(false)
+        return
+      }
+
+      const result = await addToCart(listing.id, 1)
+
+      if (result.error) {
+        setError(result.error)
+      } else {
+        setAdded(true)
+        router.refresh()
+        setTimeout(() => setAdded(false), 2000)
+      }
+    } catch (err: any) {
+      console.error('Add to cart error:', err)
+      setError(err.message || 'Failed to add to cart')
+    } finally {
+      setCartLoading(false)
+    }
+  }
+
+  const handleBuyNow = async () => {
+    try {
+      setBuyLoading(true)
+      setError(null)
+
+      // Check if user is authenticated
+      const { data: { user } } = await supabase.auth.getUser()
+
+      if (!user) {
         window.location.href = `/login?returnUrl=${encodeURIComponent(`/item/${listing.id}`)}`
         return
       }
@@ -42,56 +79,38 @@ export default function BuyButton({ listing, className = '' }: BuyButtonProps) {
       // Prevent buying your own listing
       if (user.id === listing.user_id) {
         setError('You cannot purchase your own listing')
-        setLoading(false)
+        setBuyLoading(false)
         return
       }
 
-      // TODO: Enable Stripe checkout after LLC setup
-      // Redirect to payments coming soon page
-      router.push('/payments-coming-soon')
+      // Add to cart and redirect to cart page
+      const result = await addToCart(listing.id, 1)
 
-      /* DISABLED - Stripe checkout integration
-      const response = await fetch('/api/stripe/create-checkout-session', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          listingId: listing.id,
-        }),
-      })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        if (response.status === 503) {
-          throw new Error(data.message || 'Payments are currently unavailable')
-        }
-        throw new Error(data.error || 'Failed to create checkout session')
+      if (result.error) {
+        setError(result.error)
+        setBuyLoading(false)
+        return
       }
 
-      if (data.url) {
-        window.location.href = data.url
-      } else {
-        throw new Error('No checkout URL returned')
-      }
-      */
+      // Redirect to cart for checkout
+      router.push('/cart')
 
     } catch (err: any) {
-      console.error('Purchase error:', err)
-      setError(err.message || 'Failed to initiate purchase')
-      setLoading(false)
+      console.error('Buy now error:', err)
+      setError(err.message || 'Failed to proceed to checkout')
+      setBuyLoading(false)
     }
   }
 
   return (
-    <div>
+    <div className="space-y-3">
+      {/* Buy Now Button */}
       <button
-        onClick={handlePurchase}
-        disabled={loading}
+        onClick={handleBuyNow}
+        disabled={buyLoading || cartLoading}
         className={`w-full bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors ${className}`}
       >
-        {loading ? (
+        {buyLoading ? (
           <span className="flex items-center justify-center gap-2">
             <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
@@ -104,13 +123,46 @@ export default function BuyButton({ listing, className = '' }: BuyButtonProps) {
         )}
       </button>
 
-      {error && (
-        <p className="text-red-600 text-sm mt-2">{error}</p>
-      )}
+      {/* Add to Cart Button */}
+      <button
+        onClick={handleAddToCart}
+        disabled={buyLoading || cartLoading || added}
+        className={`w-full border-2 px-6 py-3 rounded-lg font-semibold transition-colors ${
+          added
+            ? 'border-green-600 text-green-600 bg-green-50'
+            : 'border-gray-300 text-gray-700 hover:border-gray-400 hover:bg-gray-50'
+        } disabled:opacity-50 disabled:cursor-not-allowed`}
+      >
+        {cartLoading ? (
+          <span className="flex items-center justify-center gap-2">
+            <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Adding...
+          </span>
+        ) : added ? (
+          <span className="flex items-center justify-center gap-2">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/>
+            </svg>
+            Added to Cart!
+          </span>
+        ) : (
+          <span className="flex items-center justify-center gap-2">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <circle cx="9" cy="21" r="1"/>
+              <circle cx="20" cy="21" r="1"/>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+            </svg>
+            Add to Cart
+          </span>
+        )}
+      </button>
 
-      <p className="text-xs text-gray-500 mt-2 text-center">
-        Secure payments coming soon
-      </p>
+      {error && (
+        <p className="text-red-600 text-sm text-center">{error}</p>
+      )}
     </div>
   )
 }

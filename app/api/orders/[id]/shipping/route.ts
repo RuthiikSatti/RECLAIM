@@ -9,6 +9,8 @@ import { createClient } from '@/lib/supabase/server'
 import { createServiceClient } from '@/lib/supabase/server'
 import { notifyBuyerOrderShipped } from '@/lib/notifications/createNotification'
 
+export const runtime = 'nodejs'
+
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<Record<string, string>> }

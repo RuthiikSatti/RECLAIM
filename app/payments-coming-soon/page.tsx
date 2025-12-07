@@ -1,10 +1,8 @@
 import Link from 'next/link'
-import Navbar from '@/components/layout/Navbar'
 
 export default function PaymentsComingSoonPage() {
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navbar />
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="bg-white rounded-lg shadow-md p-8 md:p-12 text-center">

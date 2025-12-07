@@ -9,6 +9,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createServiceClient } from '@/lib/supabase/server'
 
+export const runtime = 'nodejs'
+
 // Helper to check if user is admin
 async function isAdmin(userId: string): Promise<boolean> {
   const adminEmails = (process.env.ADMIN_EMAILS || '').split(',').map(e => e.trim())

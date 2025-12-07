@@ -9,7 +9,6 @@ import { useConversations, type Conversation } from '@/lib/hooks/useConversation
 import { useMessages } from '@/lib/hooks/useMessages'
 import MessageBubble from '@/components/chat/MessageBubble'
 import { trackEvent } from '@/lib/mixpanel/client'
-import Navbar from '@/components/layout/Navbar'
 
 export default function MessagesPage() {
   const [supabase] = useState(() => createClient())
@@ -131,7 +130,6 @@ export default function MessagesPage() {
   if (conversationsLoading) {
     return (
       <div className="flex flex-col h-screen bg-white">
-        <Navbar />
         <div className="flex-1 flex items-center justify-center">
           <p className="text-gray-600">Loading messages...</p>
         </div>
@@ -143,7 +141,6 @@ export default function MessagesPage() {
   if (conversationsError) {
     return (
       <div className="flex flex-col h-screen bg-white">
-        <Navbar />
         <div className="flex-1 p-4">
           <div className="bg-red-50 border border-red-200 rounded-lg p-4">
             <p className="text-red-800 text-sm">Error loading conversations: {conversationsError}</p>
@@ -157,7 +154,6 @@ export default function MessagesPage() {
   if (conversations.length === 0) {
     return (
       <div className="flex flex-col h-screen bg-white">
-        <Navbar />
         <div className="flex-1 flex items-center justify-center p-4">
           <div className="text-center">
             <svg className="w-16 h-16 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -175,8 +171,6 @@ export default function MessagesPage() {
 
   return (
     <div className="flex flex-col h-screen bg-white">
-      <Navbar />
-
       {/* Mobile: Show either conversation list OR message view */}
       <div className="flex-1 flex lg:hidden flex-col overflow-hidden">
         {!showMobileConversationView ? (

@@ -1,7 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { getUser } from '@/lib/auth/actions'
-import Navbar from '@/components/layout/Navbar'
-import FloatingChatWidget from '@/components/chat/FloatingChatWidget'
+import FloatingChatWidget from '@/components/chat/FloatingChatWidgetLoader'
 import ReportButton from '@/components/listings/ReportButton'
 import BuyButton from '@/components/listings/BuyButton'
 import ViewListingTracker from '@/components/analytics/ViewListingTracker'
@@ -43,7 +42,6 @@ export default async function ListingDetailPage({
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navbar />
       <ViewListingTracker listingId={listing.id} title={listing.title} category={listing.category} />
       <div className="max-w-7xl mx-auto md:py-8">
         <div className="grid md:grid-cols-2 md:gap-8 md:px-4 lg:px-8">

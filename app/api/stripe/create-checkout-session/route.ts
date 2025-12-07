@@ -19,6 +19,8 @@ import { NextRequest, NextResponse } from 'next/server'
 // import Stripe from 'stripe' // DISABLED - Uncomment when ready
 // import { createClient } from '@/lib/supabase/server' // DISABLED
 
+export const runtime = 'nodejs'
+
 // DISABLED - Stripe initialization
 // const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 //   apiVersion: '2025-10-29.clover'

@@ -11,6 +11,8 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 
+export const runtime = 'nodejs'
+
 /**
  * Disabled refund endpoint
  * Returns 503 Service Unavailable

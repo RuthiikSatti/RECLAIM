@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { getUser } from '@/lib/auth/actions'
+import { getCartCount } from '@/lib/cart/actions'
 import Header from './Header'
 
 export default async function HeaderWrapper() {
@@ -20,9 +21,8 @@ export default async function HeaderWrapper() {
 
     unreadMessages = messageCount || 0
 
-    // Cart count - you can implement this later when you have a cart table
-    // For now it's set to 0
-    cartItemCount = 0
+    // Get cart item count
+    cartItemCount = await getCartCount()
   }
 
   return (
