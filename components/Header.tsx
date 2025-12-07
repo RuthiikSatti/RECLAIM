@@ -42,7 +42,6 @@ function getRouteLabel(pathname: string): string {
 
 export default function Header({ unreadMessages = 0, cartItemCount = 0, userAvatar, userId }: HeaderProps) {
   const pathname = usePathname()
-  const currentLabel = getRouteLabel(pathname)
   const [searchOpen, setSearchOpen] = useState(false)
 
   return (
@@ -50,14 +49,18 @@ export default function Header({ unreadMessages = 0, cartItemCount = 0, userAvat
     <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
       <div className="px-12 py-6">
         <div className="flex items-center justify-between">
-          {/* Left - Logo + Dynamic Label */}
+          {/* Left - Logo + Static Marketplace Link */}
           <div className="flex items-center gap-3">
             <Link href="/" className="text-[28px] font-black tracking-[-0.02em] text-black hover:opacity-80 transition-opacity">
               RECLAIM
             </Link>
-            <span className="text-[11px] font-light tracking-[0.15em] uppercase text-black">
-              {currentLabel}
-            </span>
+            <Link
+              href="/marketplace"
+              className="text-[11px] font-light tracking-[0.15em] uppercase text-black hover:opacity-60 transition-opacity"
+              aria-label="Browse marketplace"
+            >
+              MARKETPLACE
+            </Link>
           </div>
 
           {/* Right - Icons */}
