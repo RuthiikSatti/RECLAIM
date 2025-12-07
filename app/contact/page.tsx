@@ -99,10 +99,7 @@ export default function ContactPage() {
     <div className="min-h-screen bg-white py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
         {/* Heading */}
-        <h1
-          className="text-[clamp(3rem,8vw,6rem)] font-black tracking-tight text-gray-900 mb-12 text-left leading-none"
-          style={{ fontFamily: '"Marianina FY", system-ui, -apple-system, sans-serif' }}
-        >
+        <h1 className="maintanker-title tracking-maintanker text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-gray-900 mb-12">
           CONTACT US
         </h1>
 

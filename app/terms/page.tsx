@@ -2,7 +2,7 @@ export default function TermsOfServicePage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Terms of Service</h1>
+        <h1 className="maintanker-title tracking-maintanker text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-gray-900 mb-8">TERMS OF SERVICE</h1>
 
         <div className="bg-white rounded-lg shadow-md p-8 space-y-6">
           <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">

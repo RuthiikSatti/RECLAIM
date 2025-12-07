@@ -37,8 +37,8 @@ export default async function ProfilePage({
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <h1 className="text-3xl font-bold text-black mb-2">
-            {profileUser.display_name}
+          <h1 className="maintanker-title tracking-maintanker text-3xl sm:text-4xl md:text-5xl text-black mb-2">
+            {profileUser.display_name?.toUpperCase()}
           </h1>
           <p className="text-black">@{profileUser.university_domain}</p>
           <p className="text-sm text-black mt-2">

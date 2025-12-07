@@ -11,8 +11,8 @@ export default function AboutPage() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-black text-gray-900 mb-4 tracking-tight uppercase">
-            About Us
+          <h1 className="maintanker-title tracking-maintanker text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-gray-900 mb-4">
+            ABOUT US
           </h1>
           <p className="text-xl text-gray-600">
             For students, by students

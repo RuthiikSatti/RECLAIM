@@ -108,7 +108,7 @@ function MarketplaceContent() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               </button>
-              <h1 className="text-3xl font-bold text-black">Marketplace</h1>
+              <h1 className="maintanker-title tracking-maintanker text-3xl sm:text-4xl md:text-5xl text-black">MARKETPLACE</h1>
             </div>
 
             {/* Sort Dropdown - Right Side */}
