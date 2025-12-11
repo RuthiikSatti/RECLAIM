@@ -9,8 +9,8 @@
  * - Clean, minimal design with checkmarks for read receipts
  */
 
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { Suspense, useEffect, useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { useConversations, type Conversation } from '@/lib/hooks/useConversations'
@@ -18,13 +18,15 @@ import { useMessages } from '@/lib/hooks/useMessages'
 import MessageBubble from '@/components/chat/MessageBubble'
 import { trackEvent } from '@/lib/mixpanel/client'
 
-export default function MessagesPage() {
+function MessagesPageContent() {
   const [supabase] = useState(() => createClient())
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null)
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [showMobileConversationView, setShowMobileConversationView] = useState(false)
+  const [prefillText, setPrefillText] = useState<string>('')
   const router = useRouter()
+  const searchParams = useSearchParams()
 
   const { conversations, loading: conversationsLoading, error: conversationsError } = useConversations()
 
@@ -46,7 +48,7 @@ export default function MessagesPage() {
     }
   )
 
-  // Get current user
+  // Get current user and handle prefill
   useEffect(() => {
     let mounted = true
 
@@ -60,6 +62,17 @@ export default function MessagesPage() {
 
       if (mounted) {
         setCurrentUserId(user.id)
+
+        // Handle prefill query parameter
+        const prefillParam = searchParams.get('prefill')
+        if (prefillParam) {
+          try {
+            const decoded = decodeURIComponent(prefillParam)
+            setPrefillText(decoded)
+          } catch (e) {
+            console.error('Failed to decode prefill:', e)
+          }
+        }
       }
     }
 
@@ -68,7 +81,7 @@ export default function MessagesPage() {
     return () => {
       mounted = false
     }
-  }, [supabase, router])
+  }, [supabase, router, searchParams])
 
   // Handle message send
   async function handleSendMessage(e: React.FormEvent, messageText: string) {
@@ -297,7 +310,7 @@ export default function MessagesPage() {
                   <div ref={messagesEndRef} />
                 </div>
 
-                <MessageInput onSend={handleSendMessage} disabled={sending} />
+                <MessageInput onSend={handleSendMessage} disabled={sending} initialText={prefillText} />
               </>
             )}
           </div>
@@ -433,7 +446,7 @@ export default function MessagesPage() {
               </div>
 
               {/* Message Input */}
-              <MessageInput onSend={handleSendMessage} disabled={sending} />
+              <MessageInput onSend={handleSendMessage} disabled={sending} initialText={prefillText} />
             </>
           ) : (
             <div className="flex-1 flex items-center justify-center text-gray-500">
@@ -459,12 +472,21 @@ export default function MessagesPage() {
 // Message Input Component
 function MessageInput({
   onSend,
-  disabled
+  disabled,
+  initialText = ''
 }: {
   onSend: (e: React.FormEvent, text: string) => void
   disabled: boolean
+  initialText?: string
 }) {
-  const [text, setText] = useState('')
+  const [text, setText] = useState(initialText)
+
+  // Update text when initialText changes (prefill support)
+  useEffect(() => {
+    if (initialText && initialText !== text) {
+      setText(initialText)
+    }
+  }, [initialText])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -516,5 +538,21 @@ function MessageInput({
         </button>
       </div>
     </form>
+  )
+}
+
+// Export default component with Suspense boundary
+export default function MessagesPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex h-screen bg-gray-50 items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading messages...</p>
+        </div>
+      </div>
+    }>
+      <MessagesPageContent />
+    </Suspense>
   )
 }
