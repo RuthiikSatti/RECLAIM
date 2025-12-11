@@ -1,12 +1,39 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { getCartItems, removeFromCart, updateCartItemQuantity, type CartItem } from '@/lib/cart/actions'
 import { formatPrice } from '@/lib/utils/helpers'
+
+// Helper to normalize cart items from different data shapes
+function normalizeCartItem(raw: any): any {
+  // If it already has the canonical structure (listing object exists)
+  if (raw.listing) {
+    return {
+      ...raw,
+      quantity: raw.quantity ?? raw.qty ?? 1
+    }
+  }
+
+  // Otherwise, convert from old flat structure
+  return {
+    id: raw.id,
+    listing_id: raw.listing_id,
+    quantity: raw.quantity ?? raw.qty ?? 1,
+    listing: {
+      id: raw.listing_id,
+      title: raw.title ?? 'Untitled',
+      price: Number(raw.price || 0),
+      image_urls: raw.image_urls ?? (raw.image_url ? [raw.image_url] : []),
+      user_id: raw.user_id || '' // fallback for localStorage items
+    },
+    seller_name: raw.seller_name ?? null,
+    seller_campus: raw.seller_campus ?? null
+  }
+}
 
 export default function CartPage() {
   const [supabase] = useState(() => createClient())
@@ -16,49 +43,86 @@ export default function CartPage() {
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
   const router = useRouter()
 
-  // Load cart items
+  // Unified loader: attempt server (if logged in) then always fallback to localStorage
+  const loadCart = useCallback(async (opts: { forceServer?: boolean } = {}) => {
+    setLoading(true)
+    setError(null)
+
+    try {
+      // try to get current user from supabase; do not redirect if no user
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
+        setCurrentUserId(user.id)
+        // If we have a user, try server cart first (unless explicitly skipped)
+        if (!opts.forceServer) {
+          const result = await getCartItems()
+          if (!result.error && Array.isArray(result.items)) {
+            setCartItems(result.items.map(normalizeCartItem))
+            setLoading(false)
+            return
+          }
+          // if server returned error, we'll fall back to localStorage below
+          if (result.error) {
+            console.warn('Server cart error:', result.error)
+          }
+        }
+      } else {
+        // No user — we will not redirect. Guests use localStorage fallback.
+        setCurrentUserId(null)
+      }
+    } catch (err) {
+      console.warn('Error checking user or server cart:', err)
+      // continue to fallback to localStorage
+    }
+
+    // LocalStorage fallback (works for guests and as resilient fallback)
+    try {
+      const raw = localStorage.getItem('reclaim_cart')
+      const parsed = raw ? JSON.parse(raw) : []
+      // normalize to array and normalize each item
+      if (Array.isArray(parsed)) {
+        setCartItems(parsed.map(normalizeCartItem))
+      } else {
+        setCartItems([])
+      }
+    } catch (err) {
+      console.error('Failed to read reclaim_cart from localStorage', err)
+      setCartItems([])
+    } finally {
+      setLoading(false)
+    }
+  }, [supabase])
+
+  // initial load
   useEffect(() => {
-    let mounted = true
+    loadCart()
+  }, [loadCart])
 
-    async function loadCart() {
-      try {
-        const { data: { user } } = await supabase.auth.getUser()
-
-        if (!user) {
-          router.push('/login')
-          return
-        }
-
-        if (mounted) {
-          setCurrentUserId(user.id)
-        }
-
-        const result = await getCartItems()
-
-        if (!mounted) return
-
-        if (result.error) {
-          setError(result.error)
-        } else {
-          setCartItems(result.items || [])
-        }
-      } catch (err) {
-        if (mounted) {
-          setError('Failed to load cart')
-        }
-      } finally {
-        if (mounted) {
-          setLoading(false)
+  // Listen for cross-tab storage updates so cart refreshes when AddToCart writes
+  useEffect(() => {
+    function onStorage(e: StorageEvent) {
+      if (e.key === 'reclaim_cart') {
+        try {
+          const parsed = e.newValue ? JSON.parse(e.newValue) : []
+          setCartItems(Array.isArray(parsed) ? parsed.map(normalizeCartItem) : [])
+        } catch (err) {
+          console.error('Failed to parse reclaim_cart from storage event', err)
+          setCartItems([])
         }
       }
     }
+    window.addEventListener('storage', onStorage)
+    return () => window.removeEventListener('storage', onStorage)
+  }, [])
 
-    loadCart()
-
-    return () => {
-      mounted = false
+  // Also listen for focus so when user returns to tab we reload cart (helps single-tab flow)
+  useEffect(() => {
+    function onFocus() {
+      loadCart()
     }
-  }, [supabase, router])
+    window.addEventListener('focus', onFocus)
+    return () => window.removeEventListener('focus', onFocus)
+  }, [loadCart])
 
   // Calculate total
   const calculateTotal = () => {
@@ -72,13 +136,22 @@ export default function CartPage() {
 
   // Handle remove
   const handleRemove = async (cartItemId: string) => {
-    const result = await removeFromCart(cartItemId)
+    // Try server remove (if logged in) but always update UI + localStorage for resilience
+    try {
+      const result = await removeFromCart(cartItemId)
+      if (result?.error) {
+        console.warn('Server remove error:', result.error)
+      }
+    } catch (err) {
+      console.warn('removeFromCart network error', err)
+    }
 
-    if (result.error) {
-      alert(result.error)
-    } else {
-      setCartItems(prev => prev.filter(item => item.id !== cartItemId))
-      router.refresh()
+    const newItems = cartItems.filter(item => item.id !== cartItemId)
+    setCartItems(newItems)
+    try {
+      localStorage.setItem('reclaim_cart', JSON.stringify(newItems))
+    } catch (err) {
+      console.error('Failed to persist reclaim_cart after remove', err)
     }
   }
 
@@ -86,23 +159,29 @@ export default function CartPage() {
   const handleQuantityChange = async (cartItemId: string, newQuantity: number) => {
     if (newQuantity < 1) return
 
-    const result = await updateCartItemQuantity(cartItemId, newQuantity)
+    try {
+      const result = await updateCartItemQuantity(cartItemId, newQuantity)
+      if (result?.error) {
+        console.warn('Server update quantity error:', result.error)
+      }
+    } catch (err) {
+      console.warn('updateCartItemQuantity network error', err)
+    }
 
-    if (result.error) {
-      alert(result.error)
-    } else {
-      setCartItems(prev =>
-        prev.map(item =>
-          item.id === cartItemId ? { ...item, quantity: newQuantity } : item
-        )
-      )
-      router.refresh()
+    const updated = cartItems.map(item =>
+      item.id === cartItemId ? { ...item, quantity: newQuantity } : item
+    )
+    setCartItems(updated)
+    try {
+      localStorage.setItem('reclaim_cart', JSON.stringify(updated))
+    } catch (err) {
+      console.error('Failed to persist reclaim_cart after quantity change', err)
     }
   }
 
-  // Handle checkout
-  const handleCheckout = async () => {
-    // Redirect to payments coming soon page
+  // Checkout disabled for MVP
+  const handleCheckout = () => {
+    // For now keep them on the "payments coming soon" flow; do not attempt a real checkout.
     router.push('/payments-coming-soon')
   }
 
@@ -117,21 +196,8 @@ export default function CartPage() {
     )
   }
 
-  if (error) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-lg shadow-lg p-8 max-w-md text-center">
-          <svg className="w-16 h-16 mx-auto mb-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-          </svg>
-          <h2 className="text-xl font-bold text-gray-900 mb-2">Error Loading Cart</h2>
-          <p className="text-gray-600">{error}</p>
-        </div>
-      </div>
-    )
-  }
-
-  if (cartItems.length === 0) {
+  // show empty state (empty array or no listings)
+  if (!cartItems || cartItems.length === 0) {
     return (
       <div className="min-h-screen bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -269,11 +335,14 @@ export default function CartPage() {
                 </div>
               </div>
 
+              {/* Disabled checkout for MVP */}
               <button
                 onClick={handleCheckout}
-                className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors mb-4"
+                className="w-full bg-gray-300 text-gray-700 px-6 py-3 rounded-lg font-semibold mb-4 cursor-not-allowed"
+                title="Payments are disabled in the MVP"
+                disabled
               >
-                Proceed to Checkout
+                Payments coming soon
               </button>
 
               <Link
@@ -285,7 +354,7 @@ export default function CartPage() {
 
               <div className="mt-6 pt-6 border-t">
                 <p className="text-xs text-gray-500 text-center">
-                  Secure payments powered by Stripe (coming soon)
+                  Payments are disabled for the MVP. Contact sellers via messages to arrange payment and pickup.
                 </p>
               </div>
             </div>

@@ -102,16 +102,19 @@ export default function BuyButton({ listing, className = '' }: BuyButtonProps) {
       // Check if user is authenticated
       const { data: { user } } = await supabase.auth.getUser()
 
-      // Build item object
+      // Build item object in canonical structure that Cart page expects
       const item = {
-        id: `cart-${listing.id}-${Date.now()}`,
+        id: `local-${listing.id}-${Date.now()}`,
         listing_id: listing.id,
-        title: listing.title,
-        price: listing.price,
-        seller_name: listing.user?.display_name || 'Unknown',
-        seller_campus: listing.user?.university_domain || 'Unknown',
-        qty: 1,
-        image_url: listing.image_urls?.[0] || null
+        quantity: 1,
+        listing: {
+          id: listing.id,
+          title: listing.title,
+          price: listing.price,
+          image_urls: listing.image_urls || []
+        },
+        seller_name: listing.user?.display_name || null,
+        seller_campus: listing.user?.university_domain || null
       }
 
       // Prevent adding your own listing
@@ -163,7 +166,7 @@ export default function BuyButton({ listing, className = '' }: BuyButtonProps) {
 
         if (existingIndex >= 0) {
           // Update quantity
-          cartItems[existingIndex].qty += 1
+          cartItems[existingIndex].quantity = (cartItems[existingIndex].quantity || 1) + 1
         } else {
           // Add new item
           cartItems.push(item)
