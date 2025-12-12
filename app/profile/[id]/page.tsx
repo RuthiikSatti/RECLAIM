@@ -13,7 +13,7 @@ export default async function ProfilePage({
 }) {
   const { id } = await params
   const supabase = await createClient()
-  const currentUser = await getUser()
+  const { user: currentUser, error: authError } = await getUser()
 
   const { data: profileUser, error: userError } = await supabase
     .from('users')

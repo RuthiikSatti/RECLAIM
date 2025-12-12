@@ -5,11 +5,12 @@ import Header from './Header'
 
 export default async function HeaderWrapper() {
   const supabase = await createClient()
-  const user = await getUser()
+  const { user, error } = await getUser()
 
   let unreadMessages = 0
   let cartItemCount = 0
 
+  // Only fetch counts if user is authenticated
   if (user) {
     // Get unread message count
     const { count: messageCount } = await supabase

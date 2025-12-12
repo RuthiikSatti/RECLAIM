@@ -25,7 +25,7 @@ export interface CartItem {
  */
 export async function addToCart(listingId: string, quantity: number = 1) {
   try {
-    const user = await getUser()
+    const { user, error: authError } = await getUser()
     if (!user) {
       return { error: 'Must be logged in to add to cart' }
     }
@@ -80,7 +80,7 @@ export async function addToCart(listingId: string, quantity: number = 1) {
  */
 export async function getCartItems(): Promise<{ items?: CartItem[]; error?: string }> {
   try {
-    const user = await getUser()
+    const { user, error: authError } = await getUser()
     if (!user) {
       return { items: [] }
     }
@@ -110,7 +110,7 @@ export async function getCartItems(): Promise<{ items?: CartItem[]; error?: stri
  */
 export async function getCartCount(): Promise<number> {
   try {
-    const user = await getUser()
+    const { user, error: authError } = await getUser()
     if (!user) {
       return 0
     }
@@ -139,7 +139,7 @@ export async function getCartCount(): Promise<number> {
  */
 export async function updateCartItemQuantity(cartItemId: string, quantity: number) {
   try {
-    const user = await getUser()
+    const { user, error: authError } = await getUser()
     if (!user) {
       return { error: 'Must be logged in' }
     }
@@ -174,7 +174,7 @@ export async function updateCartItemQuantity(cartItemId: string, quantity: numbe
  */
 export async function removeFromCart(cartItemId: string) {
   try {
-    const user = await getUser()
+    const { user, error: authError } = await getUser()
     if (!user) {
       return { error: 'Must be logged in' }
     }
@@ -205,7 +205,7 @@ export async function removeFromCart(cartItemId: string) {
  */
 export async function clearCart() {
   try {
-    const user = await getUser()
+    const { user, error: authError } = await getUser()
     if (!user) {
       return { error: 'Must be logged in' }
     }

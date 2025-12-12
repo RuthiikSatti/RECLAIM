@@ -15,7 +15,7 @@ export default async function ListingDetailPage({
 }) {
   const { id } = await params
   const supabase = await createClient()
-  const currentUser = await getUser()
+  const { user: currentUser, error: authError } = await getUser()
 
   const { data: listing, error } = await supabase
     .from('listings')

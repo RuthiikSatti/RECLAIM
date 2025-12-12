@@ -10,7 +10,7 @@ export default async function EditListingPage({
 }) {
   const { id } = await params
   const supabase = await createClient()
-  const currentUser = await getUser()
+  const { user: currentUser, error: authError } = await getUser()
 
   if (!currentUser) {
     redirect('/login')

@@ -76,14 +76,22 @@ export async function signOut() {
 
 export async function getUser() {
   const supabase = await createClient()
-  const { data: { user }, error: getUserError } = await supabase.auth.getUser()
+  const { data, error: getUserError } = await supabase.auth.getUser()
 
+  // Handle missing auth session gracefully (not an error state)
   if (getUserError) {
+    const errorMessage = getUserError.message?.toLowerCase() || ''
+    if (errorMessage.includes('auth session missing') || errorMessage.includes('session not found')) {
+      // This is a normal state when user is not logged in
+      return { user: null, error: null }
+    }
+    // Other errors should be logged
     prettyLogError('supabase.auth.getUser error:', getUserError)
-    return null
+    return { user: null, error: getUserError }
   }
 
-  if (!user) return null
+  const user = data?.user ?? null
+  if (!user) return { user: null, error: null }
 
   try {
     // The database trigger should have created the profile automatically
@@ -117,7 +125,7 @@ export async function getUser() {
     }
 
     if (profile) {
-      return profile
+      return { user: profile, error: null }
     }
 
     // If still no profile after retries, return a fallback
@@ -127,7 +135,7 @@ export async function getUser() {
       email: user.email
     })
 
-    return {
+    const fallbackUser = {
       id: user.id,
       email: user.email || '',
       display_name: (user.user_metadata?.display_name ??
@@ -137,14 +145,16 @@ export async function getUser() {
       university_domain: user.email?.split('@')[1] || '',
       created_at: new Date().toISOString()
     }
+    return { user: fallbackUser, error: null }
   } catch (err) {
     prettyLogError('Unexpected error in getUser:', err)
-    return {
+    const fallbackUser = {
       id: user.id,
       email: user.email || '',
       display_name: (user.user_metadata?.name ?? user.email?.split('@')[0]) || 'User',
       university_domain: user.email?.split('@')[1] || '',
       created_at: new Date().toISOString()
     }
+    return { user: fallbackUser, error: null }
   }
 }
