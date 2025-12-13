@@ -83,6 +83,21 @@ function MessagesPageContent() {
     }
   }, [supabase, router, searchParams])
 
+  // Auto-select conversation based on conversationId query parameter
+  useEffect(() => {
+    const conversationIdParam = searchParams.get('conversationId')
+
+    if (conversationIdParam && conversations.length > 0 && !selectedConversation) {
+      // Find the conversation by ID
+      const conversation = conversations.find(conv => conv.id === conversationIdParam)
+
+      if (conversation) {
+        setSelectedConversation(conversation)
+        setShowMobileConversationView(true)
+      }
+    }
+  }, [searchParams, conversations, selectedConversation])
+
   // Handle message send
   async function handleSendMessage(e: React.FormEvent, messageText: string) {
     e.preventDefault()

@@ -13,7 +13,7 @@ export default async function ProfilePage({
 }) {
   const { id } = await params
   const supabase = await createClient()
-  const currentUser = await getUser()
+  const { user: currentUser, error: authError } = await getUser()
 
   const { data: profileUser, error: userError } = await supabase
     .from('users')
@@ -38,7 +38,7 @@ export default async function ProfilePage({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
           <h1 className="text-3xl font-bold text-black mb-2">
-            {profileUser.display_name}
+            {profileUser.username || profileUser.display_name}
           </h1>
           <p className="text-black">@{profileUser.university_domain}</p>
           <p className="text-sm text-black mt-2">
@@ -49,7 +49,7 @@ export default async function ProfilePage({
         {/* Profile Settings - Only show for own profile */}
         {isOwnProfile && (
           <ProfileSettings
-            currentDisplayName={profileUser.display_name}
+            currentDisplayName={profileUser.username || profileUser.display_name}
             userId={id}
           />
         )}

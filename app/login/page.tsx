@@ -43,15 +43,15 @@ export default function LoginPage() {
           <div className="rounded-md shadow-sm space-y-4">
             <div>
               <label htmlFor="email" className="sr-only">
-                Email address
+                Username or Email
               </label>
               <input
                 id="email"
                 name="email"
-                type="email"
+                type="text"
                 required
                 className="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Email address (.edu)"
+                placeholder="Enter username or email"
               />
             </div>
             <div>

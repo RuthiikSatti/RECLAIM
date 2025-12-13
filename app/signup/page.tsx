@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { trackEvent } from '@/lib/mixpanel/client'
+import UsernameInput from '@/components/auth/UsernameInput'
 
 interface PasswordRequirements {
   minLength: boolean
@@ -22,6 +23,8 @@ export default function SignupPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [passwordsMatch, setPasswordsMatch] = useState(true)
+  const [username, setUsername] = useState('')
+  const [usernameAvailable, setUsernameAvailable] = useState(false)
   const router = useRouter()
 
   // Validate password requirements
@@ -57,6 +60,13 @@ export default function SignupPage() {
     setLoading(true)
     setError(null)
 
+    // Validate username
+    if (!username || !usernameAvailable) {
+      setError('Please enter a valid and available username')
+      setLoading(false)
+      return
+    }
+
     // Validate passwords match
     if (password !== confirmPassword) {
       setError('Passwords do not match')
@@ -74,13 +84,12 @@ export default function SignupPage() {
 
     const formData = new FormData(e.currentTarget)
     const email = formData.get('email') as string
-    const displayName = formData.get('displayName') as string
 
     try {
       const response = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, displayName }),
+        body: JSON.stringify({ email, password, username }),
       })
 
       const data = await response.json()
@@ -93,7 +102,7 @@ export default function SignupPage() {
 
       trackEvent('signup_success', {
         email: email,
-        display_name: displayName,
+        username: username,
       })
 
       setSuccess(true)
@@ -134,19 +143,12 @@ export default function SignupPage() {
             )}
 
             <div className="space-y-4">
-              <div>
-                <label htmlFor="displayName" className="block text-sm font-medium text-black mb-1">
-                  Display Name
-                </label>
-                <input
-                  id="displayName"
-                  name="displayName"
-                  type="text"
-                  required
-                  className="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-400 text-black focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Enter your display name"
-                />
-              </div>
+              <UsernameInput
+                value={username}
+                onChange={setUsername}
+                onAvailabilityChange={setUsernameAvailable}
+                required
+              />
 
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-black mb-1">
@@ -252,7 +254,7 @@ export default function SignupPage() {
 
             <button
               type="submit"
-              disabled={loading || !allRequirementsMet || !passwordsMatch || !confirmPassword}
+              disabled={loading || !allRequirementsMet || !passwordsMatch || !confirmPassword || !usernameAvailable}
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Creating account...' : 'Sign up'}
