@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import UsernameInput from '@/components/auth/UsernameInput'
 
 interface ProfileSettingsProps {
   currentDisplayName: string | null
@@ -10,7 +11,8 @@ interface ProfileSettingsProps {
 }
 
 export default function ProfileSettings({ currentDisplayName, userId }: ProfileSettingsProps) {
-  const [displayName, setDisplayName] = useState(currentDisplayName || '')
+  const [username, setUsername] = useState(currentDisplayName || '')
+  const [isUsernameAvailable, setIsUsernameAvailable] = useState(false)
   const [currentPassword, setCurrentPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -21,18 +23,37 @@ export default function ProfileSettings({ currentDisplayName, userId }: ProfileS
   const supabase = createClient()
   const router = useRouter()
 
-  const handleUpdateDisplayName = async (e: React.FormEvent) => {
+  const handleUpdateUsername = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setMessage(null)
 
-    try {
-      const { error } = await supabase
-        .from('users')
-        .update({ display_name: displayName })
-        .eq('id', userId)
+    // Check if username hasn't changed
+    if (username.toLowerCase() === currentDisplayName?.toLowerCase()) {
+      setMessage({ type: 'error', text: 'Please enter a different username' })
+      setLoading(false)
+      return
+    }
 
-      if (error) throw error
+    // Check if username is available
+    if (!isUsernameAvailable && username.toLowerCase() !== currentDisplayName?.toLowerCase()) {
+      setMessage({ type: 'error', text: 'Please choose an available username' })
+      setLoading(false)
+      return
+    }
+
+    try {
+      const response = await fetch('/api/username/update', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to update username')
+      }
 
       setMessage({ type: 'success', text: 'Username updated successfully!' })
       // Refresh the page to show updated name
@@ -130,25 +151,21 @@ export default function ProfileSettings({ currentDisplayName, userId }: ProfileS
       )}
 
       {/* Update Username */}
-      <form onSubmit={handleUpdateDisplayName} className="mb-8 pb-8 border-b border-gray-200">
+      <form onSubmit={handleUpdateUsername} className="mb-8 pb-8 border-b border-gray-200">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Change Username</h3>
         <div className="max-w-md">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Username
-          </label>
-          <input
-            type="text"
-            value={displayName}
-            onChange={(e) => setDisplayName(e.target.value)}
-            required
-            minLength={2}
-            maxLength={50}
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            placeholder="Enter new username"
+          <UsernameInput
+            value={username}
+            onChange={setUsername}
+            onAvailabilityChange={setIsUsernameAvailable}
+            required={true}
           />
+          <p className="mt-2 text-sm text-gray-600">
+            Current username: <span className="font-medium">{currentDisplayName}</span>
+          </p>
           <button
             type="submit"
-            disabled={loading || displayName === currentDisplayName}
+            disabled={loading || username === currentDisplayName || (!isUsernameAvailable && username.toLowerCase() !== currentDisplayName?.toLowerCase())}
             className="mt-4 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
           >
             {loading ? 'Updating...' : 'Update Username'}
