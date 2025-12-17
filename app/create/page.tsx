@@ -13,7 +13,7 @@ export default function CreateListingPage() {
     <div className="min-h-screen bg-[#f5f5f0] py-16 px-4">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
-        <h1 className="font-display text-5xl md:text-6xl font-black text-center mb-12 tracking-tight uppercase text-black">
+        <h1 className="heading-primary text-black mb-12">
           CREATE LISTING
         </h1>
 
@@ -21,7 +21,7 @@ export default function CreateListingPage() {
         <form action={handleCreateListing} className="space-y-6">
           {/* Title */}
           <div>
-            <label htmlFor="title" className="block text-sm text-gray-700 mb-2">
+            <label htmlFor="title" className="block text-sm text-black mb-2">
               Title <span className="text-gray-500">(required)</span>
             </label>
             <input
@@ -30,14 +30,14 @@ export default function CreateListingPage() {
               type="text"
               required
               aria-required="true"
-              className="w-full border border-gray-900 rounded-full px-6 py-3 text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-gray-900 placeholder-gray-400"
+              className="w-full border border-gray-900 rounded-full px-6 py-3 text-black bg-white focus:outline-none focus:ring-2 focus:ring-gray-900 placeholder-gray-400"
               placeholder="Enter listing title"
             />
           </div>
 
           {/* Description */}
           <div>
-            <label htmlFor="description" className="block text-sm text-gray-700 mb-2">
+            <label htmlFor="description" className="block text-sm text-black mb-2">
               Description
             </label>
             <textarea
@@ -46,14 +46,14 @@ export default function CreateListingPage() {
               required
               aria-required="true"
               rows={4}
-              className="w-full border border-gray-900 rounded-3xl px-6 py-4 text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-gray-900 resize-none placeholder-gray-400"
+              className="w-full border border-gray-900 rounded-3xl px-6 py-4 text-black bg-white focus:outline-none focus:ring-2 focus:ring-gray-900 resize-none placeholder-gray-400"
               placeholder="Describe your item"
             />
           </div>
 
           {/* Category */}
           <div>
-            <label htmlFor="category" className="block text-sm text-gray-700 mb-2">
+            <label htmlFor="category" className="block text-sm text-black mb-2">
               Category <span className="text-gray-500">(required)</span>
             </label>
             <div className="relative">
@@ -62,7 +62,7 @@ export default function CreateListingPage() {
                 name="category"
                 required
                 aria-required="true"
-                className="w-full border border-gray-900 rounded-full px-6 py-3 text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-gray-900 appearance-none cursor-pointer"
+                className="w-full border border-gray-900 rounded-full px-6 py-3 text-black bg-white focus:outline-none focus:ring-2 focus:ring-gray-900 appearance-none cursor-pointer"
               >
                 <option value="">Select an option</option>
                 <option value="Dorm and Decor">Dorm and Decor</option>
@@ -84,7 +84,7 @@ export default function CreateListingPage() {
 
           {/* Condition */}
           <div role="group" aria-labelledby="condition-label">
-            <label id="condition-label" className="block text-sm text-gray-700 mb-2">
+            <label id="condition-label" className="block text-sm text-black mb-2">
               Condition <span className="text-gray-500">(required)</span>
             </label>
             <div className="flex flex-wrap gap-4">
@@ -95,18 +95,18 @@ export default function CreateListingPage() {
                   value="New"
                   required
                   aria-required="true"
-                  className="w-4 h-4 border-2 border-gray-900 text-gray-900 focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 cursor-pointer"
+                  className="w-4 h-4 border-2 border-gray-900 text-black focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 cursor-pointer"
                 />
-                <span className="text-sm text-gray-900 group-hover:text-gray-700">New</span>
+                <span className="text-sm text-black group-hover:text-black">New</span>
               </label>
               <label className="flex items-center gap-2 cursor-pointer group">
                 <input
                   type="radio"
                   name="condition"
                   value="Like New"
-                  className="w-4 h-4 border-2 border-gray-900 text-gray-900 focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 cursor-pointer"
+                  className="w-4 h-4 border-2 border-gray-900 text-black focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 cursor-pointer"
                 />
-                <span className="text-sm text-gray-900 group-hover:text-gray-700">Like New</span>
+                <span className="text-sm text-black group-hover:text-black">Like New</span>
               </label>
               <label className="flex items-center gap-2 cursor-pointer group">
                 <input
@@ -114,25 +114,25 @@ export default function CreateListingPage() {
                   name="condition"
                   value="Used"
                   defaultChecked
-                  className="w-4 h-4 border-2 border-gray-900 text-gray-900 focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 cursor-pointer"
+                  className="w-4 h-4 border-2 border-gray-900 text-black focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 cursor-pointer"
                 />
-                <span className="text-sm text-gray-900 group-hover:text-gray-700">Used</span>
+                <span className="text-sm text-black group-hover:text-black">Used</span>
               </label>
               <label className="flex items-center gap-2 cursor-pointer group">
                 <input
                   type="radio"
                   name="condition"
                   value="Refurbished"
-                  className="w-4 h-4 border-2 border-gray-900 text-gray-900 focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 cursor-pointer"
+                  className="w-4 h-4 border-2 border-gray-900 text-black focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 cursor-pointer"
                 />
-                <span className="text-sm text-gray-900 group-hover:text-gray-700">Refurbished</span>
+                <span className="text-sm text-black group-hover:text-black">Refurbished</span>
               </label>
             </div>
           </div>
 
           {/* Photos */}
           <div>
-            <label className="block text-sm text-gray-700 mb-2" htmlFor="image-upload">
+            <label className="block text-sm text-black mb-2" htmlFor="image-upload">
               Photos <span className="text-gray-500">(required)</span>
             </label>
             <ImageUploaderClean />
@@ -140,11 +140,11 @@ export default function CreateListingPage() {
 
           {/* Price */}
           <div>
-            <label htmlFor="price" className="block text-sm text-gray-700 mb-2">
+            <label htmlFor="price" className="block text-sm text-black mb-2">
               Price <span className="text-gray-500">(required)</span>
             </label>
             <div className="relative">
-              <span className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-900 font-medium" aria-hidden="true">$</span>
+              <span className="absolute left-6 top-1/2 -translate-y-1/2 text-black font-medium" aria-hidden="true">$</span>
               <input
                 id="price"
                 name="price"
@@ -155,7 +155,7 @@ export default function CreateListingPage() {
                 required
                 aria-required="true"
                 aria-label="Price in dollars"
-                className="w-full border border-gray-900 rounded-full pl-10 pr-6 py-3 text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-gray-900 placeholder-gray-400"
+                className="w-full border border-gray-900 rounded-full pl-10 pr-6 py-3 text-black bg-white focus:outline-none focus:ring-2 focus:ring-gray-900 placeholder-gray-400"
                 placeholder="0"
               />
             </div>

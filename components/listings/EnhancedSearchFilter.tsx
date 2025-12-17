@@ -37,7 +37,6 @@ const SORT_OPTIONS: { value: SortOption; label: string; icon: string }[] = [
   { value: 'price_low', label: 'Price: Low to High', icon: '💰' },
   { value: 'price_high', label: 'Price: High to Low', icon: '💎' },
   { value: 'condition', label: 'Best Condition', icon: '✨' },
-  { value: 'seller_rating', label: 'Seller Rating', icon: '⭐' },
   { value: 'features', label: 'Most Features', icon: '🔧' }
 ]
 
@@ -83,11 +82,6 @@ export default function EnhancedSearchFilter({
       ? current.filter(c => c !== condition)
       : [...current, condition]
     onFiltersChange({ ...filters, conditions: updated })
-  }
-
-  // Handle seller rating filter
-  const handleSellerRatingChange = (rating: number | undefined) => {
-    onFiltersChange({ ...filters, sellerRating: rating })
   }
 
   // Handle array filter toggle (brands, features, etc.)
@@ -219,29 +213,6 @@ export default function EnhancedSearchFilter({
                 {isSelected && (
                   <span className="ml-1.5">✓</span>
                 )}
-              </button>
-            )
-          })}
-        </div>
-      </div>
-
-          {/* Seller Rating Filter */}
-          <div>
-            <h3 className="font-semibold text-gray-900 mb-3">Seller Rating</h3>
-        <div className="flex gap-2 flex-wrap">
-          {[5, 4, 3].map((rating) => {
-            const isSelected = filters.sellerRating === rating
-            return (
-              <button
-                key={rating}
-                onClick={() => handleSellerRatingChange(isSelected ? undefined : rating)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                  isSelected
-                    ? 'bg-yellow-500 text-white shadow-sm'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
-              >
-                {rating}★ & up
               </button>
             )
           })}

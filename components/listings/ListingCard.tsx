@@ -27,7 +27,7 @@ export default function ListingCard({ listing }: { listing: Listing }) {
           <h3 className="font-semibold text-lg text-gray-900 mb-1 truncate">
             {listing.title}
           </h3>
-          <p className="text-blue-600 font-bold text-xl mb-2">
+          <p className="text-black font-bold text-xl mb-2">
             {formatPrice(listing.price)}
           </p>
           <p className="text-black text-sm line-clamp-2 mb-2">

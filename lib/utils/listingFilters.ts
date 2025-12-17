@@ -16,7 +16,6 @@ export type SortOption =
   | 'price_low'
   | 'price_high'
   | 'condition'
-  | 'seller_rating'
   | 'features'
 
 export interface FilterOptions {
@@ -25,7 +24,6 @@ export interface FilterOptions {
   conditions?: ListingCondition[]
   minPrice?: number
   maxPrice?: number
-  sellerRating?: number // Minimum rating (e.g., 4 for 4★+)
   features?: string[]
   brands?: string[]
   colors?: string[]
@@ -99,15 +97,7 @@ function applyPriceFilter(
   })
 }
 
-/**
- * Apply seller rating filter
- */
-function applySellerRatingFilter(listings: Listing[], minRating?: number): Listing[] {
-  if (!minRating) return listings
-  return listings.filter(listing =>
-    listing.user?.seller_rating && listing.user.seller_rating >= minRating
-  )
-}
+// Seller rating filter removed - feature disabled
 
 // Verified sellers filter removed - no longer needed
 
@@ -198,13 +188,7 @@ function sortByCondition(listings: Listing[]): Listing[] {
 /**
  * Sort by seller rating (highest first)
  */
-function sortBySellerRating(listings: Listing[]): Listing[] {
-  return [...listings].sort((a, b) => {
-    const ratingA = a.user?.seller_rating || 0
-    const ratingB = b.user?.seller_rating || 0
-    return ratingB - ratingA
-  })
-}
+// Sort by seller rating removed - feature disabled
 
 /**
  * Sort by features (items with more features first)
@@ -235,7 +219,7 @@ export function applyFilters(
   filtered = applyCategoryFilter(filtered, filters.category)
   filtered = applyConditionFilter(filtered, filters.conditions)
   filtered = applyPriceFilter(filtered, filters.minPrice, filters.maxPrice)
-  filtered = applySellerRatingFilter(filtered, filters.sellerRating)
+  // Seller rating filter removed - feature disabled
   filtered = applyFeaturesFilter(filtered, filters.features)
   filtered = applyBrandFilter(filtered, filters.brands)
   filtered = applyColorFilter(filtered, filters.colors)
@@ -264,9 +248,6 @@ export function applySorting(
 
     case 'condition':
       return sortByCondition(listings)
-
-    case 'seller_rating':
-      return sortBySellerRating(listings)
 
     case 'features':
       return sortByFeatures(listings)
@@ -333,7 +314,7 @@ export function getActiveFilterCount(filters: FilterOptions): number {
   if (filters.conditions && filters.conditions.length > 0) count += filters.conditions.length
   if (filters.minPrice !== undefined) count++
   if (filters.maxPrice !== undefined) count++
-  if (filters.sellerRating) count++
+  // Seller rating filter removed - feature disabled
   if (filters.features && filters.features.length > 0) count += filters.features.length
   if (filters.brands && filters.brands.length > 0) count += filters.brands.length
   if (filters.colors && filters.colors.length > 0) count += filters.colors.length

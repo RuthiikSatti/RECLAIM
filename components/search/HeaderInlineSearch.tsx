@@ -154,7 +154,7 @@ export default function HeaderInlineSearch({ isOpen, onClose }: HeaderInlineSear
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search"
-          className="flex-1 outline-none text-sm placeholder-gray-400 border-b border-gray-300 pb-1"
+          className="flex-1 outline-none text-sm text-black placeholder-gray-400 border-b border-gray-300 pb-1"
         />
         {loading && (
           <div className="animate-spin h-4 w-4 border-2 border-gray-300 border-t-black rounded-full ml-2" />

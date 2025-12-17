@@ -52,10 +52,10 @@ export default function Header({ unreadMessages = 0, cartItemCount = 0, userAvat
         <div className="flex items-center justify-between">
           {/* Left - Logo + Dynamic Label */}
           <div className="flex items-center gap-3">
-            <Link href="/" className="text-[28px] font-black tracking-[-0.02em] text-black hover:opacity-80 transition-opacity">
+            <Link href="/" className="text-[28px] font-black tracking-[-0.02em] text-black hover:opacity-80 transition-opacity" style={{ fontFamily: "'Archivo Black', sans-serif" }}>
               RECLAIM
             </Link>
-            <span className="text-[11px] font-light tracking-[0.15em] uppercase text-black">
+            <span className="text-[11px] font-light tracking-[0.15em] uppercase text-black" style={{ fontFamily: "'Archivo Black', sans-serif" }}>
               {currentLabel}
             </span>
           </div>
@@ -111,7 +111,7 @@ export default function Header({ unreadMessages = 0, cartItemCount = 0, userAvat
                   <path d="m2 7 8.5 5.5a2 2 0 0 0 2 0L22 7"/>
                 </svg>
                 {unreadMessages > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full min-w-[16px] h-4 flex items-center justify-center px-1">
+                  <span className="absolute -top-1 -right-1 bg-black text-white text-[10px] font-bold rounded-full min-w-[16px] h-4 flex items-center justify-center px-1">
                     {unreadMessages > 99 ? '99+' : unreadMessages}
                   </span>
                 )}

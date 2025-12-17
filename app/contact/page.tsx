@@ -96,13 +96,10 @@ export default function ContactPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white py-16 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen pampas-bg py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
         {/* Heading */}
-        <h1
-          className="text-[clamp(3rem,8vw,6rem)] font-black tracking-tight text-gray-900 mb-12 text-left leading-none"
-          style={{ fontFamily: '"Marianina FY", system-ui, -apple-system, sans-serif' }}
-        >
+        <h1 className="heading-primary text-black mb-12">
           CONTACT US
         </h1>
 
@@ -110,12 +107,12 @@ export default function ContactPage() {
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Name Fields (Two Columns) */}
           <div>
-            <label className="block text-sm font-normal text-gray-900 mb-2">
-              Name <span className="text-gray-500">(required)</span>
+            <label className="block text-sm font-normal text-black mb-2">
+              Name <span className="text-black">(required)</span>
             </label>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label htmlFor="firstName" className="block text-sm text-gray-700 mb-1">
+                <label htmlFor="firstName" className="block text-sm text-black mb-1">
                   First Name
                 </label>
                 <input
@@ -125,11 +122,11 @@ export default function ContactPage() {
                   value={formData.firstName}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 border-2 border-gray-900 rounded-full focus:outline-none focus:ring-4 focus:ring-gray-900/20 text-gray-900"
+                  className="w-full px-4 py-3 border-2 border-gray-900 rounded-full focus:outline-none focus:ring-4 focus:ring-gray-900/20 text-black"
                 />
               </div>
               <div>
-                <label htmlFor="lastName" className="block text-sm text-gray-700 mb-1">
+                <label htmlFor="lastName" className="block text-sm text-black mb-1">
                   Last Name
                 </label>
                 <input
@@ -139,7 +136,7 @@ export default function ContactPage() {
                   value={formData.lastName}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 border-2 border-gray-900 rounded-full focus:outline-none focus:ring-4 focus:ring-gray-900/20 text-gray-900"
+                  className="w-full px-4 py-3 border-2 border-gray-900 rounded-full focus:outline-none focus:ring-4 focus:ring-gray-900/20 text-black"
                 />
               </div>
             </div>
@@ -147,8 +144,8 @@ export default function ContactPage() {
 
           {/* Email Field */}
           <div>
-            <label htmlFor="email" className="block text-sm font-normal text-gray-900 mb-2">
-              Email <span className="text-gray-500">(required)</span>
+            <label htmlFor="email" className="block text-sm font-normal text-black mb-2">
+              Email <span className="text-black">(required)</span>
             </label>
             <input
               type="email"
@@ -157,7 +154,7 @@ export default function ContactPage() {
               value={formData.email}
               onChange={handleChange}
               required
-              className="w-full px-4 py-3 border-2 border-gray-900 rounded-full focus:outline-none focus:ring-4 focus:ring-gray-900/20 text-gray-900"
+              className="w-full px-4 py-3 border-2 border-gray-900 rounded-full focus:outline-none focus:ring-4 focus:ring-gray-900/20 text-black"
             />
             <div className="mt-3 flex items-center">
               <input
@@ -168,7 +165,7 @@ export default function ContactPage() {
                 onChange={handleChange}
                 className="w-4 h-4 border-2 border-gray-900 rounded focus:ring-4 focus:ring-gray-900/20"
               />
-              <label htmlFor="signUpNewsletter" className="ml-2 text-sm text-gray-900">
+              <label htmlFor="signUpNewsletter" className="ml-2 text-sm text-black">
                 Sign up for news and updates
               </label>
             </div>
@@ -176,7 +173,7 @@ export default function ContactPage() {
 
           {/* Phone Field */}
           <div>
-            <label htmlFor="phone" className="block text-sm font-normal text-gray-900 mb-2">
+            <label htmlFor="phone" className="block text-sm font-normal text-black mb-2">
               Phone
             </label>
             <input
@@ -185,13 +182,13 @@ export default function ContactPage() {
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              className="w-full px-4 py-3 border-2 border-gray-900 rounded-full focus:outline-none focus:ring-4 focus:ring-gray-900/20 text-gray-900"
+              className="w-full px-4 py-3 border-2 border-gray-900 rounded-full focus:outline-none focus:ring-4 focus:ring-gray-900/20 text-black"
             />
           </div>
 
           {/* Dropdown Field */}
           <div>
-            <label htmlFor="referralSource" className="block text-sm font-normal text-gray-900 mb-2">
+            <label htmlFor="referralSource" className="block text-sm font-normal text-black mb-2">
               How did you hear about us?
             </label>
             <select
@@ -199,7 +196,7 @@ export default function ContactPage() {
               name="referralSource"
               value={formData.referralSource}
               onChange={handleChange}
-              className="w-full px-4 py-3 border-2 border-gray-900 rounded-full focus:outline-none focus:ring-4 focus:ring-gray-900/20 text-gray-700 bg-white appearance-none cursor-pointer"
+              className="w-full px-4 py-3 border-2 border-gray-900 rounded-full focus:outline-none focus:ring-4 focus:ring-gray-900/20 text-black bg-white appearance-none cursor-pointer"
               style={{
                 backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23000'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
                 backgroundRepeat: 'no-repeat',
@@ -218,8 +215,8 @@ export default function ContactPage() {
 
           {/* Message Textarea */}
           <div>
-            <label htmlFor="message" className="block text-sm font-normal text-gray-900 mb-2">
-              Message <span className="text-gray-500">(required)</span>
+            <label htmlFor="message" className="block text-sm font-normal text-black mb-2">
+              Message <span className="text-black">(required)</span>
             </label>
             <textarea
               id="message"
@@ -228,7 +225,7 @@ export default function ContactPage() {
               onChange={handleChange}
               required
               rows={6}
-              className="w-full px-4 py-3 border-2 border-gray-900 rounded-3xl focus:outline-none focus:ring-4 focus:ring-gray-900/20 text-gray-900 resize-none"
+              className="w-full px-4 py-3 border-2 border-gray-900 rounded-3xl focus:outline-none focus:ring-4 focus:ring-gray-900/20 text-black resize-none"
             />
           </div>
 

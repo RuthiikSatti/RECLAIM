@@ -116,7 +116,7 @@ export default function HeaderSearch({ open, onOpenChange }: HeaderSearchProps) 
                   value={query}
                   onValueChange={setQuery}
                   placeholder="Search"
-                  className="flex-1 py-3 outline-none text-sm placeholder-gray-400 bg-transparent"
+                  className="flex-1 py-3 outline-none text-sm text-black placeholder-gray-400 bg-transparent"
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' && results.length === 0) {
                       handleSearchSubmit()

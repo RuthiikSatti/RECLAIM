@@ -187,10 +187,10 @@ export default function CartPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen pampas-bg flex items-center justify-center">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-          <p className="text-gray-600 mt-4">Loading cart...</p>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-black"></div>
+          <p className="text-black mt-4">Loading cart...</p>
         </div>
       </div>
     )
@@ -199,9 +199,9 @@ export default function CartPage() {
   // show empty state (empty array or no listings)
   if (!cartItems || cartItems.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen pampas-bg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <h1 className="text-3xl font-bold text-gray-900 mb-8">Shopping Cart</h1>
+          <h1 className="heading-primary text-black mb-8">SHOPPING CART</h1>
 
           <div className="bg-white rounded-lg shadow-md p-12 text-center">
             <svg className="w-24 h-24 mx-auto mb-6 text-gray-400" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
@@ -209,11 +209,11 @@ export default function CartPage() {
               <circle cx="20" cy="21" r="1"/>
               <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
             </svg>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Your cart is empty</h2>
-            <p className="text-gray-600 mb-8">Start shopping to add items to your cart</p>
+            <h2 className="text-2xl font-bold text-black mb-4">Your cart is empty</h2>
+            <p className="text-black mb-8">Start shopping to add items to your cart</p>
             <Link
               href="/marketplace"
-              className="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+              className="inline-block bg-black text-white px-8 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors"
             >
               Browse Marketplace
             </Link>
@@ -226,9 +226,9 @@ export default function CartPage() {
   const total = calculateTotal()
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen" style={{ backgroundColor: '#f5f5f0' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Shopping Cart</h1>
+        <h1 className="heading-primary text-black mb-8">SHOPPING CART</h1>
 
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Cart Items */}
@@ -262,11 +262,11 @@ export default function CartPage() {
                     {/* Details */}
                     <div className="flex-1 min-w-0">
                       <Link href={`/item/${item.listing.id}`}>
-                        <h3 className="text-lg font-semibold text-gray-900 hover:text-blue-600 truncate">
+                        <h3 className="text-lg font-semibold text-black hover:underline truncate">
                           {item.listing.title}
                         </h3>
                       </Link>
-                      <p className="text-lg font-bold text-blue-600 mt-1">
+                      <p className="text-lg font-bold text-black mt-1">
                         {formatPrice(item.listing.price)}
                       </p>
 
@@ -302,8 +302,8 @@ export default function CartPage() {
 
                     {/* Subtotal */}
                     <div className="text-right">
-                      <p className="text-sm text-gray-600 mb-1">Subtotal</p>
-                      <p className="text-lg font-bold text-gray-900">
+                      <p className="text-sm text-black mb-1">Subtotal</p>
+                      <p className="text-lg font-bold text-black">
                         {formatPrice(item.listing.price * item.quantity)}
                       </p>
                     </div>
@@ -316,21 +316,21 @@ export default function CartPage() {
           {/* Summary */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-lg shadow-md p-6 sticky top-24">
-              <h2 className="text-xl font-bold text-gray-900 mb-6">Order Summary</h2>
+              <h2 className="text-xl font-bold text-black mb-6">Order Summary</h2>
 
               <div className="space-y-3 mb-6">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Subtotal ({cartItems.length} items)</span>
+                  <span className="text-black">Subtotal ({cartItems.length} items)</span>
                   <span className="font-semibold">{formatPrice(total)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Shipping</span>
+                  <span className="text-black">Shipping</span>
                   <span className="font-semibold">Calculated at checkout</span>
                 </div>
                 <div className="border-t pt-3 mt-3">
                   <div className="flex justify-between">
-                    <span className="text-lg font-bold text-gray-900">Total</span>
-                    <span className="text-lg font-bold text-gray-900">{formatPrice(total)}</span>
+                    <span className="text-lg font-bold text-black">Total</span>
+                    <span className="text-lg font-bold text-black">{formatPrice(total)}</span>
                   </div>
                 </div>
               </div>
@@ -338,7 +338,7 @@ export default function CartPage() {
               {/* Disabled checkout for MVP */}
               <button
                 onClick={handleCheckout}
-                className="w-full bg-gray-300 text-gray-700 px-6 py-3 rounded-lg font-semibold mb-4 cursor-not-allowed"
+                className="w-full bg-gray-300 text-black px-6 py-3 rounded-lg font-semibold mb-4 cursor-not-allowed"
                 title="Payments are disabled in the MVP"
                 disabled
               >
@@ -347,7 +347,7 @@ export default function CartPage() {
 
               <Link
                 href="/marketplace"
-                className="block text-center text-blue-600 hover:text-blue-700 font-medium"
+                className="block text-center text-black hover:underline font-medium"
               >
                 Continue Shopping
               </Link>

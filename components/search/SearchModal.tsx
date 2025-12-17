@@ -116,7 +116,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search listings..."
-                className="flex-1 text-lg outline-none text-gray-900 placeholder-gray-400"
+                className="flex-1 text-lg outline-none text-black placeholder-gray-400"
               />
               <button
                 onClick={onClose}

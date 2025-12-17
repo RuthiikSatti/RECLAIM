@@ -47,18 +47,14 @@ export default function Hero({
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center justify-center h-full px-4 sm:px-6 lg:px-8">
         {/* Subtitle */}
-        <p className="text-sm sm:text-base font-light tracking-wide text-gray-700 mb-4 sm:mb-6">
+        <p className="text-sm sm:text-base font-light tracking-wide text-black mb-4 sm:mb-6">
           {subtitle}
         </p>
 
-        {/* Headline */}
-        <h1 className="font-display text-center font-black tracking-tight text-gray-900 mb-8 sm:mb-12 leading-[0.9] max-w-5xl">
-          <span className="block text-[clamp(3rem,8vw,7rem)]">
-            YOUR UNIVERSITY
-          </span>
-          <span className="block text-[clamp(3rem,8vw,7rem)]">
-            MARKETPLACE
-          </span>
+        {/* Headline - Two Lines, Black Text */}
+        <h1 className="heading-primary text-black mb-8 sm:mb-12 max-w-5xl">
+          <span className="block">YOUR UNIVERSITY</span>
+          <span className="block">MARKETPLACE</span>
         </h1>
 
         {/* CTA Button - Pill shaped, dark background */}

@@ -107,13 +107,13 @@ export default function UsernameInput({
   const getBorderColor = () => {
     switch (checkState) {
       case 'available':
-        return 'border-green-500 focus:ring-green-500 focus:border-green-500'
+        return 'border-black focus:ring-black focus:border-black'
       case 'taken':
       case 'error':
       case 'invalid':
-        return 'border-red-500 focus:ring-red-500 focus:border-red-500'
+        return 'border-black focus:ring-black focus:border-black'
       default:
-        return 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+        return 'border-gray-300 focus:ring-black focus:border-black'
     }
   }
 
@@ -148,7 +148,7 @@ export default function UsernameInput({
     if (checkState === 'available') {
       return (
         <svg
-          className="h-5 w-5 text-green-500"
+          className="h-5 w-5 text-black"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -167,7 +167,7 @@ export default function UsernameInput({
     if (checkState === 'taken' || checkState === 'error' || checkState === 'invalid') {
       return (
         <svg
-          className="h-5 w-5 text-red-500"
+          className="h-5 w-5 text-black"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -210,17 +210,17 @@ export default function UsernameInput({
 
       {/* Status messages */}
       {checkState === 'checking' && (
-        <p id="username-status" className="mt-1 text-sm text-gray-600">
+        <p id="username-status" className="mt-1 text-sm text-black">
           Checking availability...
         </p>
       )}
       {checkState === 'available' && (
-        <p id="username-status" className="mt-1 text-sm text-green-600">
+        <p id="username-status" className="mt-1 text-sm text-black">
           ✓ Username is available!
         </p>
       )}
       {(checkState === 'taken' || checkState === 'error' || checkState === 'invalid') && errorMessage && (
-        <p id="username-status" className="mt-1 text-sm text-red-600">
+        <p id="username-status" className="mt-1 text-sm text-black">
           {errorMessage}
         </p>
       )}

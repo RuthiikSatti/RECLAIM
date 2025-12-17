@@ -40,7 +40,7 @@ export default async function ListingDetailPage({
   const isOwner = currentUser?.id === listing.user_id
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen pampas-bg">
       <ViewListingTracker listingId={listing.id} title={listing.title} category={listing.category} />
       <div className="max-w-7xl mx-auto md:py-8">
         <div className="grid md:grid-cols-2 md:gap-8 md:px-4 lg:px-8">

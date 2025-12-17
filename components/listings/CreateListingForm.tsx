@@ -60,8 +60,8 @@ export default function CreateListingForm() {
   return (
     <form action={handleSubmit} className="bg-white rounded-lg shadow-md p-6 space-y-6">
       {error && (
-        <div className="bg-red-50 p-4 rounded-lg">
-          <p className="text-red-800">{error}</p>
+        <div className="bg-white border-2 border-black p-4 rounded-lg">
+          <p className="text-black">{error}</p>
         </div>
       )}
 
@@ -74,7 +74,7 @@ export default function CreateListingForm() {
           name="title"
           id="title"
           required
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
           placeholder="e.g., iPhone 13 Pro"
         />
       </div>
@@ -88,7 +88,7 @@ export default function CreateListingForm() {
           id="description"
           required
           rows={4}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
           placeholder="Describe your item..."
         />
       </div>
@@ -101,7 +101,7 @@ export default function CreateListingForm() {
           name="category"
           id="category"
           required
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
         >
           {categories.map((cat) => (
             <option key={cat} value={cat}>
@@ -122,7 +122,7 @@ export default function CreateListingForm() {
           required
           min="0"
           step="0.01"
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
           placeholder="0.00"
         />
       </div>
@@ -136,7 +136,7 @@ export default function CreateListingForm() {
           accept="image/*"
           onChange={handleImageUpload}
           disabled={uploading || imageUrls.length >= 5}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
         />
         {uploading && <p className="text-sm text-gray-600 mt-2">Uploading...</p>}
         {imageUrls.length > 0 && (
@@ -153,7 +153,7 @@ export default function CreateListingForm() {
       <button
         type="submit"
         disabled={loading || imageUrls.length === 0}
-        className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full bg-black text-white py-3 rounded-lg hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {loading ? 'Creating...' : 'Create Listing'}
       </button>

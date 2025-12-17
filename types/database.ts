@@ -4,7 +4,7 @@ export interface User {
   display_name: string;
   university_domain: string;
   created_at: string;
-  seller_rating?: number;
+  // seller_rating?: number; // Feature disabled
   total_sales?: number;
   verified_seller?: boolean;
   stripe_account_id?: string;

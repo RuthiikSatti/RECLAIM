@@ -114,7 +114,7 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center px-4 py-12" style={{ backgroundColor: '#f5f5f0' }}>
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="text-center text-3xl font-bold text-black">
@@ -122,23 +122,23 @@ export default function SignupPage() {
           </h2>
           <p className="mt-2 text-center text-sm text-black">
             Already have an account?{' '}
-            <Link href="/login" className="font-medium text-blue-600 hover:text-blue-500">
+            <Link href="/login" className="font-medium text-black hover:underline">
               Sign in
             </Link>
           </p>
         </div>
 
         {success ? (
-          <div className="rounded-md bg-green-50 p-4">
-            <p className="text-sm text-green-800">
+          <div className="rounded-md bg-white border-2 border-black p-4">
+            <p className="text-sm text-black">
               Account created! Please check your email to verify. Redirecting to login...
             </p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="mt-8 space-y-6">
             {error && (
-              <div className="rounded-md bg-red-50 p-4">
-                <p className="text-sm text-red-800">{error}</p>
+              <div className="rounded-md bg-white border-2 border-black p-4">
+                <p className="text-sm text-black">{error}</p>
               </div>
             )}
 
@@ -159,7 +159,7 @@ export default function SignupPage() {
                   name="email"
                   type="email"
                   required
-                  className="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-400 text-black focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  className="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-400 text-black focus:outline-none focus:ring-black focus:border-black"
                   placeholder="you@university.edu"
                 />
               </div>
@@ -176,7 +176,7 @@ export default function SignupPage() {
                     required
                     value={password}
                     onChange={handlePasswordChange}
-                    className="appearance-none rounded-lg relative block w-full px-3 py-2 pr-10 border border-gray-300 placeholder-gray-400 text-black focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    className="appearance-none rounded-lg relative block w-full px-3 py-2 pr-10 border border-gray-300 placeholder-gray-400 text-black focus:outline-none focus:ring-black focus:border-black"
                     placeholder="Enter your password"
                   />
                   <button
@@ -224,8 +224,8 @@ export default function SignupPage() {
                     onChange={handleConfirmPasswordChange}
                     className={`appearance-none rounded-lg relative block w-full px-3 py-2 pr-10 border ${
                       confirmPassword && !passwordsMatch
-                        ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
-                        : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                        ? 'border-black focus:ring-black focus:border-black'
+                        : 'border-gray-300 focus:ring-black focus:border-black'
                     } placeholder-gray-400 text-black focus:outline-none`}
                     placeholder="Re-enter your password"
                   />
@@ -247,7 +247,7 @@ export default function SignupPage() {
                   </button>
                 </div>
                 {confirmPassword && !passwordsMatch && (
-                  <p className="mt-1 text-sm text-red-600">Passwords do not match</p>
+                  <p className="mt-1 text-sm text-black">Passwords do not match</p>
                 )}
               </div>
             </div>
@@ -255,7 +255,7 @@ export default function SignupPage() {
             <button
               type="submit"
               disabled={loading || !allRequirementsMet || !passwordsMatch || !confirmPassword || !usernameAvailable}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Creating account...' : 'Sign up'}
             </button>
@@ -271,7 +271,7 @@ function PasswordRequirement({ met, text }: { met: boolean; text: string }) {
   return (
     <div className="flex items-center gap-2">
       <div className={`flex-shrink-0 w-4 h-4 rounded-full flex items-center justify-center transition-all duration-200 ${
-        met ? 'bg-green-500' : 'bg-gray-300'
+        met ? 'bg-black' : 'bg-gray-300'
       }`}>
         {met && (
           <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -279,7 +279,7 @@ function PasswordRequirement({ met, text }: { met: boolean; text: string }) {
           </svg>
         )}
       </div>
-      <span className={`text-xs transition-colors duration-200 ${met ? 'text-green-700 font-medium' : 'text-black'}`}>
+      <span className={`text-xs transition-colors duration-200 ${met ? 'text-black font-medium' : 'text-black'}`}>
         {text}
       </span>
     </div>

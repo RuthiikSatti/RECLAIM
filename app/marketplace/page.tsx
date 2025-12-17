@@ -195,16 +195,17 @@ export default async function MarketplacePage({ searchParams }: MarketplacePageP
     : 'Shop all'
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen" style={{ backgroundColor: '#f5f5f0' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        {/* Page Title - Positioned at top */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl sm:text-4xl font-bold text-black mb-2">{pageTitle}</h1>
+          <p className="text-sm text-black">Shop everything you need in one safe place</p>
+        </div>
 
         {/* Category Bar */}
         <CategoryBar currentCategory={params.category} />
-
-        {/* Page Title */}
-        <h1 className="text-4xl font-bold text-center text-black my-8">
-          {pageTitle}
-        </h1>
 
         {/* Filters Row */}
         <Suspense fallback={<div className="h-20 bg-white rounded-lg animate-pulse" />}>
@@ -217,7 +218,7 @@ export default async function MarketplacePage({ searchParams }: MarketplacePageP
         </Suspense>
 
         {/* Listings Count */}
-        <div className="mt-8 mb-4 text-sm text-gray-600">
+        <div className="mt-8 mb-4 text-sm text-black">
           {listings.length === 0 ? (
             'No listings found'
           ) : (
@@ -228,13 +229,13 @@ export default async function MarketplacePage({ searchParams }: MarketplacePageP
         {/* Product Grid */}
         {listings.length === 0 ? (
           <div className="text-center py-16">
-            <svg className="mx-auto h-16 w-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="mx-auto h-16 w-16 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
             </svg>
-            <p className="text-gray-600 text-lg mt-4">
+            <p className="text-black text-lg mt-4">
               No listings match your filters
             </p>
-            <p className="text-gray-500 text-sm mt-2">
+            <p className="text-black text-sm mt-2">
               Try adjusting your search criteria
             </p>
           </div>

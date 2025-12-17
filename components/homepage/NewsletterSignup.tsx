@@ -38,10 +38,10 @@ export default function NewsletterSignup() {
   }
 
   return (
-    <section className="w-full py-16 sm:py-20 bg-gray-50">
+    <section className="w-full py-16 sm:py-20" style={{ backgroundColor: '#f5f5f0' }}>
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Heading */}
-        <h2 className="text-[clamp(1.75rem,4vw,2.5rem)] font-black tracking-[0.15em] text-center text-gray-900 mb-8 sm:mb-10" style={{ fontFamily: '"Marianina FY", system-ui, -apple-system, sans-serif' }}>
+        <h2 className="heading-primary text-black mb-8 sm:mb-10">
           SIGN UP TO RECLAIM MAIL
         </h2>
 
@@ -80,7 +80,7 @@ export default function NewsletterSignup() {
         </form>
 
         {/* Privacy Note */}
-        <p className="mt-6 text-xs text-center text-gray-500">
+        <p className="mt-6 text-xs text-center text-black">
           We'll send you updates about new features and campus marketplace tips. Unsubscribe anytime.
         </p>
       </div>

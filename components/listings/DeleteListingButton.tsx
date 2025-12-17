@@ -16,7 +16,7 @@ export default function DeleteListingButton({ listingId }: { listingId: string }
     return (
       <button
         onClick={() => setShowConfirm(true)}
-        className="bg-red-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-red-700"
+        className="bg-black text-white px-3 py-1 rounded-lg text-sm hover:bg-gray-800"
       >
         Delete
       </button>
@@ -28,7 +28,7 @@ export default function DeleteListingButton({ listingId }: { listingId: string }
       <button
         onClick={handleDelete}
         disabled={loading}
-        className="bg-red-600 text-white px-2 py-1 rounded text-xs hover:bg-red-700 disabled:opacity-50"
+        className="bg-black text-white px-2 py-1 rounded text-xs hover:bg-gray-800 disabled:opacity-50"
       >
         {loading ? 'Deleting...' : 'Confirm'}
       </button>

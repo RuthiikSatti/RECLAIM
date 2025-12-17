@@ -78,7 +78,7 @@ export default function CategoryGrid() {
     <section className="w-full py-16 sm:py-24 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Heading */}
-        <h2 className="text-[clamp(2rem,5vw,3.5rem)] font-black tracking-[0.2em] text-center text-gray-900 mb-8 sm:mb-12" style={{ fontFamily: '"Marianina FY", system-ui, -apple-system, sans-serif' }}>
+        <h2 className="heading-primary text-black mb-8 sm:mb-12">
           CATEGORIES
         </h2>
 
@@ -86,7 +86,7 @@ export default function CategoryGrid() {
         <div className="flex justify-center mb-12 sm:mb-16">
           <Link
             href="/marketplace"
-            className="inline-block px-12 py-3 border-2 border-gray-900 text-gray-900 font-medium text-sm tracking-[0.15em] uppercase rounded-full hover:bg-gray-900 hover:text-white transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-gray-900/30"
+            className="inline-block px-12 py-3 border-2 border-black text-black font-medium text-sm tracking-[0.15em] uppercase rounded-full hover:bg-black hover:text-white transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-black/30"
           >
             ALL
           </Link>
@@ -101,15 +101,15 @@ export default function CategoryGrid() {
               <Link
                 key={category.id}
                 href={category.href}
-                className="flex flex-col items-center group focus:outline-none focus:ring-4 focus:ring-gray-900/30 rounded-lg p-4 -m-4"
+                className="flex flex-col items-center group focus:outline-none focus:ring-4 focus:ring-black/30 rounded-lg p-4 -m-4"
               >
                 {/* Icon */}
-                <div className="w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center mb-4 text-gray-900 group-hover:scale-110 transition-transform duration-200">
+                <div className="w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center mb-4 text-black group-hover:scale-110 transition-transform duration-200">
                   <Icon className="w-full h-full" />
                 </div>
 
                 {/* Label */}
-                <span className="text-xs sm:text-sm font-medium text-gray-900 text-center group-hover:underline">
+                <span className="text-xs sm:text-sm font-medium text-black text-center group-hover:underline">
                   {category.name}
                 </span>
               </Link>
