@@ -91,13 +91,20 @@ function ProductCard({ listing }: { listing: Listing }) {
 
           {/* Seller Info (if available) */}
           {listing.user && (
-            <div className="flex items-center gap-2 pt-2 border-t border-gray-100">
-              <div className="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center text-xs font-medium text-gray-700">
-                {listing.user.display_name?.charAt(0).toUpperCase()}
+            <div className="pt-2 border-t border-gray-100">
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center text-xs font-medium text-gray-700">
+                  {listing.user.display_name?.charAt(0).toUpperCase()}
+                </div>
+                <span className="text-xs text-gray-600 truncate">
+                  @{listing.user.username || listing.user.display_name}
+                </span>
               </div>
-              <span className="text-xs text-gray-600 truncate">
-                {listing.user.display_name}
-              </span>
+              {listing.user.college_name && (
+                <p className="text-xs text-gray-500 mt-1 ml-8 truncate">
+                  {listing.user.college_name}
+                </p>
+              )}
             </div>
           )}
         </div>
