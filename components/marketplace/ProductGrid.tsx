@@ -54,7 +54,7 @@ function ProductCard({ listing }: { listing: Listing }) {
 
           {/* Condition Badge (if available) */}
           {listing.condition && (
-            <div className="absolute top-2 left-2 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-md text-xs font-medium text-gray-700">
+            <div className="absolute top-2 left-2 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-medium text-gray-700 shadow-sm">
               {listing.condition}
             </div>
           )}

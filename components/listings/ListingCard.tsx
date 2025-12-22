@@ -22,6 +22,11 @@ export default function ListingCard({ listing }: { listing: Listing }) {
               <span className="text-gray-400">No image</span>
             </div>
           )}
+          {listing.condition && (
+            <div className="absolute top-2 left-2 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-medium text-gray-700 shadow-sm">
+              {listing.condition}
+            </div>
+          )}
         </div>
         <div className="p-4">
           <h3 className="font-semibold text-lg text-gray-900 mb-1 truncate">

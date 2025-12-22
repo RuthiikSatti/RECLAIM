@@ -45,7 +45,7 @@ export default async function ListingDetailPage({
       <div className="max-w-7xl mx-auto md:py-8">
         <div className="grid md:grid-cols-2 md:gap-8 md:px-4 lg:px-8">
           <div className="mb-6 md:mb-0">
-            <ListingImages listingId={listing.id} altText={listing.title} />
+            <ListingImages listingId={listing.id} altText={listing.title} condition={listing.condition} />
           </div>
 
           <div className="space-y-6 px-4 md:px-0">

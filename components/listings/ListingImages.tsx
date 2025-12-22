@@ -6,9 +6,10 @@ import Image from 'next/image'
 interface ListingImagesProps {
   listingId: string
   altText?: string
+  condition?: string
 }
 
-export default function ListingImages({ listingId, altText = 'Listing image' }: ListingImagesProps) {
+export default function ListingImages({ listingId, altText = 'Listing image', condition }: ListingImagesProps) {
   const [images, setImages] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
@@ -101,6 +102,11 @@ export default function ListingImages({ listingId, altText = 'Listing image' }: 
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
           priority={selectedImage === 0}
         />
+        {condition && (
+          <div className="absolute top-2 left-2 md:top-4 md:left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-medium text-gray-700 shadow-sm">
+            {condition}
+          </div>
+        )}
       </div>
 
       {/* Thumbnails - responsive grid */}
