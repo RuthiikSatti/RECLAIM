@@ -22,12 +22,6 @@ const supabaseAdmin = createAdminClient(
   SERVICE_ROLE_KEY!
 )
 
-function extractDomain(email?: string | null) {
-  if (!email) return null
-  const parts = email.split('@')
-  return parts.length === 2 ? parts[1].toLowerCase() : null
-}
-
 /**
  * Server action to handle create listing form submission.
  * Use in page form: <form action={handleCreateListing}>...</form>
@@ -73,25 +67,20 @@ export async function handleCreateListing(formData: FormData): Promise<void> {
       imageUrls = []
     }
 
-    const university_domain = extractDomain(user.email) ?? 'unknown'
-
-    // Upsert user profile
-    console.log('[CreateListing] Upserting user profile...')
-    const { error: upsertErr } = await supabaseAdmin
+    // Verify user profile exists (should be created during signup)
+    console.log('[CreateListing] Verifying user profile exists...')
+    const { data: userProfile, error: profileCheckErr } = await supabaseAdmin
       .from('users')
-      .upsert({
-        id: user.id,
-        email: user.email ?? null,
-        display_name: user.user_metadata?.full_name ?? user.user_metadata?.name ?? null,
-        university_domain,
-      })
+      .select('id, username')
+      .eq('id', user.id)
+      .single()
 
-    if (upsertErr) {
-      console.error('[CreateListing] Profile upsert error:', upsertErr)
-      throw new Error(`Profile upsert failed: ${upsertErr.message}`)
+    if (profileCheckErr || !userProfile) {
+      console.error('[CreateListing] User profile not found:', profileCheckErr)
+      throw new Error('User profile not found. Please sign out and sign back in.')
     }
 
-    console.log('[CreateListing] User profile upserted successfully')
+    console.log('[CreateListing] User profile verified:', userProfile.username)
 
     // Insert listing (price stored in cents in `price` column)
     console.log('[CreateListing] Inserting listing...')
