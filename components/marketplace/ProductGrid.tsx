@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import type { Listing } from '@/types/database'
+import { formatPrice } from '@/lib/utils/helpers'
 
 /**
  * ProductGrid Component
@@ -79,7 +80,7 @@ function ProductCard({ listing }: { listing: Listing }) {
 
           {/* Price */}
           <p className="text-xl font-bold text-blue-600">
-            ${listing.price.toFixed(2)}
+            {formatPrice(listing.price)}
           </p>
 
           {/* Description */}
