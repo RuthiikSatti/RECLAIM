@@ -137,14 +137,10 @@ export default function HeaderInlineSearch({ isOpen, onClose }: HeaderInlineSear
   if (!isOpen) return null
 
   return (
-    <div
-      ref={containerRef}
-      className="absolute top-full right-0 mt-2 w-96 bg-white border border-gray-200 rounded-lg shadow-lg z-50"
-      onKeyDown={handleKeyDown}
-    >
+    <div ref={containerRef} className="relative w-full" onKeyDown={handleKeyDown}>
       {/* Search Input */}
-      <div className="flex items-center px-4 py-3 border-b border-gray-200">
-        <svg className="w-4 h-4 text-gray-400 mr-2" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+      <div className="flex items-center px-3 py-2 bg-white border border-gray-300 rounded-lg">
+        <svg className="w-4 h-4 text-gray-400 mr-2 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
           <circle cx="11" cy="11" r="8"/>
           <path d="m21 21-4.35-4.35"/>
         </svg>
@@ -153,16 +149,17 @@ export default function HeaderInlineSearch({ isOpen, onClose }: HeaderInlineSear
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search"
-          className="flex-1 outline-none text-sm text-black placeholder-gray-400 border-b border-gray-300 pb-1"
+          placeholder="Search listings..."
+          className="flex-1 outline-none text-sm text-black placeholder-gray-400"
         />
         {loading && (
-          <div className="animate-spin h-4 w-4 border-2 border-gray-300 border-t-black rounded-full ml-2" />
+          <div className="animate-spin h-4 w-4 border-2 border-gray-300 border-t-black rounded-full ml-2 flex-shrink-0" />
         )}
       </div>
 
-      {/* Results */}
-      <div className="max-h-96 overflow-y-auto">
+      {/* Results Dropdown */}
+      {(query.trim() || results.length > 0) && (
+        <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-96 overflow-y-auto">
         {query.trim() && !loading && results.length === 0 && (
           <div className="px-4 py-8 text-center text-sm text-gray-500">
             No results found. Press Enter to search all listings.
@@ -228,7 +225,8 @@ export default function HeaderInlineSearch({ isOpen, onClose }: HeaderInlineSear
             </button>
           </div>
         )}
-      </div>
+        </div>
+      )}
     </div>
   )
 }
