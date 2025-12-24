@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import "./globals.css";
 import "./fonts.css";
+import "./globals.css";
 import MixpanelProvider from "@/components/analytics/MixpanelProvider";
 import HeaderWrapper from "@/components/HeaderWrapper";
 import SimpleFooter from "@/components/homepage/SimpleFooter";
