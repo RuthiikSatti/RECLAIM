@@ -1,8 +1,11 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import type { Listing } from '@/types/database'
 import { formatPrice } from '@/lib/utils/helpers'
+import useCart from '@/hooks/useCart'
+import { createClient } from '@/lib/supabase/client'
 
 /**
  * ProductGrid Component
@@ -32,6 +35,23 @@ export default function ProductGrid({ listings }: ProductGridProps) {
 function ProductCard({ listing }: { listing: Listing }) {
   // Use first image or placeholder
   const imageUrl = listing.image_urls?.[0] || '/placeholder-image.jpg'
+  const { isInCart, addToCart, removeFromCart, loadingIds } = useCart()
+  const inCart = isInCart(listing.id)
+  const loading = loadingIds[listing.id] === true
+
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null)
+  const [supabase] = useState(() => createClient())
+
+  useEffect(() => {
+    async function getCurrentUser() {
+      const { data: { user } } = await supabase.auth.getUser()
+      setCurrentUserId(user?.id || null)
+    }
+    getCurrentUser()
+  }, [supabase])
+
+  // Check if this is the user's own listing
+  const isOwnListing = currentUserId && listing.user_id === currentUserId
 
   // Truncate description to ~100 chars
   const shortDescription = listing.description
@@ -41,8 +61,9 @@ function ProductCard({ listing }: { listing: Listing }) {
     : ''
 
   return (
-    <Link href={`/item/${listing.id}`} className="group">
-      <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
+    <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden flex flex-col">
+      <Link href={`/item/${listing.id}`} className="group flex-1">
+        <div>
         {/* Square Image Container */}
         <div className="relative w-full pb-[100%] bg-gray-200 overflow-hidden">
           {/* Using padding-top: 100% technique to maintain square aspect ratio */}
@@ -109,8 +130,27 @@ function ProductCard({ listing }: { listing: Listing }) {
             </div>
           )}
         </div>
-      </div>
-    </Link>
+        </div>
+      </Link>
+      {!isOwnListing && (
+        <div className="p-4 pt-0">
+          <button
+            onClick={(e) => {
+              e.preventDefault()
+              if (inCart) removeFromCart(listing.id)
+              else addToCart(listing.id)
+            }}
+            disabled={loading}
+            aria-pressed={inCart}
+            className={`w-full px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+              inCart ? 'bg-white border border-black text-black hover:bg-gray-50' : 'bg-black text-white hover:bg-gray-800'
+            } ${loading ? 'opacity-60 cursor-not-allowed' : ''}`}
+          >
+            {loading ? 'Working...' : (inCart ? 'Remove from cart' : 'Add to cart')}
+          </button>
+        </div>
+      )}
+    </div>
   )
 }
 

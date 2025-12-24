@@ -1,9 +1,10 @@
 import { createClient } from '@/lib/supabase/server'
 import { getUser } from '@/lib/auth/actions'
 import ReportButton from '@/components/listings/ReportButton'
-import BuyButton from '@/components/listings/BuyButton'
+import ContactSellerButton from '@/components/listings/ContactSellerButton'
 import ViewListingTracker from '@/components/analytics/ViewListingTracker'
 import ListingImages from '@/components/listings/ListingImages'
+import CartToggleButton from '@/components/listings/CartToggleButton'
 import { formatPrice, getTimeAgo } from '@/lib/utils/helpers'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -87,10 +88,15 @@ export default async function ListingDetailPage({
                 </div>
               )}
 
-              {/* Buy Button for non-owners */}
+              {/* Contact, Cart and Report for non-owners */}
               {currentUser && !isOwner && (
-                <div className="border-t pt-4 mt-4">
-                  <BuyButton listing={listing} />
+                <div className="border-t pt-4 mt-4 space-y-3">
+                  <ContactSellerButton listing={listing} />
+                  <CartToggleButton
+                    listingId={listing.id}
+                    listingOwnerId={listing.user_id}
+                    currentUserId={currentUser.id}
+                  />
                   <div className="mt-4">
                     <ReportButton listingId={listing.id} />
                   </div>
@@ -109,10 +115,10 @@ export default async function ListingDetailPage({
                 </div>
               )}
 
-              {/* Guest users - show buy button with login redirect */}
+              {/* Guest users - show cart toggle */}
               {!currentUser && (
-                <div className="border-t pt-4 mt-4">
-                  <BuyButton listing={listing} />
+                <div className="border-t pt-4 mt-4 space-y-3">
+                  <CartToggleButton listingId={listing.id} />
                 </div>
               )}
             </div>

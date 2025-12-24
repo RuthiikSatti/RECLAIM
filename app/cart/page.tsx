@@ -1,187 +1,71 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
-import { getCartItems, removeFromCart, updateCartItemQuantity, type CartItem } from '@/lib/cart/actions'
 import { formatPrice } from '@/lib/utils/helpers'
-
-// Helper to normalize cart items from different data shapes
-function normalizeCartItem(raw: any): any {
-  // If it already has the canonical structure (listing object exists)
-  if (raw.listing) {
-    return {
-      ...raw,
-      quantity: raw.quantity ?? raw.qty ?? 1
-    }
-  }
-
-  // Otherwise, convert from old flat structure
-  return {
-    id: raw.id,
-    listing_id: raw.listing_id,
-    quantity: raw.quantity ?? raw.qty ?? 1,
-    listing: {
-      id: raw.listing_id,
-      title: raw.title ?? 'Untitled',
-      price: Number(raw.price || 0),
-      image_urls: raw.image_urls ?? (raw.image_url ? [raw.image_url] : []),
-      user_id: raw.user_id || '' // fallback for localStorage items
-    },
-    seller_name: raw.seller_name ?? null,
-    seller_campus: raw.seller_campus ?? null
-  }
-}
+import useCart from '@/hooks/useCart'
+import type { Listing } from '@/types/database'
 
 export default function CartPage() {
   const [supabase] = useState(() => createClient())
-  const [cartItems, setCartItems] = useState<CartItem[]>([])
+  const [listings, setListings] = useState<Listing[]>([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [currentUserId, setCurrentUserId] = useState<string | null>(null)
+  const { cart, removeFromCart, loadingIds } = useCart()
   const router = useRouter()
 
-  // Unified loader: attempt server (if logged in) then always fallback to localStorage
-  const loadCart = useCallback(async (opts: { forceServer?: boolean } = {}) => {
-    setLoading(true)
-    setError(null)
-
-    try {
-      // try to get current user from supabase; do not redirect if no user
-      const { data: { user } } = await supabase.auth.getUser()
-      if (user) {
-        setCurrentUserId(user.id)
-        // If we have a user, try server cart first (unless explicitly skipped)
-        if (!opts.forceServer) {
-          const result = await getCartItems()
-          if (!result.error && Array.isArray(result.items)) {
-            setCartItems(result.items.map(normalizeCartItem))
-            setLoading(false)
-            return
-          }
-          // if server returned error, we'll fall back to localStorage below
-          if (result.error) {
-            console.warn('Server cart error:', result.error)
-          }
-        }
-      } else {
-        // No user — we will not redirect. Guests use localStorage fallback.
-        setCurrentUserId(null)
-      }
-    } catch (err) {
-      console.warn('Error checking user or server cart:', err)
-      // continue to fallback to localStorage
-    }
-
-    // LocalStorage fallback (works for guests and as resilient fallback)
-    try {
-      const raw = localStorage.getItem('reclaim_cart')
-      const parsed = raw ? JSON.parse(raw) : []
-      // normalize to array and normalize each item
-      if (Array.isArray(parsed)) {
-        setCartItems(parsed.map(normalizeCartItem))
-      } else {
-        setCartItems([])
-      }
-    } catch (err) {
-      console.error('Failed to read reclaim_cart from localStorage', err)
-      setCartItems([])
-    } finally {
-      setLoading(false)
-    }
-  }, [supabase])
-
-  // initial load
+  // Fetch listing details for items in cart
   useEffect(() => {
-    loadCart()
-  }, [loadCart])
+    async function fetchListings() {
+      console.debug('Cart page: fetching listings for cart', cart)
 
-  // Listen for cross-tab storage updates so cart refreshes when AddToCart writes
-  useEffect(() => {
-    function onStorage(e: StorageEvent) {
-      if (e.key === 'reclaim_cart') {
-        try {
-          const parsed = e.newValue ? JSON.parse(e.newValue) : []
-          setCartItems(Array.isArray(parsed) ? parsed.map(normalizeCartItem) : [])
-        } catch (err) {
-          console.error('Failed to parse reclaim_cart from storage event', err)
-          setCartItems([])
-        }
+      if (cart.length === 0) {
+        setListings([])
+        setLoading(false)
+        return
+      }
+
+      setLoading(true)
+      try {
+        const { data, error } = await supabase
+          .from('listings')
+          .select('*')
+          .in('id', cart)
+
+        if (error) throw error
+        console.debug('Cart page: fetched listings', data)
+        setListings(data || [])
+      } catch (err) {
+        console.error('Failed to fetch cart listings:', err)
+        setListings([])
+      } finally {
+        setLoading(false)
       }
     }
-    window.addEventListener('storage', onStorage)
-    return () => window.removeEventListener('storage', onStorage)
+
+    fetchListings()
+  }, [cart, supabase])
+
+  // Re-fetch when cart is updated from other components
+  useEffect(() => {
+    const handleCartUpdate = () => {
+      console.debug('Cart page: received cart update event')
+      // The cart state will update via useCart hook, triggering the fetchListings effect
+    }
+
+    window.addEventListener('cart-updated', handleCartUpdate)
+    return () => window.removeEventListener('cart-updated', handleCartUpdate)
   }, [])
 
-  // Also listen for focus so when user returns to tab we reload cart (helps single-tab flow)
-  useEffect(() => {
-    function onFocus() {
-      loadCart()
-    }
-    window.addEventListener('focus', onFocus)
-    return () => window.removeEventListener('focus', onFocus)
-  }, [loadCart])
-
-  // Calculate total
+  // Calculate total (no quantities, just sum all prices)
   const calculateTotal = () => {
-    return cartItems.reduce((total, item) => {
-      if (item.listing) {
-        return total + (item.listing.price * item.quantity)
-      }
-      return total
-    }, 0)
-  }
-
-  // Handle remove
-  const handleRemove = async (cartItemId: string) => {
-    // Try server remove (if logged in) but always update UI + localStorage for resilience
-    try {
-      const result = await removeFromCart(cartItemId)
-      if (result?.error) {
-        console.warn('Server remove error:', result.error)
-      }
-    } catch (err) {
-      console.warn('removeFromCart network error', err)
-    }
-
-    const newItems = cartItems.filter(item => item.id !== cartItemId)
-    setCartItems(newItems)
-    try {
-      localStorage.setItem('reclaim_cart', JSON.stringify(newItems))
-    } catch (err) {
-      console.error('Failed to persist reclaim_cart after remove', err)
-    }
-  }
-
-  // Handle quantity update
-  const handleQuantityChange = async (cartItemId: string, newQuantity: number) => {
-    if (newQuantity < 1) return
-
-    try {
-      const result = await updateCartItemQuantity(cartItemId, newQuantity)
-      if (result?.error) {
-        console.warn('Server update quantity error:', result.error)
-      }
-    } catch (err) {
-      console.warn('updateCartItemQuantity network error', err)
-    }
-
-    const updated = cartItems.map(item =>
-      item.id === cartItemId ? { ...item, quantity: newQuantity } : item
-    )
-    setCartItems(updated)
-    try {
-      localStorage.setItem('reclaim_cart', JSON.stringify(updated))
-    } catch (err) {
-      console.error('Failed to persist reclaim_cart after quantity change', err)
-    }
+    return listings.reduce((total, listing) => total + listing.price, 0)
   }
 
   // Checkout disabled for MVP
   const handleCheckout = () => {
-    // For now keep them on the "payments coming soon" flow; do not attempt a real checkout.
     router.push('/payments-coming-soon')
   }
 
@@ -196,8 +80,8 @@ export default function CartPage() {
     )
   }
 
-  // show empty state (empty array or no listings)
-  if (!cartItems || cartItems.length === 0) {
+  // Empty cart state
+  if (listings.length === 0) {
     return (
       <div className="min-h-screen bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -233,19 +117,19 @@ export default function CartPage() {
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Cart Items */}
           <div className="lg:col-span-2 space-y-4">
-            {cartItems.map((item) => {
-              if (!item.listing) return null
+            {listings.map((listing) => {
+              const isRemoving = loadingIds[listing.id] === true
 
               return (
-                <div key={item.id} className="bg-white rounded-lg shadow-md p-6">
+                <div key={listing.id} className="bg-white rounded-lg shadow-md p-6">
                   <div className="flex gap-4">
                     {/* Image */}
-                    <Link href={`/item/${item.listing.id}`} className="flex-shrink-0">
-                      {item.listing.image_urls?.[0] ? (
+                    <Link href={`/item/${listing.id}`} className="flex-shrink-0">
+                      {listing.image_urls?.[0] ? (
                         <div className="relative w-24 h-24 rounded-lg overflow-hidden bg-gray-200">
                           <Image
-                            src={item.listing.image_urls[0]}
-                            alt={item.listing.title}
+                            src={listing.image_urls[0]}
+                            alt={listing.title}
                             fill
                             className="object-cover"
                           />
@@ -261,50 +145,35 @@ export default function CartPage() {
 
                     {/* Details */}
                     <div className="flex-1 min-w-0">
-                      <Link href={`/item/${item.listing.id}`}>
+                      <Link href={`/item/${listing.id}`}>
                         <h3 className="text-lg font-semibold text-black hover:underline truncate">
-                          {item.listing.title}
+                          {listing.title}
                         </h3>
                       </Link>
                       <p className="text-lg font-bold text-black mt-1">
-                        {formatPrice(item.listing.price)}
+                        {formatPrice(listing.price)}
                       </p>
 
-                      {/* Quantity Controls */}
-                      <div className="flex items-center gap-4 mt-4">
-                        <div className="flex items-center border border-gray-300 rounded-lg">
-                          <button
-                            onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
-                            disabled={item.quantity <= 1}
-                            className="px-3 py-1 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
-                          >
-                            -
-                          </button>
-                          <span className="px-4 py-1 border-x border-gray-300 font-medium">
-                            {item.quantity}
-                          </span>
-                          <button
-                            onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
-                            className="px-3 py-1 hover:bg-gray-100"
-                          >
-                            +
-                          </button>
-                        </div>
-
+                      {/* Remove Button */}
+                      <div className="mt-4">
                         <button
-                          onClick={() => handleRemove(item.id)}
-                          className="text-red-600 hover:text-red-700 font-medium text-sm"
+                          onClick={() => removeFromCart(listing.id)}
+                          disabled={isRemoving}
+                          className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                            isRemoving
+                              ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
+                              : 'bg-white border border-red-600 text-red-600 hover:bg-red-50'
+                          }`}
                         >
-                          Remove
+                          {isRemoving ? 'Removing...' : 'Remove from cart'}
                         </button>
                       </div>
                     </div>
 
-                    {/* Subtotal */}
+                    {/* Price (no subtotal since quantity is always 1) */}
                     <div className="text-right">
-                      <p className="text-sm text-black mb-1">Subtotal</p>
                       <p className="text-lg font-bold text-black">
-                        {formatPrice(item.listing.price * item.quantity)}
+                        {formatPrice(listing.price)}
                       </p>
                     </div>
                   </div>
@@ -320,7 +189,7 @@ export default function CartPage() {
 
               <div className="space-y-3 mb-6">
                 <div className="flex justify-between">
-                  <span className="text-black">Subtotal ({cartItems.length} items)</span>
+                  <span className="text-black">Subtotal ({listings.length} {listings.length === 1 ? 'item' : 'items'})</span>
                   <span className="font-semibold">{formatPrice(total)}</span>
                 </div>
                 <div className="flex justify-between">

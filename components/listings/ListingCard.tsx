@@ -1,14 +1,37 @@
+'use client'
+
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import type { Listing } from '@/types/database'
 import { formatPrice, getTimeAgo } from '@/lib/utils/helpers'
+import useCart from '@/hooks/useCart'
+import { createClient } from '@/lib/supabase/client'
 
 export default function ListingCard({ listing }: { listing: Listing }) {
   const imageUrl = listing.image_urls?.[0] || '/placeholder-image.png'
+  const { isInCart, addToCart, removeFromCart, loadingIds } = useCart()
+  const inCart = isInCart(listing.id)
+  const loading = loadingIds[listing.id] === true
+
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null)
+  const [supabase] = useState(() => createClient())
+
+  useEffect(() => {
+    async function getCurrentUser() {
+      const { data: { user } } = await supabase.auth.getUser()
+      setCurrentUserId(user?.id || null)
+    }
+    getCurrentUser()
+  }, [supabase])
+
+  // Check if this is the user's own listing
+  const isOwnListing = currentUserId && listing.user_id === currentUserId
 
   return (
-    <Link href={`/item/${listing.id}`}>
-      <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+      <Link href={`/item/${listing.id}`}>
+        <div>
         <div className="relative h-48 bg-gray-200">
           {listing.image_urls && listing.image_urls.length > 0 ? (
             <Image
@@ -50,14 +73,32 @@ export default function ListingCard({ listing }: { listing: Listing }) {
               )}
             </div>
           )}
-          <div className="flex justify-between items-center text-sm text-black">
+          <div className="flex justify-between items-center text-sm text-black mb-3">
             <span className="bg-gray-100 px-2 py-1 rounded">
               {listing.category}
             </span>
             <span>{getTimeAgo(listing.created_at)}</span>
           </div>
         </div>
-      </div>
-    </Link>
+      </Link>
+      {!isOwnListing && (
+        <div className="px-4 pb-4">
+          <button
+            onClick={(e) => {
+              e.preventDefault()
+              if (inCart) removeFromCart(listing.id)
+              else addToCart(listing.id)
+            }}
+            disabled={loading}
+            aria-pressed={inCart}
+            className={`w-full px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+              inCart ? 'bg-white border border-black text-black hover:bg-gray-50' : 'bg-black text-white hover:bg-gray-800'
+            } ${loading ? 'opacity-60 cursor-not-allowed' : ''}`}
+          >
+            {loading ? 'Working...' : (inCart ? 'Remove from cart' : 'Add to cart')}
+          </button>
+        </div>
+      )}
+    </div>
   )
 }
