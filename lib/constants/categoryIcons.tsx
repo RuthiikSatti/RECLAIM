@@ -1,4 +1,5 @@
-// lib/constants/categoryIcons.ts
+// lib/constants/categoryIcons.tsx
+import React from 'react';
 import {
   HouseLine,
   CoatHanger,
