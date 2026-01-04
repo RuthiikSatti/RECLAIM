@@ -97,7 +97,7 @@ export default function CategoryGrid() {
               >
                 {/* Phosphor Icon */}
                 <div className="w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center mb-4 text-black group-hover:scale-110 transition-transform duration-200">
-                  <CategoryIcon category={category.categoryKey} size={80} className="text-black" />
+                  <CategoryIcon category={category.categoryKey} size={64} className="text-black" />
                 </div>
 
                 {/* Label */}
