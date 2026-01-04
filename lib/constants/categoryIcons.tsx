@@ -13,7 +13,7 @@ import {
 import type { IconProps } from 'phosphor-react';
 
 // Single source of truth: mapping category -> render function
-export const CATEGORY_ICONS: Record<string, (props?: IconProps) => JSX.Element> = {
+export const CATEGORY_ICONS: Record<string, (props?: IconProps) => React.ReactElement> = {
   'All': (p = {}) => <MagnifyingGlass {...p} />,
   'Dorm & Decor': (p = {}) => <HouseLine {...p} />,
   'Clothing & Accessories': (p = {}) => <CoatHanger {...p} />,
