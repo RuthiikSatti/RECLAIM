@@ -1,6 +1,8 @@
-# 🎓 RECLAIM - Campus Marketplace MVP
+# 🎓 UME - Campus Marketplace MVP
 
-**A trusted marketplace exclusively for university students to buy, sell, and reclaim campus essentials.**
+_(Formerly RECLAIM)_
+
+**A trusted marketplace exclusively for university students to buy, sell, and share campus essentials.**
 
 Built with Next.js 15, TypeScript, Tailwind CSS, and Supabase.
 
@@ -71,7 +73,7 @@ Built with Next.js 15, TypeScript, Tailwind CSS, and Supabase.
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd RECLAIM
+   cd UME
    ```
 
 2. **Install dependencies**
@@ -424,7 +426,7 @@ Add these to `package.json`:
 ## 🆘 Support
 
 - **Issues:** [GitHub Issues](your-repo/issues)
-- **Email:** support@reclaimcampus.com
+- **Email:** support@umecampus.com
 - **Discord:** [Community Link]
 
 ---
