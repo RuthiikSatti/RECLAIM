@@ -8,7 +8,7 @@ export default function SafetyTipsPage() {
           <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6">
             <p className="text-sm text-blue-800">
               Your safety is our priority. Follow these guidelines to ensure secure transactions
-              on RECLAIM.
+              on UME.
             </p>
           </div>
 
@@ -18,7 +18,7 @@ export default function SafetyTipsPage() {
             </h2>
             <div className="bg-red-50 border border-red-200 rounded-lg p-4">
               <p className="text-red-800 font-semibold mb-2">
-                IMPORTANT: Do NOT arrange in-person meetups through RECLAIM
+                IMPORTANT: Do NOT arrange in-person meetups through UME
               </p>
               <p className="text-red-700">
                 All transactions must be completed through our platform with shipping.
@@ -36,7 +36,7 @@ export default function SafetyTipsPage() {
                 <span className="text-green-600 font-bold mt-1">✓</span>
                 <span>
                   <strong>Only transact through the platform:</strong> Never send money outside
-                  of RECLAIM's payment system.
+                  of UME's payment system.
                 </span>
               </li>
               <li className="flex items-start gap-3">
@@ -56,7 +56,7 @@ export default function SafetyTipsPage() {
               <li className="flex items-start gap-3">
                 <span className="text-green-600 font-bold mt-1">✓</span>
                 <span>
-                  <strong>Keep communications on-platform:</strong> Use RECLAIM messaging
+                  <strong>Keep communications on-platform:</strong> Use UME messaging
                   for all buyer-seller communications.
                 </span>
               </li>
@@ -147,7 +147,7 @@ export default function SafetyTipsPage() {
             <div className="mt-4 p-4 bg-gray-100 rounded-lg">
               <p className="text-gray-800">
                 <strong>To report an issue:</strong> Click the "Report" button on any listing,
-                or email us at <a href="mailto:support@reclaimcampus.com" className="text-blue-600 hover:underline">support@reclaimcampus.com</a>
+                or email us at <a href="mailto:support@ume-life.com" className="text-blue-600 hover:underline">support@ume-life.com</a>
               </p>
             </div>
           </section>
@@ -158,7 +158,7 @@ export default function SafetyTipsPage() {
             </h2>
             <p className="text-gray-700">
               Our support team is here to help. If you have questions or concerns about a
-              transaction, please contact us at support@reclaimcampus.com
+              transaction, please contact us at support@ume-life.com
             </p>
           </section>
 

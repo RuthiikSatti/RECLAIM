@@ -15,7 +15,7 @@ export default function TermsOfServicePage() {
           <section>
             <h2 className="text-2xl font-semibold text-black mb-4">1. Acceptance of Terms</h2>
             <p className="text-black">
-              By accessing and using RECLAIM, you accept and agree to be bound by the terms
+              By accessing and using UME, you accept and agree to be bound by the terms
               and provision of this agreement.
             </p>
           </section>
@@ -23,7 +23,7 @@ export default function TermsOfServicePage() {
           <section>
             <h2 className="text-2xl font-semibold text-black mb-4">2. Eligibility</h2>
             <p className="text-black mb-2">
-              To use RECLAIM, you must:
+              To use UME, you must:
             </p>
             <ul className="list-disc list-inside text-black space-y-1">
               <li>Be a current student with a valid university .edu email address</li>
@@ -50,7 +50,7 @@ export default function TermsOfServicePage() {
           <section>
             <h2 className="text-2xl font-semibold text-black mb-4">4. Prohibited Items</h2>
             <p className="text-black mb-2">
-              The following items are prohibited on RECLAIM:
+              The following items are prohibited on UME:
             </p>
             <ul className="list-disc list-inside text-black space-y-1">
               <li>Illegal items or services</li>
@@ -64,7 +64,7 @@ export default function TermsOfServicePage() {
           <section>
             <h2 className="text-2xl font-semibold text-black mb-4">5. Payment and Fees</h2>
             <p className="text-black">
-              RECLAIM charges a 10% platform fee on all transactions. Payment processing
+              UME charges a 10% platform fee on all transactions. Payment processing
               is handled securely through Stripe. Refunds are subject to our refund policy.
             </p>
           </section>
@@ -80,7 +80,7 @@ export default function TermsOfServicePage() {
           <section>
             <h2 className="text-2xl font-semibold text-black mb-4">7. Limitation of Liability</h2>
             <p className="text-black">
-              RECLAIM is a platform that facilitates transactions between users. We are not
+              UME is a platform that facilitates transactions between users. We are not
               responsible for the quality, safety, or legality of items listed, the accuracy
               of listings, the ability of sellers to complete transactions, or the ability of
               buyers to pay for items.
@@ -106,7 +106,7 @@ export default function TermsOfServicePage() {
           <section>
             <h2 className="text-2xl font-semibold text-black mb-4">10. Contact</h2>
             <p className="text-black">
-              For questions about these terms, please contact us at support@reclaimcampus.com
+              For questions about these terms, please contact us at support@ume-life.com
             </p>
           </section>
 

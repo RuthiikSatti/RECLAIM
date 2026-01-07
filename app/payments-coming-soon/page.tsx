@@ -20,7 +20,7 @@ export default function PaymentsComingSoonPage() {
 
           {/* Message */}
           <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-            We're finalizing secure payment processing for RECLAIM. Our team is working hard to bring you a safe and seamless checkout experience.
+            We're finalizing secure payment processing for UME. Our team is working hard to bring you a safe and seamless checkout experience.
           </p>
 
           {/* Info Box */}

@@ -23,7 +23,7 @@ const archivoBlack = Archivo_Black({
 });
 
 export const metadata: Metadata = {
-  title: "Reclaim - Campus Marketplace",
+  title: "UME - Campus Marketplace",
   description: "Buy and sell items safely within your university community",
 };
 

@@ -49,7 +49,7 @@ export default function SimpleFooter() {
 
         {/* Copyright */}
         <p className="text-center text-xs text-gray-500">
-          © {currentYear} RECLAIM. All rights reserved.
+          © {currentYear} UME. All rights reserved.
         </p>
       </div>
     </footer>

@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy - Reclaim',
-  description: 'RECLAIM Privacy Policy - How we collect, use, and protect your data',
+  title: 'Privacy Policy - UME',
+  description: 'UME Privacy Policy - How we collect, use, and protect your data',
 }
 
 export default function PrivacyPage() {
@@ -24,7 +24,7 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-2xl font-bold text-black mb-4">Introduction</h2>
             <p className="leading-relaxed">
-              Welcome to RECLAIM. We respect your privacy and are committed to protecting your personal data. This privacy policy explains how we collect, use, store, and protect your information when you use our student marketplace platform.
+              Welcome to UME. We respect your privacy and are committed to protecting your personal data. This privacy policy explains how we collect, use, store, and protect your information when you use our student marketplace platform.
             </p>
           </section>
 
@@ -168,8 +168,8 @@ export default function PrivacyPage() {
             <ul className="mt-4 space-y-2">
               <li>
                 <strong className="text-black">Email:</strong>{' '}
-                <a href="mailto:privacy@reclaim.app" className="text-blue-600 hover:text-blue-700 underline">
-                  privacy@reclaim.app
+                <a href="mailto:privacy@ume-life.com" className="text-blue-600 hover:text-blue-700 underline">
+                  privacy@ume-life.com
                 </a>
               </li>
               <li>
@@ -183,7 +183,7 @@ export default function PrivacyPage() {
 
           <section className="bg-gray-50 p-6 rounded-lg mt-8">
             <p className="text-sm text-black leading-relaxed">
-              <strong className="text-black">Note:</strong> This is a sample privacy policy for the RECLAIM platform. For a production environment, this policy should be reviewed and customized by legal counsel to ensure compliance with applicable privacy laws (GDPR, CCPA, etc.) and your specific business practices.
+              <strong className="text-black">Note:</strong> This is a sample privacy policy for the UME platform. For a production environment, this policy should be reviewed and customized by legal counsel to ensure compliance with applicable privacy laws (GDPR, CCPA, etc.) and your specific business practices.
             </p>
           </section>
         </div>

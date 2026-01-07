@@ -42,7 +42,7 @@ export default function NewsletterSignup() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Heading */}
         <h2 className="heading-primary text-black mb-8 sm:mb-10">
-          SIGN UP TO RECLAIM MAIL
+          SIGN UP TO UME MAIL
         </h2>
 
         {/* Form */}

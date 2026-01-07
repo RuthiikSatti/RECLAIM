@@ -74,7 +74,7 @@ export default function HeaderSearch({
         {/* Brand */}
         <Link href="/marketplace" className="flex items-center gap-2 flex-shrink-0">
           <span className="font-black text-xl" style={{ fontFamily: 'Archivo Black, sans-serif' }}>
-            RECLAIM
+            UME
           </span>
           <span className="text-[10px] text-gray-500 uppercase tracking-wide">marketplace</span>
         </Link>

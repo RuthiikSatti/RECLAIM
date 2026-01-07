@@ -5,7 +5,7 @@ import ImageUploaderClean from '@/components/listings/ImageUploaderClean'
 
 
 export const metadata: Metadata = {
-  title: 'Create Listing - Reclaim',
+  title: 'Create Listing - UME',
 }
 
 export default function CreateListingPage() {

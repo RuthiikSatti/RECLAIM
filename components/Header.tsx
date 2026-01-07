@@ -53,7 +53,7 @@ export default function Header({ unreadMessages = 0, cartItemCount = 0, userAvat
           {/* Left - Logo + Dynamic Label */}
           <div className="flex items-center gap-3">
             <Link href="/" className="text-[28px] font-black tracking-[-0.03em] text-black hover:opacity-80 transition-opacity" style={{ fontFamily: "'Archivo Black', sans-serif" }}>
-              RECLAIM
+              UME
             </Link>
             <span className="text-[11px] font-light tracking-[-0.03em] uppercase text-black" style={{ fontFamily: "'Archivo Black', sans-serif" }}>
               {currentLabel}

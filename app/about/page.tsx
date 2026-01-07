@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'About Us - Reclaim',
-  description: 'Learn about RECLAIM - the student marketplace built for students, by students',
+  title: 'About Us - UME',
+  description: 'Learn about UME - the student marketplace built for students, by students',
 }
 
 export default function AboutPage() {
@@ -13,7 +13,7 @@ export default function AboutPage() {
         {/* What's RECLAIM? - Centered Section */}
         <div className="text-center mb-20">
           <h1 className="heading-primary text-black mb-8">
-            WHAT'S RECLAIM?
+            WHAT'S UME?
           </h1>
           <div className="max-w-3xl mx-auto">
             <p className="text-lg text-black leading-relaxed mb-4">
