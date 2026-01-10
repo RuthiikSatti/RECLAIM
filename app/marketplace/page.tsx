@@ -231,7 +231,7 @@ export default async function MarketplacePage({ searchParams }: MarketplacePageP
 
   // Generate page title and subtitle
   const pageTitle = params.category
-    ? `Shop ${categoryDisplay}`
+    ? `SHOP ${categoryDisplay.toUpperCase()}`
     : 'SHOP ALL'
   const pageSubtitle = getCategorySubtitle(categoryDisplay)
 
