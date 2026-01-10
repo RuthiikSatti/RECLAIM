@@ -58,28 +58,28 @@ export default function AboutPage() {
 
           {/* Three Pillars with Icons */}
           <div className="grid md:grid-cols-3 gap-8">
-            {/* Trust */}
+            {/* Affordable */}
             <div className="flex flex-col items-center">
               <div className="bg-gray-200 rounded-lg w-48 h-48 mb-4 flex items-center justify-center">
-                <p className="text-gray-400 text-sm">Trust icon</p>
+                <p className="text-gray-400 text-sm">Affordable icon</p>
               </div>
-              <h3 className="text-xl font-bold text-black">Trust</h3>
+              <h3 className="text-xl font-bold text-black">Affordable</h3>
             </div>
 
-            {/* Sustainability */}
+            {/* Sustainable */}
             <div className="flex flex-col items-center">
               <div className="bg-gray-200 rounded-lg w-48 h-48 mb-4 flex items-center justify-center">
-                <p className="text-gray-400 text-sm">Sustainability icon</p>
+                <p className="text-gray-400 text-sm">Sustainable icon</p>
               </div>
-              <h3 className="text-xl font-bold text-black">Sustainability</h3>
+              <h3 className="text-xl font-bold text-black">Sustainable</h3>
             </div>
 
-            {/* Community */}
+            {/* Connected */}
             <div className="flex flex-col items-center">
               <div className="bg-gray-200 rounded-lg w-48 h-48 mb-4 flex items-center justify-center">
-                <p className="text-gray-400 text-sm">Community icon</p>
+                <p className="text-gray-400 text-sm">Connected icon</p>
               </div>
-              <h3 className="text-xl font-bold text-black">Community</h3>
+              <h3 className="text-xl font-bold text-black">Connected</h3>
             </div>
           </div>
         </div>
