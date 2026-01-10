@@ -84,6 +84,21 @@ export default function Header({ unreadMessages = 0, cartItemCount = 0, userAvat
               </span>
             </button>
 
+            {/* Marketplace */}
+            <Link
+              href="/marketplace"
+              className="text-black hover:opacity-60 transition-opacity relative group"
+              aria-label="Marketplace"
+            >
+              <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                <path d="M9 22V12h6v10"/>
+              </svg>
+              <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs bg-black text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                Marketplace
+              </span>
+            </Link>
+
             {/* Create Listing */}
             {userId && (
               <Link
