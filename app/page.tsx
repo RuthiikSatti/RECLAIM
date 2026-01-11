@@ -24,11 +24,12 @@ import MobileHome from '@/components/MobileHome'
 export default async function Home({
   searchParams,
 }: {
-  searchParams: { showMobile?: string }
+  searchParams: Promise<{ showMobile?: string }>
 }) {
   // DEBUG ONLY: Allow viewing mobile layout on desktop via ?showMobile=1
   // Remove this in production or keep for QA testing
-  const debugForceMobile = searchParams.showMobile === '1'
+  const params = await searchParams
+  const debugForceMobile = params.showMobile === '1'
   return (
     <>
       {/* MOBILE-ONLY HOMEPAGE - Only visible on mobile devices (or with ?showMobile=1) */}
