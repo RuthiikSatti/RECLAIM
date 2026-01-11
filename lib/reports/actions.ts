@@ -26,6 +26,20 @@ export async function reportListing(listingId: string, reason: string) {
     return { error: error.message }
   }
 
+  // Send email notification to support team (non-blocking - don't fail if email fails)
+  try {
+    const { sendReportNotification } = await import('@/lib/email/sendEmail')
+    await sendReportNotification({
+      listingId,
+      reportReason: reason,
+      reporterId: user.id,
+      timestamp: new Date().toISOString(),
+    })
+  } catch (emailError) {
+    console.error('Failed to send report notification email:', emailError)
+    // Continue - don't fail the report submission if email fails
+  }
+
   return { report: data }
 }
 

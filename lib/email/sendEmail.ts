@@ -38,7 +38,7 @@ export async function sendEmail(options: EmailOptions) {
     }
 
     // Default from address
-    const from = options.from || 'Reclaim <noreply@reclaim.app>'
+    const from = options.from || 'UME <noreply@ume-life.com>'
 
     // Send email
     const { data, error } = await resend.emails.send({
@@ -461,4 +461,93 @@ function getTrackingUrl(carrier?: string, trackingNumber?: string): string | nul
   }
 
   return null
+}
+
+/**
+ * Send report notification to support team
+ */
+export async function sendReportNotification({
+  listingId,
+  reportReason,
+  reporterId,
+  timestamp,
+}: {
+  listingId: string
+  reportReason: string
+  reporterId: string
+  timestamp: string
+}) {
+  const supportEmail = process.env.SUPPORT_EMAIL || 'support@ume-life.com'
+
+  const html = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Listing Reported</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+    .content { background: #ffffff; padding: 30px; border: 1px solid #e0e0e0; }
+    .footer { background: #f5f5f5; padding: 20px; text-align: center; font-size: 12px; color: #666; border-radius: 0 0 10px 10px; }
+    .report-details { background: #fef2f2; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #ef4444; }
+    .detail-row { padding: 10px 0; border-bottom: 1px solid #fee2e2; }
+    .detail-row:last-child { border-bottom: none; }
+    .label { font-weight: 600; color: #991b1b; }
+    .value { color: #333; margin-left: 10px; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>⚠️ New Listing Report</h1>
+  </div>
+
+  <div class="content">
+    <p>A listing has been reported on the UME marketplace and requires review.</p>
+
+    <div class="report-details">
+      <div class="detail-row">
+        <span class="label">Listing ID:</span>
+        <span class="value">${listingId}</span>
+      </div>
+      <div class="detail-row">
+        <span class="label">Reporter ID:</span>
+        <span class="value">${reporterId}</span>
+      </div>
+      <div class="detail-row">
+        <span class="label">Report Reason:</span>
+        <span class="value">${reportReason}</span>
+      </div>
+      <div class="detail-row">
+        <span class="label">Reported At:</span>
+        <span class="value">${new Date(timestamp).toLocaleString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          timeZoneName: 'short'
+        })}</span>
+      </div>
+    </div>
+
+    <p style="color: #666; font-size: 14px;">
+      Please review this report in your admin dashboard and take appropriate action.
+    </p>
+  </div>
+
+  <div class="footer">
+    <p>This is an automated notification from UME Support System</p>
+    <p>© ${new Date().getFullYear()} UME. All rights reserved.</p>
+  </div>
+</body>
+</html>
+  `
+
+  return sendEmail({
+    to: supportEmail,
+    subject: '[UME] Listing Reported',
+    html,
+  })
 }
