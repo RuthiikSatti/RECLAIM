@@ -27,10 +27,11 @@ const archivoBlack = Archivo_Black({
 export const metadata: Metadata = {
   title: "UME - University Market Exchange",
   description: "Buy and sell items safely within your university community",
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-  },
+};
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
 };
 
 export default function RootLayout({
