@@ -3,17 +3,18 @@ import { updateSession } from '@/lib/supabase/middleware'
 import { createServerClient } from '@supabase/ssr'
 
 export async function middleware(request: NextRequest) {
-  // Skip middleware entirely for public auth routes to prevent redirects
-  const publicAuthPaths = ['/auth/callback', '/reset-password', '/forgot-password', '/login', '/signup']
-  const isPublicAuthPath = publicAuthPaths.some(path =>
+  // Public routes that don't need session updates or auth checks
+  const publicPaths = ['/reset-password', '/forgot-password', '/login', '/signup']
+  const isPublicPath = publicPaths.some(path =>
     request.nextUrl.pathname.startsWith(path)
   )
 
-  if (isPublicAuthPath) {
+  if (isPublicPath) {
     return NextResponse.next()
   }
 
-  // Update session first
+  // Update session for all other routes (including /auth/callback)
+  // This is where Supabase will handle PKCE code exchange
   const response = await updateSession(request)
 
   // Check authentication for protected routes
