@@ -52,7 +52,7 @@ export default function MobileHome() {
               alt: 'Safe and simple trading feature'
             }
           ]}
-          autoPlayInterval={5000}
+          autoPlayInterval={3000}
         />
 
         {/* Category Grid - Browse by category */}

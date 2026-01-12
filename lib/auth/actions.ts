@@ -209,3 +209,61 @@ export async function getUser() {
     return { user: fallbackUser, error: null }
   }
 }
+
+/**
+ * Request password reset email
+ */
+export async function requestPasswordReset(email: string) {
+  try {
+    if (!email) {
+      return { error: 'Email is required' }
+    }
+
+    const supabase = await createClient()
+
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/reset-password`,
+    })
+
+    if (error) {
+      prettyLogError('Password reset request error:', error)
+      return { error: 'Failed to send reset email' }
+    }
+
+    return { success: true }
+  } catch (err) {
+    prettyLogError('Unexpected error in requestPasswordReset:', err)
+    return { error: 'An unexpected error occurred' }
+  }
+}
+
+/**
+ * Update user password (called from reset password page)
+ */
+export async function updatePassword(newPassword: string) {
+  try {
+    if (!newPassword) {
+      return { error: 'Password is required' }
+    }
+
+    if (newPassword.length < 6) {
+      return { error: 'Password must be at least 6 characters' }
+    }
+
+    const supabase = await createClient()
+
+    const { error } = await supabase.auth.updateUser({
+      password: newPassword
+    })
+
+    if (error) {
+      prettyLogError('Password update error:', error)
+      return { error: 'Failed to update password' }
+    }
+
+    return { success: true }
+  } catch (err) {
+    prettyLogError('Unexpected error in updatePassword:', err)
+    return { error: 'An unexpected error occurred' }
+  }
+}

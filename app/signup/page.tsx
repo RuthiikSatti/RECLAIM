@@ -18,6 +18,7 @@ export default function SignupPage() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
+  const [userEmail, setUserEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -126,12 +127,40 @@ export default function SignupPage() {
         username: username,
       })
 
+      setUserEmail(email)
       setSuccess(true)
-      setTimeout(() => router.push('/login'), 2000)
     } catch (err) {
       setError('An unexpected error occurred')
       setLoading(false)
     }
+  }
+
+  if (success) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center px-4">
+        <div className="max-w-md w-full space-y-8">
+          <div className="text-center">
+            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
+              <svg className="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <h2 className="text-3xl font-bold text-black mb-2">
+              Check your email
+            </h2>
+            <p className="text-sm text-gray-600 mb-6">
+              We've sent a verification link to <span className="font-medium text-black">{userEmail}</span>. Please check your email and click the link to verify your account.
+            </p>
+            <Link
+              href="/login"
+              className="inline-block text-sm font-medium text-black hover:underline"
+            >
+              Go to sign in
+            </Link>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -149,14 +178,7 @@ export default function SignupPage() {
           </p>
         </div>
 
-        {success ? (
-          <div className="rounded-md bg-white border-2 border-black p-4">
-            <p className="text-sm text-black">
-              Account created! Please check your email to verify. Redirecting to login...
-            </p>
-          </div>
-        ) : (
-          <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+        <form onSubmit={handleSubmit} className="mt-8 space-y-6">
             {error && (
               <div className="rounded-md bg-white border-2 border-black p-4">
                 <p className="text-sm text-black">{error}</p>
@@ -313,7 +335,6 @@ export default function SignupPage() {
               {loading ? 'Creating account...' : 'Sign up'}
             </button>
           </form>
-        )}
       </div>
     </div>
   )

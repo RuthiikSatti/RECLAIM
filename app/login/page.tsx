@@ -1,12 +1,21 @@
 'use client'
 
 import { signIn } from '@/lib/auth/actions'
-import { useState } from 'react'
+import { useState, useEffect, Suspense } from 'react'
+import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 
-export default function LoginPage() {
+function LoginForm() {
+  const searchParams = useSearchParams()
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const [successMessage, setSuccessMessage] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (searchParams.get('reset') === 'success') {
+      setSuccessMessage('Your password has been reset successfully. You can now sign in with your new password.')
+    }
+  }, [searchParams])
 
   async function handleSubmit(formData: FormData) {
     setLoading(true)
@@ -35,6 +44,11 @@ export default function LoginPage() {
           </p>
         </div>
         <form action={handleSubmit} className="mt-8 space-y-6">
+          {successMessage && (
+            <div className="rounded-md bg-white border-2 border-green-500 p-4">
+              <p className="text-sm text-black">{successMessage}</p>
+            </div>
+          )}
           {error && (
             <div className="rounded-md bg-white border-2 border-black p-4">
               <p className="text-sm text-black">{error}</p>
@@ -69,6 +83,17 @@ export default function LoginPage() {
             </div>
           </div>
 
+          <div className="flex items-center justify-between">
+            <div className="text-sm">
+              <Link
+                href="/forgot-password"
+                className="font-medium text-black hover:underline"
+              >
+                Forgot password?
+              </Link>
+            </div>
+          </div>
+
           <button
             type="submit"
             disabled={loading}
@@ -79,5 +104,17 @@ export default function LoginPage() {
         </form>
       </div>
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-black">Loading...</div>
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
   )
 }
