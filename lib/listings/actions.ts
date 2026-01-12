@@ -196,5 +196,5 @@ export async function deleteListing(listingId: string) {
 
   revalidatePath('/marketplace')
   revalidatePath('/profile/' + user.id)
-  return { success: true }
+  redirect('/marketplace?deleted=success')
 }

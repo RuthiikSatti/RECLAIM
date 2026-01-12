@@ -5,6 +5,7 @@ import FiltersRow from '@/components/marketplace/FiltersRow'
 import MobileFilterButton from '@/components/marketplace/MobileFilterButton'
 import MobileFiltersWrapper from '@/components/marketplace/MobileFiltersWrapper'
 import ProductGrid from '@/components/marketplace/ProductGrid'
+import DeleteSuccessModal from '@/components/marketplace/DeleteSuccessModal'
 import { getCategorySubtitle } from '@/lib/constants/categories'
 import type { Listing } from '@/types/database'
 
@@ -239,6 +240,11 @@ export default async function MarketplacePage({ searchParams }: MarketplacePageP
 
   return (
     <div className="min-h-screen bg-white">
+      {/* Delete Success Modal */}
+      <Suspense fallback={null}>
+        <DeleteSuccessModal />
+      </Suspense>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
         {/* Page Title - Positioned at top */}
