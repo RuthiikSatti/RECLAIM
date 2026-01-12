@@ -16,12 +16,26 @@ export async function GET(request: NextRequest) {
     next = '/reset-password'
   }
 
-  if (token_hash && type) {
-    const supabase = await createClient()
+  const supabase = await createClient()
 
-    // For password recovery, verify the OTP token
-    if (type === 'recovery') {
-      console.log('[Auth Callback] Verifying OTP for recovery...')
+  // Handle PKCE flow - Supabase sends token_hash with "pkce_" prefix for password recovery
+  if (token_hash && type === 'recovery') {
+    console.log('[Auth Callback] Processing password recovery with token_hash')
+
+    // Check if this is a PKCE token (starts with "pkce_")
+    if (token_hash.startsWith('pkce_')) {
+      console.log('[Auth Callback] Detected PKCE token, using exchangeCodeForSession')
+      const { error } = await supabase.auth.exchangeCodeForSession(token_hash)
+
+      if (error) {
+        console.error('[Auth Callback] PKCE token exchange error:', error)
+      } else {
+        console.log('[Auth Callback] PKCE token exchanged successfully, redirecting to:', next)
+        return NextResponse.redirect(new URL(next, request.url))
+      }
+    } else {
+      // Legacy OTP flow
+      console.log('[Auth Callback] Using OTP verification for recovery')
       const { error } = await supabase.auth.verifyOtp({
         type: 'recovery',
         token_hash,
@@ -36,10 +50,9 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  // Handle PKCE flow with code parameter (newer Supabase flow)
+  // Handle standard PKCE flow with code parameter
   if (code) {
     console.log('[Auth Callback] Exchanging code for session...')
-    const supabase = await createClient()
     const { error } = await supabase.auth.exchangeCodeForSession(code)
 
     if (error) {
