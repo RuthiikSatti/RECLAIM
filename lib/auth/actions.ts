@@ -246,11 +246,21 @@ export async function updatePassword(newPassword: string) {
       return { error: 'Password is required' }
     }
 
-    if (newPassword.length < 6) {
-      return { error: 'Password must be at least 6 characters' }
+    if (newPassword.length < 8) {
+      return { error: 'Password must be at least 8 characters' }
     }
 
     const supabase = await createClient()
+
+    // Check if user is authenticated
+    const { data: { user } } = await supabase.auth.getUser()
+
+    if (!user) {
+      console.error('[updatePassword] Password update failed: No authenticated user')
+      return { error: 'You must be logged in to update your password. Please click the reset link again.' }
+    }
+
+    console.log('[updatePassword] Updating password for user:', user.id)
 
     const { error } = await supabase.auth.updateUser({
       password: newPassword
@@ -258,9 +268,10 @@ export async function updatePassword(newPassword: string) {
 
     if (error) {
       prettyLogError('Password update error:', error)
-      return { error: 'Failed to update password' }
+      return { error: error.message || 'Failed to update password' }
     }
 
+    console.log('[updatePassword] Password updated successfully')
     return { success: true }
   } catch (err) {
     prettyLogError('Unexpected error in updatePassword:', err)

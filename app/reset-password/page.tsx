@@ -5,12 +5,51 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { updatePassword } from '@/lib/auth/actions'
 
+interface PasswordRequirements {
+  minLength: boolean
+  hasUppercase: boolean
+  hasLowercase: boolean
+  hasNumber: boolean
+  hasSpecialChar: boolean
+}
+
 export default function ResetPasswordPage() {
   const router = useRouter()
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [passwordsMatch, setPasswordsMatch] = useState(true)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  // Validate password requirements
+  const validatePassword = (pwd: string): PasswordRequirements => {
+    return {
+      minLength: pwd.length >= 8,
+      hasUppercase: /[A-Z]/.test(pwd),
+      hasLowercase: /[a-z]/.test(pwd),
+      hasNumber: /[0-9]/.test(pwd),
+      hasSpecialChar: /[!@#$%^&*(),.?":{}|<>]/.test(pwd),
+    }
+  }
+
+  const requirements = validatePassword(password)
+  const allRequirementsMet = Object.values(requirements).every(req => req)
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newPassword = e.target.value
+    setPassword(newPassword)
+    if (confirmPassword) {
+      setPasswordsMatch(newPassword === confirmPassword)
+    }
+  }
+
+  const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newConfirmPassword = e.target.value
+    setConfirmPassword(newConfirmPassword)
+    setPasswordsMatch(password === newConfirmPassword)
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -20,13 +59,14 @@ export default function ResetPasswordPage() {
     // Validate passwords match
     if (password !== confirmPassword) {
       setError('Passwords do not match')
+      setPasswordsMatch(false)
       setLoading(false)
       return
     }
 
-    // Validate password length
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters')
+    // Validate all requirements are met
+    if (!allRequirementsMet) {
+      setError('Please meet all password requirements')
       setLoading(false)
       return
     }
@@ -43,7 +83,7 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center px-4">
+    <div className="min-h-screen bg-white flex items-center justify-center px-4 py-12">
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="text-center text-3xl font-bold text-black">
@@ -56,49 +96,104 @@ export default function ResetPasswordPage() {
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-6">
           {error && (
-            <div className="rounded-md bg-white border-2 border-red-500 p-4">
+            <div className="rounded-md bg-white border-2 border-black p-4">
               <p className="text-sm text-black">{error}</p>
             </div>
           )}
 
           <div className="space-y-4">
             <div>
-              <label htmlFor="password" className="sr-only">
+              <label htmlFor="password" className="block text-sm font-medium text-black mb-1">
                 New Password
               </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-400 text-black focus:outline-none focus:ring-black focus:border-black"
-                placeholder="New password (min. 6 characters)"
-              />
+              <div className="relative">
+                <input
+                  id="password"
+                  name="password"
+                  type={showPassword ? 'text' : 'password'}
+                  required
+                  value={password}
+                  onChange={handlePasswordChange}
+                  className="appearance-none rounded-lg relative block w-full px-3 py-2 pr-10 border border-gray-300 placeholder-gray-400 text-black focus:outline-none focus:ring-black focus:border-black"
+                  placeholder="Enter your new password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600 hover:text-black"
+                >
+                  {showPassword ? (
+                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                  ) : (
+                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.542 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                    </svg>
+                  )}
+                </button>
+              </div>
+
+              {/* Password Requirements Checklist */}
+              <div className="mt-3 space-y-2">
+                <p className="text-xs font-medium text-black">Password must contain:</p>
+                <div className="space-y-1.5">
+                  <PasswordRequirement met={requirements.minLength} text="At least 8 characters" />
+                  <PasswordRequirement met={requirements.hasUppercase} text="One uppercase letter (A-Z)" />
+                  <PasswordRequirement met={requirements.hasLowercase} text="One lowercase letter (a-z)" />
+                  <PasswordRequirement met={requirements.hasNumber} text="One number (0-9)" />
+                  <PasswordRequirement met={requirements.hasSpecialChar} text="One special character (!@#$%^&*)" />
+                </div>
+              </div>
             </div>
 
             <div>
-              <label htmlFor="confirmPassword" className="sr-only">
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-black mb-1">
                 Confirm Password
               </label>
-              <input
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                required
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-400 text-black focus:outline-none focus:ring-black focus:border-black"
-                placeholder="Confirm new password"
-              />
+              <div className="relative">
+                <input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  required
+                  value={confirmPassword}
+                  onChange={handleConfirmPasswordChange}
+                  className={`appearance-none rounded-lg relative block w-full px-3 py-2 pr-10 border ${
+                    confirmPassword && !passwordsMatch
+                      ? 'border-black focus:ring-black focus:border-black'
+                      : 'border-gray-300 focus:ring-black focus:border-black'
+                  } placeholder-gray-400 text-black focus:outline-none`}
+                  placeholder="Re-enter your new password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600 hover:text-black"
+                >
+                  {showConfirmPassword ? (
+                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                  ) : (
+                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.542 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                    </svg>
+                  )}
+                </button>
+              </div>
+              {confirmPassword && !passwordsMatch && (
+                <p className="mt-1 text-sm text-black">Passwords do not match</p>
+              )}
             </div>
           </div>
 
           <button
             type="submit"
-            disabled={loading}
-            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black disabled:opacity-50"
+            disabled={loading || !allRequirementsMet || !passwordsMatch || !confirmPassword}
+            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? 'Updating password...' : 'Reset password'}
           </button>
@@ -113,6 +208,26 @@ export default function ResetPasswordPage() {
           </div>
         </form>
       </div>
+    </div>
+  )
+}
+
+// Password Requirement Component
+function PasswordRequirement({ met, text }: { met: boolean; text: string }) {
+  return (
+    <div className="flex items-center gap-2">
+      <div className={`flex-shrink-0 w-4 h-4 rounded-full flex items-center justify-center transition-all duration-200 ${
+        met ? 'bg-black' : 'bg-gray-300'
+      }`}>
+        {met && (
+          <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+          </svg>
+        )}
+      </div>
+      <span className={`text-xs transition-colors duration-200 ${met ? 'text-black font-medium' : 'text-black'}`}>
+        {text}
+      </span>
     </div>
   )
 }
