@@ -30,15 +30,22 @@ export async function sendEmail(options: EmailOptions) {
   try {
     // Check if Resend is configured
     if (!resend) {
-      console.warn('Resend API key not configured. Email not sent:', options.subject)
+      console.error('[EMAIL] RESEND_API_KEY not configured - email not sent')
+      console.error('[EMAIL] Subject:', options.subject)
+      console.error('[EMAIL] To:', options.to)
       return {
         success: false,
-        error: 'RESEND_API_KEY not configured. Add it to .env.local to enable emails.'
+        error: 'RESEND_API_KEY not configured. Add it to environment variables to enable emails.'
       }
     }
 
     // Default from address
     const from = options.from || 'UME <noreply@ume-life.com>'
+
+    console.log('[EMAIL] Attempting to send email...')
+    console.log('[EMAIL] From:', from)
+    console.log('[EMAIL] To:', options.to)
+    console.log('[EMAIL] Subject:', options.subject)
 
     // Send email
     const { data, error } = await resend.emails.send({
@@ -50,14 +57,15 @@ export async function sendEmail(options: EmailOptions) {
     })
 
     if (error) {
-      console.error('Email send error:', error)
+      console.error('[EMAIL] Send error:', JSON.stringify(error))
       return { success: false, error }
     }
 
-    console.log('Email sent successfully:', data?.id)
+    console.log('[EMAIL] Sent successfully! ID:', data?.id)
     return { success: true, data }
   } catch (error: any) {
-    console.error('Email send exception:', error)
+    console.error('[EMAIL] Exception:', error.message)
+    console.error('[EMAIL] Stack:', error.stack)
     return { success: false, error: error.message }
   }
 }
