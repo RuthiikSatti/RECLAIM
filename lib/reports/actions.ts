@@ -64,17 +64,45 @@ export async function getAllReports() {
 }
 
 export async function updateReportStatus(reportId: string, status: 'resolved' | 'dismissed') {
-  const supabase = await createServiceClient()
+  // Verify the caller is an admin
+  const userSupabase = await createClient()
+  const { data: { user } } = await userSupabase.auth.getUser()
 
-  const { error } = await supabase
-    .from('reports')
-    .update({ status })
-    .eq('id', reportId)
-
-  if (error) {
-    return { error: error.message }
+  if (!user) {
+    console.error('[ADMIN] updateReportStatus: No user session')
+    return { error: 'Unauthorized: Not logged in', success: false }
   }
 
+  // Check admin status
+  const adminEmails = (process.env.ADMIN_EMAILS || '').split(',').map(e => e.trim().toLowerCase())
+  const serviceSupabase = await createServiceClient()
+
+  const { data: userData } = await serviceSupabase
+    .from('users')
+    .select('email')
+    .eq('id', user.id)
+    .single()
+
+  if (!userData?.email || !adminEmails.includes(userData.email.toLowerCase())) {
+    console.error('[ADMIN] updateReportStatus: User is not admin:', userData?.email)
+    return { error: 'Unauthorized: Admin access required', success: false }
+  }
+
+  // Update the report status
+  const { data, error } = await serviceSupabase
+    .from('reports')
+    .update({ status, updated_at: new Date().toISOString() })
+    .eq('id', reportId)
+    .select()
+    .single()
+
+  if (error) {
+    console.error('[ADMIN] updateReportStatus error:', error.message)
+    return { error: error.message, success: false }
+  }
+
+  console.log('[ADMIN] Report status updated:', { reportId, status, updatedBy: userData.email })
+
   revalidatePath('/admin')
-  return { success: true }
+  return { success: true, status: data.status }
 }

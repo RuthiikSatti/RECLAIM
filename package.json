@@ -13,7 +13,8 @@
     "test:email": "npx tsx scripts/test-email.ts",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
-    "test:e2e:report": "playwright test e2e/report-email-api.spec.ts"
+    "test:e2e:report": "playwright test e2e/report-email-api.spec.ts",
+    "test:e2e:admin": "playwright test e2e/admin-moderation.spec.ts"
   },
   "dependencies": {
     "@getbrevo/brevo": "^3.0.1",
