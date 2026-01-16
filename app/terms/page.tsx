@@ -89,7 +89,7 @@ export default function TermsOfServicePage() {
           <section>
             <h2 className="text-2xl font-semibold text-black mb-4">8. Contact</h2>
             <p className="text-black">
-              For questions about these terms, please contact us at support@ume-life.com
+              For questions about these terms, please contact us at umelife.official@gmail.com
             </p>
           </section>
 

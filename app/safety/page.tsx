@@ -147,7 +147,7 @@ export default function SafetyTipsPage() {
             <div className="mt-4 p-4 bg-gray-100 rounded-lg">
               <p className="text-gray-800">
                 <strong>To report an issue:</strong> Click the "Report" button on any listing,
-                or email us at <a href="mailto:support@ume-life.com" className="text-blue-600 hover:underline">support@ume-life.com</a>
+                or email us at <a href="mailto:umelife.official@gmail.com" className="text-blue-600 hover:underline">umelife.official@gmail.com</a>
               </p>
             </div>
           </section>
@@ -158,7 +158,7 @@ export default function SafetyTipsPage() {
             </h2>
             <p className="text-gray-700">
               Our support team is here to help. If you have questions or concerns about a
-              transaction, please contact us at support@ume-life.com
+              transaction, please contact us at umelife.official@gmail.com
             </p>
           </section>
 

@@ -40,7 +40,8 @@ export async function sendEmail(options: EmailOptions) {
     }
 
     // Default from address
-    const from = options.from || 'UME <noreply@ume-life.com>'
+    const defaultFromEmail = process.env.SUPPORT_EMAIL || 'umelife.official@gmail.com'
+    const from = options.from || `UME Support <${defaultFromEmail}>`
 
     console.log('[EMAIL] Attempting to send email...')
     console.log('[EMAIL] From:', from)
@@ -485,7 +486,7 @@ export async function sendReportNotification({
   reporterId: string
   timestamp: string
 }) {
-  const supportEmail = process.env.SUPPORT_EMAIL || 'support@ume-life.com'
+  const supportEmail = process.env.SUPPORT_EMAIL || 'umelife.official@gmail.com'
 
   const html = `
 <!DOCTYPE html>
