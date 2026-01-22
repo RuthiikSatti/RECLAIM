@@ -36,12 +36,6 @@ function LoginForm() {
           <h2 className="text-center text-3xl font-bold text-ume-indigo">
             Log in to <span className="text-ume-indigo">U</span><span className="text-ume-pink">M</span><span className="text-ume-pink">E</span>
           </h2>
-          <p className="mt-2 text-center text-sm text-black">
-            Or{' '}
-            <Link href="/signup" className="font-medium text-black hover:underline">
-              create a new account
-            </Link>
-          </p>
         </div>
         <form action={handleSubmit} className="mt-8 space-y-6">
           {successMessage && (
@@ -86,10 +80,17 @@ function LoginForm() {
           <button
             type="submit"
             disabled={loading}
-            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-full text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black disabled:opacity-50"
+            className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-full text-white bg-ume-pink hover:bg-pink-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ume-pink disabled:opacity-50"
           >
             {loading ? 'Logging in...' : 'Log in'}
           </button>
+
+          <p className="mt-6 text-center text-base text-black">
+            Need an account?{' '}
+            <Link href="/signup" className="font-semibold text-blue-600 hover:text-ume-pink transition-colors">
+              SIGN UP
+            </Link>
+          </p>
         </form>
       </div>
     </div>

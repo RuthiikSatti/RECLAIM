@@ -170,12 +170,6 @@ export default function SignupPage() {
           <h2 className="text-center text-3xl font-bold text-black">
             Create your account
           </h2>
-          <p className="mt-2 text-center text-sm text-black">
-            Already have an account?{' '}
-            <Link href="/login" className="font-medium text-black hover:underline">
-              Log in
-            </Link>
-          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-6">
@@ -330,10 +324,17 @@ export default function SignupPage() {
             <button
               type="submit"
               disabled={loading || !allRequirementsMet || !passwordsMatch || !confirmPassword || !usernameAvailable || !collegeName.trim() || !collegeAddress.trim()}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-full text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black disabled:opacity-50 disabled:cursor-not-allowed"
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-full text-white bg-ume-pink hover:bg-pink-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ume-pink disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Creating account...' : 'Sign up'}
             </button>
+
+            <p className="mt-6 text-center text-base text-black">
+              Already a user?{' '}
+              <Link href="/login" className="font-semibold text-blue-600 hover:text-ume-pink transition-colors">
+                LOG IN
+              </Link>
+            </p>
           </form>
       </div>
     </div>
