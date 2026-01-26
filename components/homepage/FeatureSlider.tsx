@@ -158,7 +158,7 @@ export default function FeatureSlider({
             return (
               <div
                 key={slide.id}
-                className={`absolute flex flex-col justify-start rounded-2xl sm:rounded-3xl border-2 border-ume-indigo cursor-pointer ${
+                className={`absolute flex flex-col justify-center rounded-2xl sm:rounded-3xl border-2 border-ume-indigo cursor-pointer ${
                   isCenter ? 'bg-ume-cream shadow-2xl' : 'bg-white hover:opacity-95'
                 }`}
                 style={cardStyles}

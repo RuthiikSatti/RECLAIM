@@ -41,7 +41,7 @@ export default function Hero({
         </h1>
 
         {/* Subtitle */}
-        <p className="text-ume-indigo md:text-white/80 text-sm md:text-base font-bold md:font-light mb-8">
+        <p className="text-white md:text-white/80 text-sm md:text-base font-bold md:font-light mb-8 drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)] md:drop-shadow-none">
           {subtitle}
         </p>
 
