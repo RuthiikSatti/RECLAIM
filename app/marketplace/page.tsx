@@ -239,17 +239,17 @@ export default async function MarketplacePage({ searchParams }: MarketplacePageP
   const pageSubtitle = getCategorySubtitle(categoryDisplay)
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-ume-bg">
       {/* Delete Success Modal */}
       <Suspense fallback={null}>
         <DeleteSuccessModal />
       </Suspense>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
         {/* Page Title - Positioned at top */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl sm:text-4xl font-bold text-black mb-2">{pageTitle}</h1>
+        <div className="text-center mb-4">
+          <h1 className="text-3xl sm:text-4xl font-bold text-ume-indigo mb-1">{pageTitle}</h1>
           <p className="text-sm text-gray-600">{pageSubtitle}</p>
         </div>
 
@@ -278,7 +278,7 @@ export default async function MarketplacePage({ searchParams }: MarketplacePageP
         />
 
         {/* Listings Count */}
-        <div className="mt-8 mb-4 text-sm text-black">
+        <div className="mt-4 mb-3 text-sm text-black">
           {listings.length === 0 ? (
             'No listings found'
           ) : (
@@ -288,7 +288,7 @@ export default async function MarketplacePage({ searchParams }: MarketplacePageP
 
         {/* Product Grid */}
         {listings.length === 0 ? (
-          <div className="text-center py-16">
+          <div className="text-center py-10">
             <svg className="mx-auto h-16 w-16 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
             </svg>

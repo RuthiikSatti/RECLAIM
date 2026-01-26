@@ -220,7 +220,7 @@ export default function ProfileSettings({
           <button
             type="submit"
             disabled={loading || username === currentDisplayName || (!isUsernameAvailable && username.toLowerCase() !== currentDisplayName?.toLowerCase())}
-            className="mt-4 bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
+            className="mt-4 bg-ume-indigo text-white px-6 py-2 rounded-full hover:bg-indigo-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
           >
             {loading ? 'Updating...' : 'Update Username'}
           </button>
@@ -260,7 +260,7 @@ export default function ProfileSettings({
           <button
             type="submit"
             disabled={loading}
-            className="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
+            className="bg-ume-indigo text-white px-6 py-2 rounded-full hover:bg-indigo-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
           >
             {loading ? 'Updating...' : 'Update College Info'}
           </button>
@@ -302,7 +302,7 @@ export default function ProfileSettings({
           <button
             type="submit"
             disabled={loading}
-            className="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
+            className="bg-ume-indigo text-white px-6 py-2 rounded-full hover:bg-indigo-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
           >
             {loading ? 'Updating...' : 'Update Password'}
           </button>
@@ -319,7 +319,7 @@ export default function ProfileSettings({
           <button
             onClick={handleLogout}
             disabled={logoutLoading}
-            className="w-full bg-red-600 text-white py-3 px-6 rounded-full font-semibold hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+            className="w-full bg-white text-ume-pink border border-ume-pink py-3 px-6 rounded-full font-semibold hover:bg-pink-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
           >
             {logoutLoading ? (
               <>

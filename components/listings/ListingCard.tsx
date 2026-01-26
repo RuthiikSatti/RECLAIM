@@ -52,14 +52,14 @@ export default function ListingCard({ listing }: { listing: Listing }) {
             )}
           </div>
           <div className="p-4">
-            <h3 className="font-semibold text-lg text-gray-900 mb-1 truncate">
+            <h3 className="font-semibold text-lg text-ume-indigo mb-1 truncate">
               {listing.title}
             </h3>
-            <p className="text-black font-bold text-xl mb-2">
-              {formatPrice(listing.price)}
-            </p>
-            <p className="text-black text-sm line-clamp-2 mb-2">
+            <p className="text-gray-600 text-sm line-clamp-2 mb-2">
               {listing.description}
+            </p>
+            <p className="text-ume-indigo font-bold text-xl mb-2">
+              {formatPrice(listing.price)}
             </p>
             {listing.user && (
               <div className="mb-2">

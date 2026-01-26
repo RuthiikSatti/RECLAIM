@@ -96,7 +96,7 @@ export default function ContactPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white py-16 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-ume-bg py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
         {/* Heading */}
         <h1 className="heading-primary text-black mb-12">
@@ -247,7 +247,7 @@ export default function ContactPage() {
             <button
               type="submit"
               disabled={status === 'submitting'}
-              className="px-12 py-4 bg-gray-900 text-white font-medium text-base rounded-full hover:bg-gray-800 transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-gray-900/50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+              className="px-12 py-4 bg-ume-pink text-white font-medium text-base rounded-full hover:bg-pink-400 transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-ume-pink/50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
             >
               {status === 'submitting' ? 'Submitting...' : 'Submit'}
             </button>

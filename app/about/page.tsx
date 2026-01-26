@@ -7,13 +7,13 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-ume-bg">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
 
-        {/* What's RECLAIM? - Centered Section */}
+        {/* What's UME? - Centered Section */}
         <div className="text-center mb-20">
-          <h1 className="heading-primary text-black mb-8">
-            WHAT'S UME?
+          <h1 className="heading-primary mb-8">
+            WHAT'S <span className="text-ume-indigo">U</span><span className="text-ume-pink">M</span><span className="text-ume-pink">E</span>?
           </h1>
           <div className="max-w-3xl mx-auto">
             <p className="text-lg text-black leading-relaxed mb-4">
@@ -38,7 +38,7 @@ export default function AboutPage() {
 
             {/* Our Values Text - right side */}
             <div>
-              <h2 className="heading-primary text-black mb-6" style={{ fontSize: '2rem' }}>
+              <h2 className="heading-primary mb-6" style={{ fontSize: '2rem' }}>
                 OUR VALUES
               </h2>
               <div className="space-y-4 text-lg text-black leading-relaxed">
@@ -52,7 +52,7 @@ export default function AboutPage() {
 
         {/* For Students, By Students Section */}
         <div className="text-center mb-12">
-          <h2 className="heading-primary text-black mb-12">
+          <h2 className="heading-primary mb-12">
             FOR STUDENTS, BY STUDENTS
           </h2>
 
@@ -63,7 +63,7 @@ export default function AboutPage() {
               <div className="bg-gray-200 rounded-lg w-48 h-48 mb-4 flex items-center justify-center">
                 <p className="text-gray-400 text-sm">Affordable icon</p>
               </div>
-              <h3 className="text-xl font-bold text-black">Affordable</h3>
+              <h3 className="text-xl font-bold text-ume-indigo">Affordable</h3>
             </div>
 
             {/* Sustainable */}
@@ -71,7 +71,7 @@ export default function AboutPage() {
               <div className="bg-gray-200 rounded-lg w-48 h-48 mb-4 flex items-center justify-center">
                 <p className="text-gray-400 text-sm">Sustainable icon</p>
               </div>
-              <h3 className="text-xl font-bold text-black">Sustainable</h3>
+              <h3 className="text-xl font-bold text-ume-indigo">Sustainable</h3>
             </div>
 
             {/* Connected */}
@@ -79,7 +79,7 @@ export default function AboutPage() {
               <div className="bg-gray-200 rounded-lg w-48 h-48 mb-4 flex items-center justify-center">
                 <p className="text-gray-400 text-sm">Connected icon</p>
               </div>
-              <h3 className="text-xl font-bold text-black">Connected</h3>
+              <h3 className="text-xl font-bold text-ume-indigo">Connected</h3>
             </div>
           </div>
         </div>

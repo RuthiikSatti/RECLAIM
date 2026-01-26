@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { trackEvent } from '@/lib/mixpanel/client'
 import UsernameInput from '@/components/auth/UsernameInput'
+import AddressInput from '@/components/auth/AddressInput'
 
 interface PasswordRequirements {
   minLength: boolean
@@ -137,7 +138,7 @@ export default function SignupPage() {
 
   if (success) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center px-4">
+      <div className="min-h-screen bg-ume-bg flex items-center justify-center px-4">
         <div className="max-w-md w-full space-y-8">
           <div className="text-center">
             <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
@@ -164,18 +165,12 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-ume-bg flex items-center justify-center px-4 py-12">
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="text-center text-3xl font-bold text-black">
             Create your account
           </h2>
-          <p className="mt-2 text-center text-sm text-black">
-            Already have an account?{' '}
-            <Link href="/login" className="font-medium text-black hover:underline">
-              Log in
-            </Link>
-          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-6">
@@ -223,21 +218,11 @@ export default function SignupPage() {
                 />
               </div>
 
-              <div>
-                <label htmlFor="collegeAddress" className="block text-sm font-medium text-black mb-1">
-                  College Address
-                </label>
-                <input
-                  id="collegeAddress"
-                  name="collegeAddress"
-                  type="text"
-                  required
-                  value={collegeAddress}
-                  onChange={(e) => setCollegeAddress(e.target.value)}
-                  className="appearance-none rounded-full relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-400 text-black focus:outline-none focus:ring-black focus:border-black"
-                  placeholder="e.g., 6178 College Station Dr, Williamsburg, KY 40769"
-                />
-              </div>
+              <AddressInput
+                value={collegeAddress}
+                onChange={setCollegeAddress}
+                required
+              />
 
               <div>
                 <label htmlFor="password" className="block text-sm font-medium text-black mb-1">
@@ -330,10 +315,17 @@ export default function SignupPage() {
             <button
               type="submit"
               disabled={loading || !allRequirementsMet || !passwordsMatch || !confirmPassword || !usernameAvailable || !collegeName.trim() || !collegeAddress.trim()}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-full text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black disabled:opacity-50 disabled:cursor-not-allowed"
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-full text-white bg-ume-pink hover:bg-pink-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ume-pink disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Creating account...' : 'Sign up'}
             </button>
+
+            <p className="mt-6 text-center text-base text-black">
+              Already a user?{' '}
+              <Link href="/login" className="font-semibold text-blue-600 hover:text-ume-pink transition-colors">
+                LOG IN
+              </Link>
+            </p>
           </form>
       </div>
     </div>

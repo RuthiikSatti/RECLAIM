@@ -1,7 +1,6 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import HeaderInlineSearch from './search/HeaderInlineSearch'
 
@@ -12,37 +11,7 @@ interface HeaderProps {
   userId?: string
 }
 
-// Route-to-label mapping - easily customizable
-const ROUTE_LABELS: Record<string, string> = {
-  '/': 'MARKETPLACE',
-  '/marketplace': 'MARKETPLACE',
-  '/create': 'CREATE LISTING',
-  '/messages': 'MESSAGES',
-  '/profile': 'PROFILE',
-  '/cart': 'CART',
-  '/search': 'SEARCH',
-  '/orders': 'ORDERS',
-  '/settings': 'SETTINGS',
-}
-
-// Extract label from pathname (handles dynamic routes)
-function getRouteLabel(pathname: string): string {
-  // Exact match
-  if (ROUTE_LABELS[pathname]) return ROUTE_LABELS[pathname]
-
-  // Handle dynamic routes like /profile/[id]
-  const segments = pathname.split('/').filter(Boolean)
-  if (segments.length > 0) {
-    const baseRoute = `/${segments[0]}`
-    return ROUTE_LABELS[baseRoute] || 'MARKETPLACE'
-  }
-
-  return 'MARKETPLACE'
-}
-
 export default function Header({ unreadMessages = 0, cartItemCount = 0, userAvatar, userId }: HeaderProps) {
-  const pathname = usePathname()
-  const currentLabel = getRouteLabel(pathname)
   const [searchOpen, setSearchOpen] = useState(false)
 
   return (
@@ -50,13 +19,16 @@ export default function Header({ unreadMessages = 0, cartItemCount = 0, userAvat
     <header className="hidden md:block bg-white border-b border-gray-200 sticky top-0 z-50">
       <div className="px-4 md:px-12 py-3 md:py-6">
         <div className="flex items-center justify-between">
-          {/* Left - Logo + Dynamic Label */}
-          <div className="flex items-center gap-3">
-            <Link href="/" className="text-[28px] font-black tracking-[-0.03em] text-black hover:opacity-80 transition-opacity" style={{ fontFamily: "'Archivo Black', sans-serif" }}>
-              UME
+          {/* Left - Logo + Subheading */}
+          <div className="flex items-center gap-2">
+            {/* UME Logo - U and E in indigo, M in pink */}
+            <Link href="/" className="flex items-baseline hover:opacity-80 transition-opacity" style={{ fontFamily: "'Archivo Black', sans-serif" }}>
+              <span className="text-[28px] font-black tracking-[-0.03em] text-ume-indigo">U</span>
+              <span className="text-[28px] font-black tracking-[-0.03em] text-ume-pink">M</span>
+              <span className="text-[28px] font-black tracking-[-0.03em] text-ume-pink">E</span>
             </Link>
-            <span className="text-[11px] font-light tracking-[-0.03em] uppercase text-black" style={{ fontFamily: "'Archivo Black', sans-serif" }}>
-              {currentLabel}
+            <span className="text-[11px] font-medium tracking-wide uppercase text-ume-indigo ml-1" style={{ fontFamily: "'Archivo Black', sans-serif" }}>
+              UNIVERSITY MARKET<br />EXCHANGE
             </span>
           </div>
 
@@ -72,14 +44,14 @@ export default function Header({ unreadMessages = 0, cartItemCount = 0, userAvat
             {/* Search */}
             <button
               onClick={() => setSearchOpen(true)}
-              className="text-black hover:opacity-60 transition-opacity relative group"
+              className="text-ume-indigo hover:text-ume-pink transition-colors relative group"
               aria-label="Search"
             >
               <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
                 <circle cx="11" cy="11" r="8"/>
                 <path d="m21 21-4.35-4.35"/>
               </svg>
-              <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs bg-black text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+              <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs bg-ume-indigo text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
                 Search
               </span>
             </button>
@@ -87,14 +59,14 @@ export default function Header({ unreadMessages = 0, cartItemCount = 0, userAvat
             {/* Marketplace */}
             <Link
               href="/marketplace"
-              className="text-black hover:opacity-60 transition-opacity relative group"
+              className="text-ume-indigo hover:text-ume-pink transition-colors relative group"
               aria-label="Marketplace"
             >
               <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
                 <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
                 <path d="M9 22V12h6v10"/>
               </svg>
-              <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs bg-black text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+              <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs bg-ume-indigo text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
                 Marketplace
               </span>
             </Link>
@@ -103,14 +75,14 @@ export default function Header({ unreadMessages = 0, cartItemCount = 0, userAvat
             {userId && (
               <Link
                 href="/create"
-                className="text-black hover:opacity-60 transition-opacity relative group"
+                className="text-ume-indigo hover:text-ume-pink transition-colors relative group"
                 aria-label="Create listing"
               >
                 <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
                   <line x1="12" y1="5" x2="12" y2="19"/>
                   <line x1="5" y1="12" x2="19" y2="12"/>
                 </svg>
-                <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs bg-black text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs bg-ume-indigo text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
                   Create
                 </span>
               </Link>
@@ -120,7 +92,7 @@ export default function Header({ unreadMessages = 0, cartItemCount = 0, userAvat
             {userId && (
               <Link
                 href="/messages"
-                className="text-black hover:opacity-60 transition-opacity relative group"
+                className="text-ume-indigo hover:text-ume-pink transition-colors relative group"
                 aria-label="Messages"
               >
                 <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
@@ -128,11 +100,11 @@ export default function Header({ unreadMessages = 0, cartItemCount = 0, userAvat
                   <path d="m2 7 8.5 5.5a2 2 0 0 0 2 0L22 7"/>
                 </svg>
                 {unreadMessages > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-black text-white text-[10px] font-bold rounded-full min-w-[16px] h-4 flex items-center justify-center px-1">
+                  <span className="absolute -top-1 -right-1 bg-ume-pink text-white text-[10px] font-bold rounded-full min-w-[16px] h-4 flex items-center justify-center px-1">
                     {unreadMessages > 99 ? '99+' : unreadMessages}
                   </span>
                 )}
-                <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs bg-black text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs bg-ume-indigo text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
                   Messages
                 </span>
               </Link>
@@ -141,7 +113,7 @@ export default function Header({ unreadMessages = 0, cartItemCount = 0, userAvat
             {/* Profile */}
             <Link
               href={userId ? `/profile/${userId}` : "/login"}
-              className="text-black hover:opacity-60 transition-opacity relative group"
+              className="text-ume-indigo hover:text-ume-pink transition-colors relative group"
               aria-label="Profile"
             >
               {userAvatar ? (
@@ -152,7 +124,7 @@ export default function Header({ unreadMessages = 0, cartItemCount = 0, userAvat
                   <path d="M20 21a8 8 0 1 0-16 0"/>
                 </svg>
               )}
-              <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs bg-black text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+              <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs bg-ume-indigo text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
                 {userId ? 'Profile' : 'Log in'}
               </span>
             </Link>
@@ -160,7 +132,7 @@ export default function Header({ unreadMessages = 0, cartItemCount = 0, userAvat
             {/* Cart with Badge */}
             <Link
               href="/cart"
-              className="text-black hover:opacity-60 transition-opacity relative group"
+              className="text-ume-indigo hover:text-ume-pink transition-colors relative group"
               aria-label="Cart"
             >
               <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
@@ -169,11 +141,11 @@ export default function Header({ unreadMessages = 0, cartItemCount = 0, userAvat
                 <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
               </svg>
               {cartItemCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-black text-white text-[10px] font-bold rounded-full min-w-[16px] h-4 flex items-center justify-center px-1">
+                <span className="absolute -top-1 -right-1 bg-ume-pink text-white text-[10px] font-bold rounded-full min-w-[16px] h-4 flex items-center justify-center px-1">
                   {cartItemCount > 99 ? '99+' : cartItemCount}
                 </span>
               )}
-              <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs bg-black text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+              <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs bg-ume-indigo text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
                 Cart
               </span>
             </Link>

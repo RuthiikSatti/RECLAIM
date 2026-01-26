@@ -27,7 +27,7 @@ export default function CartToggleButton({ listingId, listingOwnerId, currentUse
       disabled={loading}
       aria-pressed={inCart}
       className={`w-full px-6 py-3 rounded-full text-base font-medium transition-colors ${
-        inCart ? 'bg-white border-2 border-black text-black hover:bg-gray-50' : 'bg-black text-white hover:bg-gray-800'
+        inCart ? 'bg-white border-2 border-ume-indigo text-ume-indigo hover:bg-gray-50' : 'bg-ume-indigo text-white hover:bg-indigo-800'
       } ${loading ? 'opacity-60 cursor-not-allowed' : ''}`}
     >
       {loading ? 'Working...' : (inCart ? 'Remove from cart' : 'Add to cart')}

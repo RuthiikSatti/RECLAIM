@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center px-4">
+    <div className="min-h-screen bg-ume-bg flex items-center justify-center px-4">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
           <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-gray-100 mb-4">
@@ -16,15 +16,15 @@ export default function PrivacyPage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
           </div>
-          <h2 className="text-3xl font-bold text-black mb-2">
-            Privacy Policy
+          <h2 className="text-3xl font-bold text-ume-indigo mb-2">
+            PRIVACY POLICY
           </h2>
           <p className="text-sm text-gray-600 mb-6">
             Our privacy policy is currently being updated. Please check back later for more information.
           </p>
           <Link
             href="/"
-            className="inline-block text-sm font-medium text-black hover:underline"
+            className="inline-block text-sm font-medium text-ume-indigo hover:underline"
           >
             Back to home
           </Link>

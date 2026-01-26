@@ -10,10 +10,10 @@ export const metadata: Metadata = {
 
 export default function CreateListingPage() {
   return (
-    <div className="min-h-screen bg-white py-16 px-4">
+    <div className="min-h-screen bg-ume-bg py-16 px-4">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
-        <h1 className="heading-primary text-black mb-12">
+        <h1 className="heading-primary mb-12">
           CREATE LISTING
         </h1>
 
@@ -165,7 +165,7 @@ export default function CreateListingPage() {
           <div className="pt-4">
             <button
               type="submit"
-              className="bg-black text-white font-semibold px-12 py-4 rounded-full hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 transition-all text-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              className="bg-ume-pink text-white font-semibold px-12 py-4 rounded-full hover:bg-pink-400 focus:outline-none focus:ring-2 focus:ring-ume-pink focus:ring-offset-2 transition-all text-lg disabled:opacity-50 disabled:cursor-not-allowed"
               aria-label="Submit listing"
             >
               Post Listing

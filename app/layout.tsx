@@ -41,7 +41,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${workSans.variable} ${archivoBlack.variable}`}>
-      <body className={workSans.className} style={{ isolation: 'isolate', fontWeight: 300 }} suppressHydrationWarning>
+      <body className={`${workSans.className} bg-ume-bg`} style={{ isolation: 'isolate', fontWeight: 300 }} suppressHydrationWarning>
         <MixpanelProvider />
         <HeaderWrapper />
         <MobileHeaderWrapper />

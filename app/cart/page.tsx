@@ -114,7 +114,7 @@ export default function CartPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
+      <div className="min-h-screen bg-ume-bg flex items-center justify-center">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-black"></div>
           <p className="text-black mt-4">Loading cart...</p>
@@ -126,7 +126,7 @@ export default function CartPage() {
   // Empty cart state
   if (listings.length === 0) {
     return (
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-ume-bg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <h1 className="heading-primary text-black mb-8">SHOPPING CART</h1>
 
@@ -153,7 +153,7 @@ export default function CartPage() {
   const total = calculateTotal()
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-ume-bg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <h1 className="heading-primary text-black mb-8">SHOPPING CART</h1>
 
@@ -164,12 +164,12 @@ export default function CartPage() {
               const isRemoving = loadingIds[listing.id] === true
 
               return (
-                <div key={listing.id} className="bg-white rounded-lg shadow-md p-6">
+                <div key={listing.id} className="bg-white rounded-2xl shadow-md p-6 relative">
                   <div className="flex gap-4">
                     {/* Image */}
                     <Link href={`/item/${listing.id}`} className="flex-shrink-0">
                       {listing.image_urls?.[0] ? (
-                        <div className="relative w-24 h-24 rounded-lg overflow-hidden bg-gray-200">
+                        <div className="relative w-24 h-24 rounded-xl overflow-hidden bg-gray-200">
                           <Image
                             src={listing.image_urls[0]}
                             alt={listing.title}
@@ -178,7 +178,7 @@ export default function CartPage() {
                           />
                         </div>
                       ) : (
-                        <div className="w-24 h-24 rounded-lg bg-gray-200 flex items-center justify-center">
+                        <div className="w-24 h-24 rounded-xl bg-gray-200 flex items-center justify-center">
                           <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
                             <path d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
                           </svg>
@@ -197,29 +197,18 @@ export default function CartPage() {
                         {formatPrice(listing.price)}
                       </p>
 
-                      {/* Action Buttons */}
-                      <div className="mt-4 grid grid-cols-2 gap-3 max-w-md">
+                      {/* Contact Button */}
+                      <div className="mt-4">
                         <button
                           onClick={() => handleContactSeller(listing)}
                           disabled={contactingIds[listing.id]}
-                          className={`w-full h-11 px-4 rounded-full text-sm font-medium transition-colors whitespace-nowrap ${
+                          className={`h-11 px-6 rounded-full text-sm font-medium transition-colors whitespace-nowrap ${
                             contactingIds[listing.id]
                               ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
-                              : 'bg-black text-white hover:bg-gray-800'
+                              : 'bg-white border border-black text-black hover:bg-gray-50'
                           }`}
                         >
-                          {contactingIds[listing.id] ? 'Opening...' : '💬 Contact'}
-                        </button>
-                        <button
-                          onClick={() => removeFromCart(listing.id)}
-                          disabled={isRemoving}
-                          className={`w-full h-11 px-4 rounded-full text-sm font-medium transition-colors whitespace-nowrap ${
-                            isRemoving
-                              ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
-                              : 'bg-white border border-red-600 text-red-600 hover:bg-red-50'
-                          }`}
-                        >
-                          {isRemoving ? 'Removing...' : 'Remove'}
+                          {contactingIds[listing.id] ? 'Opening...' : 'Contact'}
                         </button>
                       </div>
                     </div>
@@ -231,6 +220,22 @@ export default function CartPage() {
                       </p>
                     </div>
                   </div>
+
+                  {/* Trash Icon - Bottom Right */}
+                  <button
+                    onClick={() => removeFromCart(listing.id)}
+                    disabled={isRemoving}
+                    className={`absolute bottom-4 right-4 p-2 transition-colors ${
+                      isRemoving
+                        ? 'text-gray-400 cursor-not-allowed'
+                        : 'text-black hover:text-gray-600'
+                    }`}
+                    aria-label="Remove from cart"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </button>
                 </div>
               )
             })}
@@ -243,12 +248,12 @@ export default function CartPage() {
 
               <div className="space-y-3 mb-6">
                 <div className="flex justify-between">
-                  <span className="text-black">Subtotal ({listings.length} {listings.length === 1 ? 'item' : 'items'})</span>
-                  <span className="font-semibold">{formatPrice(total)}</span>
+                  <span className="text-black font-medium">Subtotal ({listings.length} {listings.length === 1 ? 'item' : 'items'})</span>
+                  <span className="font-bold text-black">{formatPrice(total)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-black">Shipping</span>
-                  <span className="font-semibold">Calculated at checkout</span>
+                  <span className="text-black font-medium">Shipping</span>
+                  <span className="font-bold text-black">Calculated at checkout</span>
                 </div>
                 <div className="border-t pt-3 mt-3">
                   <div className="flex justify-between">

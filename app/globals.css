@@ -7,7 +7,7 @@ html, body, #__next {
 }
 
 :root {
-  --background: #ffffff;
+  --background: #f3f7f8;
   --foreground: #171717;
 }
 
@@ -39,6 +39,7 @@ body {
     text-align: center;
     letter-spacing: -0.03em;
     line-height: 1.2;
+    color: #130170; /* UME Indigo */
   }
 
   /* Responsive heading sizes */

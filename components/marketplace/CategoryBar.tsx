@@ -63,10 +63,10 @@ export default function CategoryBar({ currentCategory }: CategoryBarProps) {
             className={`
               flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium
               transition-all duration-200
-              focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+              focus:outline-none focus:ring-2 focus:ring-ume-pink focus:ring-offset-2
               ${!currentCategory
-                ? 'bg-black text-white shadow-md'
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                ? 'bg-ume-indigo text-white shadow-md'
+                : 'bg-gray-200 text-ume-indigo hover:text-ume-pink hover:scale-105'
               }
             `}
             aria-pressed={!currentCategory}
@@ -86,10 +86,10 @@ export default function CategoryBar({ currentCategory }: CategoryBarProps) {
                 className={`
                   flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium
                   transition-all duration-200
-                  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+                  focus:outline-none focus:ring-2 focus:ring-ume-pink focus:ring-offset-2
                   ${isActive
-                    ? 'bg-black text-white shadow-md'
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    ? 'bg-ume-indigo text-white shadow-md'
+                    : 'bg-gray-200 text-ume-indigo hover:text-ume-pink hover:scale-105'
                   }
                 `}
                 aria-pressed={isActive}
@@ -110,10 +110,10 @@ export default function CategoryBar({ currentCategory }: CategoryBarProps) {
           className={`
             flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium
             transition-all duration-200
-            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+            focus:outline-none focus:ring-2 focus:ring-ume-pink focus:ring-offset-2
             ${!currentCategory
-              ? 'bg-black text-white shadow-md'
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              ? 'bg-ume-indigo text-white shadow-md'
+              : 'bg-gray-200 text-ume-indigo hover:text-ume-pink hover:scale-105'
             }
           `}
           aria-pressed={!currentCategory}
@@ -133,10 +133,10 @@ export default function CategoryBar({ currentCategory }: CategoryBarProps) {
               className={`
                 flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium
                 transition-all duration-200
-                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+                focus:outline-none focus:ring-2 focus:ring-ume-pink focus:ring-offset-2
                 ${isActive
-                  ? 'bg-black text-white shadow-md'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  ? 'bg-ume-indigo text-white shadow-md'
+                  : 'bg-gray-200 text-ume-indigo hover:text-ume-pink hover:scale-105'
                 }
               `}
               aria-pressed={isActive}

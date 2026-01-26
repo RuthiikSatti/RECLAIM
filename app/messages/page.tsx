@@ -276,7 +276,7 @@ function MessagesPageContent() {
 
   if (conversationsLoading) {
     return (
-      <div className="flex h-screen bg-white items-center justify-center">
+      <div className="flex h-screen bg-ume-bg items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black mx-auto mb-4"></div>
           <p className="text-black">Loading messages...</p>
@@ -287,7 +287,7 @@ function MessagesPageContent() {
 
   if (conversationsError) {
     return (
-      <div className="flex h-screen bg-white items-center justify-center p-4">
+      <div className="flex h-screen bg-ume-bg items-center justify-center p-4">
         <div className="bg-white border border-black rounded-lg p-4 max-w-md" role="alert">
           <p className="text-black text-sm">Error loading conversations: {conversationsError}</p>
         </div>
@@ -297,9 +297,9 @@ function MessagesPageContent() {
 
   if (conversations.length === 0) {
     return (
-      <div className="flex h-screen bg-white items-center justify-center p-4">
+      <div className="flex h-screen bg-ume-bg items-center justify-center p-4">
         <div className="text-center max-w-md">
-          <h2 className="text-2xl font-bold text-black mb-2">No messages yet</h2>
+          <h2 className="text-2xl font-bold text-ume-indigo mb-2">No messages yet</h2>
           <p className="text-gray-600 mb-6">Start a conversation by contacting a seller on a listing</p>
           <Link
             href="/marketplace"
@@ -313,13 +313,13 @@ function MessagesPageContent() {
   }
 
   return (
-    <div className="flex h-screen bg-white overflow-hidden">
+    <div className="flex h-screen bg-ume-bg overflow-hidden">
       {/* Mobile */}
       <div className="flex md:hidden w-full">
         {!showMobileConversationView ? (
           <div className="flex-1 flex flex-col bg-white border-r border-gray-200">
             <div className="p-4 border-b border-gray-200">
-              <h1 className="text-2xl font-bold text-black mb-3">Messages</h1>
+              <h1 className="text-2xl font-bold text-ume-indigo mb-3">Messages</h1>
               <input
                 type="search"
                 value={searchQuery}
@@ -521,7 +521,7 @@ function MessagesPageContent() {
                                     <div
                                       className={`px-4 py-2 rounded-3xl text-sm break-words ${
                                         isOwn
-                                          ? 'bg-black text-white max-w-[280px]'
+                                          ? 'bg-ume-indigo text-white max-w-[280px]'
                                           : 'bg-gray-200 text-black max-w-[280px]'
                                       }`}
                                       style={{ wordBreak: 'break-word' }}
@@ -556,7 +556,7 @@ function MessagesPageContent() {
         {/* Left Sidebar */}
         <div className="w-96 border-r border-gray-200 flex flex-col bg-white h-full">
           <div className="p-6 border-b border-gray-200">
-            <h1 className="text-2xl font-bold text-black mb-4">Messages</h1>
+            <h1 className="text-2xl font-bold text-ume-indigo mb-4">Messages</h1>
             <input
               type="search"
               value={searchQuery}
@@ -772,7 +772,7 @@ function MessagesPageContent() {
                                   <div
                                     className={`px-4 py-2 rounded-3xl break-words ${
                                       isOwn
-                                        ? 'bg-black text-white max-w-[450px]'
+                                        ? 'bg-ume-indigo text-white max-w-[450px]'
                                         : 'bg-gray-200 text-black max-w-[450px]'
                                     }`}
                                     style={{ wordBreak: 'break-word' }}
@@ -841,22 +841,32 @@ function MessageInput({
     setText('')
   }
 
+  const fileInputRef = useRef<HTMLInputElement | null>(null)
+
+  const handleImageClick = () => {
+    fileInputRef.current?.click()
+  }
+
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    // For now, show a message that image sharing is coming soon
+    // TODO: Implement actual image upload functionality
+    alert('Image sharing is coming soon!')
+
+    // Reset the input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
+    }
+  }
+
   return (
     <form
       onSubmit={handleSubmit}
       className="px-4 py-3 border-t border-gray-200 bg-white"
     >
       <div className="flex items-center gap-2">
-        <button
-          type="button"
-          className="p-2 text-gray-600 hover:text-black rounded-full hover:bg-gray-100 flex-shrink-0"
-          aria-label="Emoji"
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-        </button>
-
         <input
           ref={inputRef}
           type="text"
@@ -868,36 +878,41 @@ function MessageInput({
           aria-label="Message input"
         />
 
-        {text.trim() ? (
-          <button
-            type="submit"
-            className="px-4 py-2 text-sm font-semibold text-black hover:text-gray-700"
-            aria-label="Send message"
-          >
-            Send
-          </button>
-        ) : (
-          <div className="flex items-center gap-1">
-            <button
-              type="button"
-              className="p-2 text-gray-600 hover:text-black rounded-full hover:bg-gray-100 flex-shrink-0"
-              aria-label="Voice message"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-              </svg>
-            </button>
-            <button
-              type="button"
-              className="p-2 text-gray-600 hover:text-black rounded-full hover:bg-gray-100 flex-shrink-0"
-              aria-label="Add image"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-            </button>
-          </div>
-        )}
+        {/* Image upload button */}
+        <button
+          type="button"
+          onClick={handleImageClick}
+          className="p-2 text-gray-600 hover:text-black rounded-full hover:bg-gray-100 flex-shrink-0"
+          aria-label="Add image"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+        </button>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleImageChange}
+          className="hidden"
+          aria-label="Upload image"
+        />
+
+        {/* Send button - always visible */}
+        <button
+          type="submit"
+          disabled={!text.trim() || disabled}
+          className={`p-2 rounded-full flex-shrink-0 transition-colors ${
+            text.trim() && !disabled
+              ? 'text-ume-indigo hover:bg-indigo-50'
+              : 'text-gray-400 cursor-not-allowed'
+          }`}
+          aria-label="Send message"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+          </svg>
+        </button>
       </div>
     </form>
   )
@@ -906,7 +921,7 @@ function MessageInput({
 export default function MessagesPage() {
   return (
     <Suspense fallback={
-      <div className="flex h-screen bg-white items-center justify-center">
+      <div className="flex h-screen bg-ume-bg items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black mx-auto mb-4"></div>
           <p className="text-black">Loading messages...</p>

@@ -12,6 +12,7 @@ All MVP features have been successfully implemented and are ready for testing an
 - ✅ Login and signup pages with validation
 - ✅ Protected route middleware
 - ✅ Session management
+- ✅ College address autocomplete with US-only suggestions (Nominatim/OpenStreetMap API)
 
 #### 2. Listings Management ✅
 - ✅ Create listing page with form validation
@@ -67,6 +68,11 @@ All MVP features have been successfully implemented and are ready for testing an
 - ✅ View all reports with details
 - ✅ Resolve or dismiss reports
 - ✅ Status tracking (pending, resolved, dismissed)
+- ✅ Admin email verification for security
+- ✅ API endpoint for moderation (/api/admin/moderation)
+- ✅ Client-side callModeration utility function
+- ✅ E2E Playwright tests for moderation API
+- ✅ Database migration for reports status columns
 
 #### 8. Analytics ✅
 - ✅ Mixpanel integration
@@ -158,7 +164,8 @@ RECLAIM/
 │       ├── 20250115000000_enhanced_messaging_schema.sql
 │       ├── 20250115200000_add_listing_filters.sql
 │       ├── 20250115210000_add_stripe_payments.sql
-│       └── 20250116000000_fix_user_creation.sql
+│       ├── 20250116000000_fix_user_creation.sql
+│       └── 20250116100000_add_reports_status.sql
 ├── types/                   # TypeScript types
 │   └── database.ts          # Database type definitions
 ├── middleware.ts            # Auth middleware

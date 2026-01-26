@@ -34,10 +34,10 @@ export default async function ProfilePage({
   const isOwnProfile = currentUser?.id === id
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-ume-bg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <h1 className="text-3xl font-bold text-black mb-2">
+          <h1 className="text-3xl font-bold text-ume-indigo mb-2">
             {profileUser.username || profileUser.display_name}
           </h1>
           <p className="text-black">@{profileUser.university_domain}</p>
@@ -57,7 +57,7 @@ export default async function ProfilePage({
         )}
 
         <div className="mb-4 flex justify-between items-center">
-          <h2 className="text-2xl font-bold text-black">
+          <h2 className="text-2xl font-bold text-ume-indigo">
             {isOwnProfile ? 'Your Listings' : 'Listings'}
           </h2>
         </div>
@@ -76,7 +76,7 @@ export default async function ProfilePage({
                 <div className="absolute top-2 right-2 flex gap-1">
                   <Link
                     href={`/edit/${listing.id}`}
-                    className="bg-blue-600 text-white px-3 py-1 rounded-full text-sm hover:bg-blue-700"
+                    className="bg-ume-indigo text-white px-3 py-1 rounded-full text-sm hover:bg-indigo-800"
                   >
                     Edit
                   </Link>

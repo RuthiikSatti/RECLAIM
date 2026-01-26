@@ -32,6 +32,13 @@ const SORT_OPTIONS = [
   { value: 'price-asc', label: 'Price: Low to High' },
   { value: 'price-desc', label: 'Price: High to Low' },
 ]
+const PRICE_OPTIONS = [
+  { label: 'Under $25', min: 0, max: 25 },
+  { label: '$25 to $50', min: 25, max: 50 },
+  { label: '$50 to $100', min: 50, max: 100 },
+  { label: '$100 to $200', min: 100, max: 200 },
+  { label: '$200 & above', min: 200, max: null },
+]
 
 export default function MobileFilters({
   isOpen,
@@ -45,15 +52,24 @@ export default function MobileFilters({
   const searchParams = useSearchParams()
   const [sort, setSort] = useState(currentSort || 'relevance')
   const [condition, setCondition] = useState(currentCondition || 'all')
-  const [minPrice, setMinPrice] = useState(currentMinPrice || '')
-  const [maxPrice, setMaxPrice] = useState(currentMaxPrice || '')
+  const [selectedPriceOption, setSelectedPriceOption] = useState<string>('')
+
+  // Determine current price option from props
+  const getCurrentPriceOption = () => {
+    if (!currentMinPrice && !currentMaxPrice) return ''
+    const min = currentMinPrice ? parseFloat(currentMinPrice) : 0
+    const max = currentMaxPrice ? parseFloat(currentMaxPrice) : null
+    for (const option of PRICE_OPTIONS) {
+      if (option.min === min && option.max === max) return option.label
+    }
+    return ''
+  }
 
   // Update local state when props change
   useEffect(() => {
     setSort(currentSort || 'relevance')
     setCondition(currentCondition || 'all')
-    setMinPrice(currentMinPrice || '')
-    setMaxPrice(currentMaxPrice || '')
+    setSelectedPriceOption(getCurrentPriceOption())
   }, [currentSort, currentCondition, currentMinPrice, currentMaxPrice])
 
   const handleApplyFilters = () => {
@@ -74,15 +90,18 @@ export default function MobileFilters({
     }
 
     // Price
-    if (minPrice) {
-      params.set('minPrice', (parseFloat(minPrice) * 100).toString())
+    if (selectedPriceOption) {
+      const option = PRICE_OPTIONS.find(o => o.label === selectedPriceOption)
+      if (option) {
+        params.set('minPrice', (option.min * 100).toString())
+        if (option.max !== null) {
+          params.set('maxPrice', (option.max * 100).toString())
+        } else {
+          params.delete('maxPrice')
+        }
+      }
     } else {
       params.delete('minPrice')
-    }
-
-    if (maxPrice) {
-      params.set('maxPrice', (parseFloat(maxPrice) * 100).toString())
-    } else {
       params.delete('maxPrice')
     }
 
@@ -93,8 +112,7 @@ export default function MobileFilters({
   const handleClearFilters = () => {
     setSort('relevance')
     setCondition('all')
-    setMinPrice('')
-    setMaxPrice('')
+    setSelectedPriceOption('')
 
     const params = new URLSearchParams(searchParams.toString())
     params.delete('sort')
@@ -170,37 +188,23 @@ export default function MobileFilters({
             </select>
           </div>
 
-          {/* Price Range */}
+          {/* Price */}
           <div>
             <label className="block text-sm font-medium text-black mb-2">
-              Price Range
+              Price
             </label>
-            <div className="space-y-3">
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm">$</span>
-                <input
-                  type="number"
-                  placeholder="Min"
-                  value={minPrice}
-                  onChange={(e) => setMinPrice(e.target.value)}
-                  className="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-full bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
-                  min="0"
-                  step="1"
-                />
-              </div>
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm">$</span>
-                <input
-                  type="number"
-                  placeholder="Max"
-                  value={maxPrice}
-                  onChange={(e) => setMaxPrice(e.target.value)}
-                  className="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-full bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
-                  min="0"
-                  step="1"
-                />
-              </div>
-            </div>
+            <select
+              value={selectedPriceOption}
+              onChange={(e) => setSelectedPriceOption(e.target.value)}
+              className="w-full px-4 py-3 border border-gray-300 rounded-full bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
+            >
+              <option value="">All Prices</option>
+              {PRICE_OPTIONS.map((option) => (
+                <option key={option.label} value={option.label}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
 

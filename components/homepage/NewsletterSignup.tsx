@@ -3,11 +3,11 @@
 /**
  * NewsletterSignup Component
  *
- * Newsletter signup section matching screenshot 3.
- * Features:
- * - Email input with submit button
- * - Form validation
- * - Accessible form controls
+ * Newsletter signup section matching the UME design:
+ * - Cream/beige background
+ * - "SIGN UP TO UME MAIL" heading in dark indigo
+ * - Email input with rounded borders
+ * - Dark/black signup button
  */
 
 import { useState } from 'react'
@@ -38,15 +38,15 @@ export default function NewsletterSignup() {
   }
 
   return (
-    <section className="w-full py-16 sm:py-20" style={{ backgroundColor: '#f5f5f0' }}>
+    <section className="w-full py-8 sm:py-12 bg-ume-bg">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Heading */}
-        <h2 className="heading-primary text-black mb-8 sm:mb-10">
+        {/* Heading - Dark Indigo */}
+        <h2 className="font-black text-2xl sm:text-3xl md:text-4xl uppercase text-center tracking-tight text-ume-indigo mb-4 sm:mb-6">
           SIGN UP TO UME MAIL
         </h2>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="max-w-md mx-auto">
+        <form onSubmit={handleSubmit} className="max-w-lg mx-auto">
           <div className="flex flex-col sm:flex-row gap-3">
             <input
               type="email"
@@ -54,13 +54,13 @@ export default function NewsletterSignup() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
               disabled={status === 'loading'}
-              className="flex-1 px-6 py-4 border-2 border-gray-900 rounded-full text-sm focus:outline-none focus:ring-4 focus:ring-gray-900/30 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 px-6 py-4 border-2 border-gray-800 rounded-full text-sm bg-white focus:outline-none focus:ring-4 focus:ring-ume-indigo/30 focus:border-ume-indigo disabled:opacity-50 disabled:cursor-not-allowed"
               aria-label="Email address"
             />
             <button
               type="submit"
               disabled={status === 'loading'}
-              className="px-8 py-4 bg-gray-900 text-white font-medium text-sm rounded-full hover:bg-gray-800 transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-gray-900/50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+              className="px-8 py-4 bg-ume-pink text-white font-semibold text-sm rounded-full hover:bg-pink-400 transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-ume-pink/50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
             >
               {status === 'loading' ? 'Signing up...' : 'Sign Up'}
             </button>
@@ -80,7 +80,7 @@ export default function NewsletterSignup() {
         </form>
 
         {/* Privacy Note */}
-        <p className="mt-6 text-xs text-center text-black">
+        <p className="mt-4 text-sm text-center text-gray-600">
           We'll send you updates about new features and campus marketplace tips. Unsubscribe anytime.
         </p>
       </div>

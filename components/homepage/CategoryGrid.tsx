@@ -1,13 +1,11 @@
 /**
  * CategoryGrid Component
  *
- * Category grid with Phosphor icons and labels.
- * Matches screenshot 3: "CATEGORIES" heading with "ALL" button and icon grid below.
- * Features:
- * - 7 categories in a horizontal row (responsive wrapping)
- * - Phosphor icon + label for each category
- * - Links to marketplace with category filter
- * - Accessible keyboard navigation
+ * Minimalistic category section:
+ * - Dark indigo background
+ * - "CATEGORIES" title in pastel pink
+ * - "ALL" pill button in cream with pink text
+ * - Clean white card without border containing category icons
  */
 
 'use client'
@@ -18,7 +16,7 @@ import CategoryIcon from '@/components/marketplace/CategoryIcon'
 interface Category {
   id: string
   name: string
-  categoryKey: string // Key for CategoryIcon component
+  categoryKey: string
   href: string
 }
 
@@ -69,72 +67,66 @@ const categories: Category[] = [
 
 export default function CategoryGrid() {
   return (
-    <section className="w-full py-16 sm:py-24 bg-white">
+    <section className="w-full bg-ume-bg py-8 sm:py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Heading */}
-        <h2 className="heading-primary text-black mb-8 sm:mb-12">
+        {/* Heading - Dark Indigo text */}
+        <h2 className="font-black text-3xl sm:text-4xl md:text-5xl lg:text-6xl uppercase text-center tracking-tight text-ume-indigo mb-4 sm:mb-6">
           CATEGORIES
         </h2>
 
-        {/* ALL Button */}
-        <div className="flex justify-center mb-12 sm:mb-16">
+        {/* ALL Button - Pink background with white text */}
+        <div className="flex justify-center mb-6 sm:mb-8">
           <Link
             href="/marketplace"
-            className="inline-block px-12 py-3 border-2 border-black text-black font-medium text-sm tracking-[-0.03em] uppercase rounded-full hover:bg-black hover:text-white transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-black/30"
+            className="inline-block px-12 py-3 bg-ume-pink text-white font-semibold text-sm tracking-wide uppercase rounded-full hover:bg-pink-400 transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-ume-pink/30 shadow-md"
           >
             ALL
           </Link>
         </div>
 
-        {/* Category Grid - Horizontal scroll on mobile, grid on desktop */}
-        <div className="md:grid md:grid-cols-3 lg:grid-cols-7 md:gap-8 lg:gap-12">
+        {/* White Card containing categories */}
+        <div className="bg-white rounded-3xl p-4 sm:p-6 lg:p-8 shadow-sm">
           {/* Mobile: Horizontal scroll */}
-          <div className="md:hidden overflow-x-auto -mx-4 px-4 pb-2 scrollbar-hide">
-            <div className="flex gap-6 min-w-max">
-              {categories.map((category) => {
-                return (
-                  <Link
-                    key={category.id}
-                    href={category.href}
-                    className="flex flex-col items-center group focus:outline-none focus:ring-4 focus:ring-black/30 rounded-lg p-2"
-                    style={{ minWidth: '80px' }}
-                  >
-                    {/* Phosphor Icon */}
-                    <div className="w-16 h-16 flex items-center justify-center mb-2 text-black group-hover:scale-110 transition-transform duration-200">
-                      <CategoryIcon category={category.categoryKey} size={48} className="text-black" />
-                    </div>
-
-                    {/* Label */}
-                    <span className="text-xs font-medium text-black text-center group-hover:underline whitespace-nowrap">
-                      {category.name}
-                    </span>
-                  </Link>
-                )
-              })}
-            </div>
-          </div>
-
-          {/* Desktop: Grid (hidden on mobile) */}
-          <div className="hidden md:contents">
-            {categories.map((category) => {
-              return (
+          <div className="md:hidden overflow-x-auto scrollbar-hide">
+            <div className="flex gap-4 justify-start">
+              {categories.map((category) => (
                 <Link
                   key={category.id}
                   href={category.href}
-                  className="flex flex-col items-center group focus:outline-none focus:ring-4 focus:ring-black/30 rounded-lg p-4 -m-4"
+                  className="flex flex-col items-center group focus:outline-none rounded-lg p-2 flex-shrink-0"
+                  style={{ width: '72px' }}
                 >
-                  {/* Phosphor Icon */}
-                  <div className="w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center mb-4 text-black group-hover:scale-110 transition-transform duration-200">
-                    <CategoryIcon category={category.categoryKey} size={64} className="text-black" />
+                  {/* Icon */}
+                  <div className="w-12 h-12 flex items-center justify-center mb-2 text-ume-indigo group-hover:text-ume-pink group-hover:scale-110 transition-all duration-200">
+                    <CategoryIcon category={category.categoryKey} size={40} />
                   </div>
-
                   {/* Label */}
-                  <span className="text-xs sm:text-sm font-medium text-black text-center group-hover:underline">
+                  <span className="text-[10px] font-medium text-ume-indigo text-center group-hover:text-ume-pink whitespace-nowrap transition-colors duration-200">
                     {category.name}
                   </span>
                 </Link>
-              )
-            })}
+              ))}
+            </div>
+          </div>
+
+          {/* Desktop: Grid */}
+          <div className="hidden md:grid md:grid-cols-4 lg:grid-cols-7 md:gap-6 lg:gap-8">
+            {categories.map((category) => (
+              <Link
+                key={category.id}
+                href={category.href}
+                className="flex flex-col items-center group focus:outline-none rounded-lg p-4"
+              >
+                {/* Icon */}
+                <div className="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center mb-3 text-ume-indigo group-hover:text-ume-pink group-hover:scale-110 transition-all duration-200">
+                  <CategoryIcon category={category.categoryKey} size={56} />
+                </div>
+                {/* Label */}
+                <span className="text-xs sm:text-sm font-medium text-ume-indigo text-center group-hover:text-ume-pink transition-colors duration-200">
+                  {category.name}
+                </span>
+              </Link>
+            ))}
           </div>
         </div>
       </div>

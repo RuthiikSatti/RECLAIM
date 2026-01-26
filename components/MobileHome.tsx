@@ -15,44 +15,37 @@ import NewsletterSignup from '@/components/homepage/NewsletterSignup'
 
 export default function MobileHome() {
   return (
-    <div className="bg-white min-h-screen">
+    <div className="bg-ume-bg min-h-screen">
       {/* MAIN CONTENT - Same as desktop */}
       <main className="min-h-screen">
-        {/* Hero Section */}
+        {/* Hero Section - Split layout */}
         <Hero
-          backgroundImage="/placeholders/hero-city.jpg"
+          backgroundImage="/placeholders/hero-main.png"
           subtitle="For students, by students"
-          headline="YOUR UNIVERSITY MARKETPLACE"
           ctaText="Browse Marketplace"
           ctaHref="/marketplace"
         />
 
-        {/* Feature Slider - Real-time chat, Verified students, Safe & simple */}
+        {/* Feature Slider - Owl carousel style */}
         <FeatureSlider
           slides={[
             {
               id: '1',
-              image: '/placeholders/feature-chat.jpg',
               headline: 'REAL-TIME CHAT',
-              subtitle: 'Message sellers instantly and arrange pickups easily',
-              alt: 'Real-time chat feature with ocean sunset background'
+              subtitle: 'Message sellers instantly and arrange pickups easily'
             },
             {
               id: '2',
-              image: '/placeholders/feature-secure.jpg',
               headline: 'VERIFIED STUDENTS ONLY',
-              subtitle: '.edu email verification ensures you\'re trading within your campus community',
-              alt: 'Verified students only feature'
+              subtitle: '.edu email verification ensures you\'re trading within your campus community'
             },
             {
               id: '3',
-              image: '/placeholders/feature-safe.jpg',
               headline: 'SAFE & SIMPLE',
-              subtitle: 'Report inappropriate listings and trade with confidence',
-              alt: 'Safe and simple trading feature'
+              subtitle: 'Report inappropriate listings and trade with confidence'
             }
           ]}
-          autoPlayInterval={3000}
+          autoPlayInterval={4000}
         />
 
         {/* Category Grid - Browse by category */}

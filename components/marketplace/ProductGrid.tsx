@@ -95,14 +95,9 @@ function ProductCard({ listing }: { listing: Listing }) {
           {/* Card Content */}
           <div className="p-4 space-y-2">
             {/* Title */}
-            <h3 className="text-lg font-bold text-gray-900 line-clamp-2 group-hover:text-blue-600 transition-colors">
+            <h3 className="text-lg font-bold text-ume-indigo line-clamp-2 group-hover:text-ume-pink transition-colors">
               {listing.title}
             </h3>
-
-            {/* Price */}
-            <p className="text-xl font-bold text-blue-600">
-              {formatPrice(listing.price)}
-            </p>
 
             {/* Description */}
             {shortDescription && (
@@ -110,6 +105,11 @@ function ProductCard({ listing }: { listing: Listing }) {
                 {shortDescription}
               </p>
             )}
+
+            {/* Price */}
+            <p className="text-xl font-bold text-ume-indigo">
+              {formatPrice(listing.price)}
+            </p>
 
             {/* Seller Info (if available) */}
             {listing.user && (
@@ -143,7 +143,7 @@ function ProductCard({ listing }: { listing: Listing }) {
             disabled={loading}
             aria-pressed={inCart}
             className={`w-full px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-              inCart ? 'bg-white border border-black text-black hover:bg-gray-50' : 'bg-black text-white hover:bg-gray-800'
+              inCart ? 'bg-white border-2 border-ume-indigo text-ume-indigo hover:bg-gray-50' : 'bg-ume-indigo text-white hover:bg-indigo-800'
             } ${loading ? 'opacity-60 cursor-not-allowed' : ''}`}
           >
             {loading ? 'Working...' : (inCart ? 'Remove from cart' : 'Add to cart')}

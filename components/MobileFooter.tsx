@@ -2,15 +2,15 @@ import Link from 'next/link'
 
 export default function MobileFooter() {
   return (
-    <footer className="md:hidden bg-white border-t border-gray-200 py-4 text-center">
+    <footer className="md:hidden bg-ume-indigo py-6 text-center">
       <div className="px-4">
-        <div className="flex justify-center gap-3 text-xs text-black mb-2">
-          <Link href="/about" className="hover:opacity-60">About</Link>
-          <Link href="/contact" className="hover:opacity-60">Contact</Link>
-          <Link href="/terms" className="hover:opacity-60">Terms</Link>
-          <Link href="/privacy" className="hover:opacity-60">Privacy</Link>
+        <div className="flex justify-center gap-4 text-xs text-white mb-3">
+          <Link href="/about" className="hover:text-ume-pink transition-colors">About us</Link>
+          <Link href="/contact" className="hover:text-ume-pink transition-colors">Contact</Link>
+          <Link href="/privacy" className="hover:text-ume-pink transition-colors">Privacy</Link>
+          <Link href="/terms" className="hover:text-ume-pink transition-colors">Terms</Link>
         </div>
-        <p className="text-xs text-gray-600">© {new Date().getFullYear()} UME</p>
+        <p className="text-xs text-white/70">@{new Date().getFullYear()} UME all rights reserved</p>
       </div>
     </footer>
   )

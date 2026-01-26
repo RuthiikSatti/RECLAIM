@@ -29,13 +29,15 @@ export default function MobileHeader({
         <div className="px-3 py-2.5">
           {/* Top Row: Logo + Icons */}
           <div className="flex items-center justify-between">
-            {/* Logo */}
+            {/* Logo - UME with U and E in indigo, M in pink */}
             <Link
               href="/"
-              className="text-lg font-black tracking-[-0.03em] text-black"
+              className="flex items-baseline"
               style={{ fontFamily: "'Archivo Black', sans-serif" }}
             >
-              UME
+              <span className="text-lg font-black tracking-[-0.03em] text-ume-indigo">U</span>
+              <span className="text-lg font-black tracking-[-0.03em] text-ume-pink">M</span>
+              <span className="text-lg font-black tracking-[-0.03em] text-ume-pink">E</span>
             </Link>
 
             {/* Icons */}
@@ -46,7 +48,7 @@ export default function MobileHeader({
                 aria-label="Search"
                 className="p-1"
               >
-                <svg className="w-4 h-4 text-black" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-ume-indigo" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
                   <circle cx="11" cy="11" r="8"/>
                   <path d="m21 21-4.35-4.35"/>
                 </svg>
@@ -58,13 +60,13 @@ export default function MobileHeader({
                 aria-label="Cart"
                 className="p-1 relative"
               >
-                <svg className="w-4 h-4 text-black" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-ume-indigo" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
                   <circle cx="9" cy="21" r="1"/>
                   <circle cx="20" cy="21" r="1"/>
                   <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
                 </svg>
                 {cartItemCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-black text-white text-[9px] font-bold rounded-full min-w-[14px] h-3.5 flex items-center justify-center px-1">
+                  <span className="absolute -top-1 -right-1 bg-ume-pink text-white text-[9px] font-bold rounded-full min-w-[14px] h-3.5 flex items-center justify-center px-1">
                     {cartItemCount > 99 ? '99+' : cartItemCount}
                   </span>
                 )}
@@ -76,7 +78,7 @@ export default function MobileHeader({
                 aria-label="Menu"
                 className="p-1"
               >
-                <svg className="w-4 h-4 text-black" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-ume-indigo" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                 </svg>
               </button>
@@ -104,9 +106,9 @@ export default function MobileHeader({
           {/* Drawer */}
           <div className="fixed top-0 right-0 bottom-0 w-56 bg-white z-50 shadow-xl md:hidden">
             <div className="px-3 py-2.5 border-b border-gray-200 flex items-center justify-between">
-              <span className="text-xs font-bold text-black">Menu</span>
+              <span className="text-xs font-bold text-ume-indigo">Menu</span>
               <button onClick={() => setIsMenuOpen(false)} aria-label="Close menu">
-                <svg className="w-4 h-4 text-black" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-ume-indigo" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
@@ -118,7 +120,7 @@ export default function MobileHeader({
                 <li>
                   <Link
                     href="/marketplace"
-                    className="flex items-center gap-2.5 p-2.5 text-xs text-black hover:bg-gray-100 rounded-lg"
+                    className="flex items-center gap-2.5 p-2.5 text-xs text-ume-indigo hover:bg-gray-100 rounded-lg"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
@@ -134,7 +136,7 @@ export default function MobileHeader({
                   <li>
                     <Link
                       href="/messages"
-                      className="flex items-center gap-2.5 p-2.5 text-xs text-black hover:bg-gray-100 rounded-lg relative"
+                      className="flex items-center gap-2.5 p-2.5 text-xs text-ume-indigo hover:bg-gray-100 rounded-lg relative"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
@@ -143,7 +145,7 @@ export default function MobileHeader({
                       </svg>
                       Messages
                       {unreadMessages > 0 && (
-                        <span className="ml-auto bg-black text-white text-[9px] font-bold rounded-full min-w-[14px] h-3.5 flex items-center justify-center px-1">
+                        <span className="ml-auto bg-ume-pink text-white text-[9px] font-bold rounded-full min-w-[14px] h-3.5 flex items-center justify-center px-1">
                           {unreadMessages > 99 ? '99+' : unreadMessages}
                         </span>
                       )}
@@ -156,7 +158,7 @@ export default function MobileHeader({
                   <li>
                     <Link
                       href="/create"
-                      className="flex items-center gap-2.5 p-2.5 text-xs text-black hover:bg-gray-100 rounded-lg"
+                      className="flex items-center gap-2.5 p-2.5 text-xs text-ume-indigo hover:bg-gray-100 rounded-lg"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
@@ -172,7 +174,7 @@ export default function MobileHeader({
                 <li>
                   <Link
                     href={userId ? `/profile/${userId}` : "/login"}
-                    className="flex items-center gap-2.5 p-2.5 text-xs text-black hover:bg-gray-100 rounded-lg"
+                    className="flex items-center gap-2.5 p-2.5 text-xs text-ume-indigo hover:bg-gray-100 rounded-lg"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     {userAvatar ? (

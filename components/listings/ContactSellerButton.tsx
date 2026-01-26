@@ -75,7 +75,7 @@ export default function ContactSellerButton({ listing, className = '' }: Contact
       <button
         onClick={handleContactSeller}
         disabled={loading}
-        className={`w-full bg-black text-white px-6 py-3 rounded-full font-semibold hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
+        className={`w-full bg-white text-ume-pink border-2 border-ume-pink px-6 py-3 rounded-full font-semibold hover:bg-pink-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
         aria-label={`Contact seller about ${listing.title}`}
       >
         {loading ? (
@@ -87,7 +87,7 @@ export default function ContactSellerButton({ listing, className = '' }: Contact
             Opening chat...
           </span>
         ) : (
-          <>💬 Contact Seller</>
+          'Contact Seller'
         )}
       </button>
 

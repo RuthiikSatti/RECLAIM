@@ -15,6 +15,11 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        // UME Brand Colors
+        'ume-indigo': '#130170',
+        'ume-pink': '#fa9ebc',
+        'ume-cream': '#f5f5f0',
+        'ume-bg': '#f3f7f8',
       },
       keyframes: {
         'fade-in': {

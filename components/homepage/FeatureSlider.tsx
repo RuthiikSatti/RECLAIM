@@ -1,27 +1,25 @@
 'use client'
 
 /**
- * FeatureSlider Component
+ * FeatureSlider Component (Owl Carousel Style)
  *
- * Full-width image slider with navigation arrows and auto-play.
- * Matches screenshot 2: large image with centered headline "REAL-TIME CHAT".
- * Features:
- * - Auto-play with 5s interval
- * - Pause on hover
- * - Left/right arrow navigation
- * - Keyboard accessible
- * - Touch swipe support on mobile
+ * Three feature cards with fluid owl carousel effect:
+ * - Center card is large with beige/cream background
+ * - Side cards are smaller, more rectangular with dark indigo border
+ * - Smooth animated transitions between positions
+ * - Cards slide and scale as they move between positions
+ * - Gap between panels for visual separation
+ * - Works on both desktop and mobile
+ * - Auto-rotating animation
+ * - Dot indicators only on center card
  */
 
 import { useState, useEffect, useCallback } from 'react'
-import Image from 'next/image'
 
 interface Slide {
   id: string
-  image: string
   headline: string
   subtitle: string
-  alt: string
 }
 
 interface FeatureSliderProps {
@@ -32,43 +30,46 @@ interface FeatureSliderProps {
 const defaultSlides: Slide[] = [
   {
     id: '1',
-    image: '/placeholders/feature-chat.jpg',
     headline: 'REAL-TIME CHAT',
-    subtitle: 'Message sellers instantly and arrange pickups easily',
-    alt: 'Real-time chat feature'
+    subtitle: 'Message sellers instantly and arrange pickups easily'
   },
   {
     id: '2',
-    image: '/placeholders/feature-secure.jpg',
     headline: 'VERIFIED STUDENTS ONLY',
-    subtitle: 'Buy and sell safely within your verified university community',
-    alt: 'Verified students only feature'
+    subtitle: '.edu email verification ensures you\'re trading within your campus community'
   },
   {
     id: '3',
-    image: '/placeholders/feature-local.jpg',
     headline: 'SAFE & SIMPLE',
-    subtitle: 'Easy-to-use platform designed for student safety and convenience',
-    alt: 'Safe and simple feature'
+    subtitle: 'Report inappropriate listings and trade with confidence'
   }
 ]
 
+type CardPosition = 'left' | 'center' | 'right'
+
 export default function FeatureSlider({
   slides = defaultSlides,
-  autoPlayInterval = 3000
+  autoPlayInterval = 4000
 }: FeatureSliderProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
-  const [touchStart, setTouchStart] = useState(0)
-  const [touchEnd, setTouchEnd] = useState(0)
+  const [isAnimating, setIsAnimating] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+
+  // Check for mobile on mount and resize
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768)
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   const goToNext = useCallback(() => {
+    if (isAnimating) return
+    setIsAnimating(true)
     setCurrentIndex((prev) => (prev + 1) % slides.length)
-  }, [slides.length])
-
-  const goToPrevious = useCallback(() => {
-    setCurrentIndex((prev) => (prev - 1 + slides.length) % slides.length)
-  }, [slides.length])
+    setTimeout(() => setIsAnimating(false), 600)
+  }, [slides.length, isAnimating])
 
   // Auto-play
   useEffect(() => {
@@ -78,135 +79,144 @@ export default function FeatureSlider({
     return () => clearInterval(interval)
   }, [isPaused, goToNext, autoPlayInterval, slides.length])
 
-  // Touch swipe handlers
-  const handleTouchStart = (e: React.TouchEvent) => {
-    setTouchStart(e.targetTouches[0].clientX)
-  }
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    setTouchEnd(e.targetTouches[0].clientX)
-  }
-
-  const handleTouchEnd = () => {
-    if (!touchStart || !touchEnd) return
-
-    const distance = touchStart - touchEnd
-    const isLeftSwipe = distance > 50
-    const isRightSwipe = distance < -50
-
-    if (isLeftSwipe) {
-      goToNext()
-    }
-    if (isRightSwipe) {
-      goToPrevious()
-    }
-
-    setTouchStart(0)
-    setTouchEnd(0)
-  }
-
-  // Keyboard navigation
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'ArrowLeft') {
-      goToPrevious()
-    } else if (e.key === 'ArrowRight') {
-      goToNext()
-    }
-  }
-
   if (slides.length === 0) return null
+
+  // Get the position of each card relative to current index
+  const getCardPosition = (cardIndex: number): CardPosition => {
+    const diff = (cardIndex - currentIndex + slides.length) % slides.length
+    if (diff === 0) return 'center'
+    if (diff === 1 || (diff === slides.length - 2 && slides.length === 3)) return 'right'
+    if (diff === slides.length - 1 || (diff === 2 && slides.length === 3)) return 'left'
+    return 'center'
+  }
+
+  // Get styles for each position with responsive sizing
+  const getCardStyles = (position: CardPosition, isCenter: boolean): React.CSSProperties => {
+    // Base dimensions - responsive
+    // Side cards are more rectangular (wider than tall)
+    const centerWidth = isMobile ? 280 : 460
+    const sideWidth = isMobile ? 160 : 260  // Wider
+    const centerHeight = isMobile ? 260 : 340
+    const sideHeight = isMobile ? 120 : 180  // Shorter - more rectangular
+    const gapPixels = isMobile ? 15 : 35 // Gap between cards
+
+    // Calculate offset including gap
+    const sideOffset = (centerWidth / 2) + (sideWidth / 2) + gapPixels
+    const sideScale = isMobile ? 0.9 : 0.9
+
+    const baseStyles: React.CSSProperties = {
+      width: isCenter ? centerWidth : sideWidth,
+      height: isCenter ? 'auto' : sideHeight,
+      minHeight: isCenter ? centerHeight : 'auto',
+      padding: isCenter ? (isMobile ? 20 : 32) : (isMobile ? 14 : 20),
+      transition: 'all 500ms cubic-bezier(0.4, 0, 0.2, 1)',
+    }
+
+    switch (position) {
+      case 'left':
+        return {
+          ...baseStyles,
+          transform: `translateX(-${sideOffset}px) scale(${sideScale})`,
+          opacity: 0.8,
+          zIndex: 10,
+        }
+      case 'center':
+        return {
+          ...baseStyles,
+          transform: 'translateX(0) scale(1)',
+          opacity: 1,
+          zIndex: 30,
+        }
+      case 'right':
+        return {
+          ...baseStyles,
+          transform: `translateX(${sideOffset}px) scale(${sideScale})`,
+          opacity: 0.8,
+          zIndex: 10,
+        }
+    }
+  }
 
   return (
     <section
-      className="relative w-full py-8 sm:py-12 bg-white"
+      className="relative w-full py-6 sm:py-8 md:py-10 bg-ume-cream overflow-hidden"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
-      onKeyDown={handleKeyDown}
-      tabIndex={0}
       role="region"
       aria-label="Feature carousel"
     >
-      {/* Container with padding/margin for spacing */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="relative h-[400px] sm:h-[500px] overflow-hidden rounded-2xl bg-gray-100">
-          {/* All slides rendered, only current one visible */}
-          {slides.map((slide, index) => (
-            <div
-              key={slide.id}
-              className={`absolute inset-0 transition-opacity duration-700 ${
-                index === currentIndex ? 'opacity-100' : 'opacity-0'
-              }`}
-            >
-              <Image
-                src={slide.image}
-                alt={slide.alt}
-                fill
-                className="object-cover object-center"
-                priority={index === 0}
-                quality={90}
-              />
-              {/* Subtle overlay */}
-              <div className="absolute inset-0 bg-black/10" />
+      <div className="max-w-7xl mx-auto px-2 sm:px-4 md:px-6">
+        {/* Cards Container */}
+        <div className="relative flex items-center justify-center min-h-[280px] sm:min-h-[320px] md:min-h-[380px]">
 
-              {/* Content */}
-              <div className="relative z-10 flex flex-col items-center justify-center h-full px-4 sm:px-6">
-                <h2 className="heading-primary text-black mb-4">
+          {/* All cards rendered with absolute positioning */}
+          {slides.map((slide, index) => {
+            const position = getCardPosition(index)
+            const isCenter = position === 'center'
+            const cardStyles = getCardStyles(position, isCenter)
+
+            return (
+              <div
+                key={slide.id}
+                className={`absolute flex flex-col justify-start rounded-2xl sm:rounded-3xl border-2 border-ume-indigo cursor-pointer ${
+                  isCenter ? 'bg-ume-cream shadow-2xl' : 'bg-white hover:opacity-95'
+                }`}
+                style={cardStyles}
+                onClick={() => {
+                  if (!isCenter && !isAnimating) {
+                    setIsAnimating(true)
+                    setCurrentIndex(index)
+                    setTimeout(() => setIsAnimating(false), 600)
+                  }
+                }}
+              >
+                <h3
+                  className={`text-ume-indigo font-black uppercase tracking-tight ${
+                    isCenter
+                      ? 'text-lg sm:text-xl md:text-2xl lg:text-3xl mb-2 sm:mb-3 md:mb-4'
+                      : 'text-xs sm:text-sm md:text-base lg:text-lg mb-1 sm:mb-2'
+                  }`}
+                >
                   {slide.headline}
-                </h2>
-                <p className="text-base sm:text-lg text-black font-light max-w-2xl text-center">
+                </h3>
+                <p
+                  className={`leading-relaxed ${
+                    isCenter
+                      ? 'text-gray-700 text-xs sm:text-sm md:text-base'
+                      : 'text-gray-600 text-[10px] sm:text-xs line-clamp-2'
+                  }`}
+                >
                   {slide.subtitle}
                 </p>
+
+                {/* Dot indicators - Only on center card */}
+                {isCenter && (
+                  <div className="mt-auto pt-4 sm:pt-6 md:pt-8 flex justify-center gap-1.5 sm:gap-2">
+                    {slides.map((_, idx) => (
+                      <button
+                        key={idx}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          if (!isAnimating) {
+                            setIsAnimating(true)
+                            setCurrentIndex(idx)
+                            setTimeout(() => setIsAnimating(false), 600)
+                          }
+                        }}
+                        className={`rounded-full transition-all duration-300 ${
+                          idx === currentIndex
+                            ? 'bg-ume-indigo w-5 sm:w-6 md:w-8 h-1.5 sm:h-2 md:h-3'
+                            : 'bg-gray-400 hover:bg-gray-500 w-1.5 sm:w-2 md:w-3 h-1.5 sm:h-2 md:h-3'
+                        }`}
+                        aria-label={`Go to slide ${idx + 1}`}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
-            </div>
-          ))}
+            )
+          })}
 
-          {/* Navigation Arrows - Invisible but clickable */}
-          {slides.length > 1 && (
-            <>
-              {/* Left Arrow */}
-              <button
-                onClick={goToPrevious}
-                className="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 z-20 w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-transparent hover:bg-white/10 text-transparent hover:text-white flex items-center justify-center transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white/30"
-                aria-label="Previous slide"
-              >
-                <svg className="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path d="M15 19l-7-7 7-7" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </button>
-
-              {/* Right Arrow */}
-              <button
-                onClick={goToNext}
-                className="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 z-20 w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-transparent hover:bg-white/10 text-transparent hover:text-white flex items-center justify-center transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white/30"
-                aria-label="Next slide"
-              >
-                <svg className="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path d="M9 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </button>
-            </>
-          )}
-
-          {/* Slide Indicators */}
-          {slides.length > 1 && (
-            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-2">
-              {slides.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentIndex(index)}
-                  className={`w-2 h-2 rounded-full transition-all duration-200 ${
-                    index === currentIndex
-                      ? 'bg-white w-8'
-                      : 'bg-white/50 hover:bg-white/75'
-                  }`}
-                  aria-label={`Go to slide ${index + 1}`}
-                />
-              ))}
-            </div>
-          )}
         </div>
       </div>
     </section>

@@ -4,11 +4,11 @@
  * Main landing page for UME marketplace.
  * Features:
  * - Mobile-only homepage (MobileHome component - hidden on desktop)
- * - Desktop: Hero section with background image and CTA
- * - Feature slider showcasing key features
- * - Category grid for easy navigation
+ * - Desktop: Split hero section with dark indigo left, image right
+ * - Owl-style feature carousel with 3 cards
+ * - Category grid with dark indigo background
  * - Newsletter signup
- * - Footer
+ * - Footer (in layout.tsx)
  *
  * TESTING MOBILE LAYOUT ON DESKTOP:
  * Add ?showMobile=1 to URL to force mobile layout on desktop browsers
@@ -38,46 +38,39 @@ export default async function Home({
       </div>
 
       {/* DESKTOP HOMEPAGE - Hidden on mobile */}
-      <main className={`min-h-screen bg-white ${debugForceMobile ? 'hidden' : 'hidden md:block'}`}>
-        {/* Hero Section - Full screen with city skyline */}
+      <main className={`min-h-screen bg-ume-bg ${debugForceMobile ? 'hidden' : 'hidden md:block'}`}>
+        {/* Hero Section - Split layout with dark indigo left, image right */}
         <Hero
-          backgroundImage="/placeholders/hero-city.jpg"
+          backgroundImage="/placeholders/hero-main.png"
           subtitle="For students, by students"
-          headline="YOUR UNIVERSITY MARKETPLACE"
           ctaText="Browse Marketplace"
           ctaHref="/marketplace"
         />
 
-      {/* Feature Slider - Showcase key features */}
-      <FeatureSlider
-        slides={[
-          {
-            id: '1',
-            image: '/placeholders/feature-chat.jpg',
-            headline: 'REAL-TIME CHAT',
-            subtitle: 'Message sellers instantly and arrange pickups easily',
-            alt: 'Real-time chat feature with ocean sunset background'
-          },
-          {
-            id: '2',
-            image: '/placeholders/feature-secure.jpg',
-            headline: 'VERIFIED STUDENTS ONLY',
-            subtitle: '.edu email verification ensures you\'re trading within your campus community',
-            alt: 'Verified students only feature'
-          },
-          {
-            id: '3',
-            image: '/placeholders/feature-safe.jpg',
-            headline: 'SAFE & SIMPLE',
-            subtitle: 'Report inappropriate listings and trade with confidence',
-            alt: 'Safe and simple trading feature'
-          }
-        ]}
-        autoPlayInterval={3000}
-      />
+        {/* Feature Slider - Owl carousel style with 3 cards */}
+        <FeatureSlider
+          slides={[
+            {
+              id: '1',
+              headline: 'REAL-TIME CHAT',
+              subtitle: 'Message sellers instantly and arrange pickups easily'
+            },
+            {
+              id: '2',
+              headline: 'VERIFIED STUDENTS ONLY',
+              subtitle: '.edu email verification ensures you\'re trading within your campus community'
+            },
+            {
+              id: '3',
+              headline: 'SAFE & SIMPLE',
+              subtitle: 'Report inappropriate listings and trade with confidence'
+            }
+          ]}
+          autoPlayInterval={4000}
+        />
 
-      {/* Category Grid - Browse by category */}
-      <CategoryGrid />
+        {/* Category Grid - Browse by category */}
+        <CategoryGrid />
 
         {/* Newsletter Signup */}
         <NewsletterSignup />
