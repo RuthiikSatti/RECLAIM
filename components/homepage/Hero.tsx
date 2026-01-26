@@ -73,7 +73,7 @@ export default function Hero({
           src={backgroundImage}
           alt="Students collaborating"
           fill
-          className="object-cover object-center opacity-90"
+          className="object-cover object-center opacity-85"
           priority
           quality={90}
           sizes="100vw"
