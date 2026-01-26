@@ -96,7 +96,7 @@ export default function FeatureSlider({
     // Side cards are more rectangular (wider than tall)
     const centerWidth = isMobile ? 280 : 460
     const sideWidth = isMobile ? 160 : 260  // Wider
-    const centerHeight = isMobile ? 260 : 340
+    const centerHeight = isMobile ? 200 : 260  // Reduced height for tighter layout
     const sideHeight = isMobile ? 120 : 180  // Shorter - more rectangular
     const gapPixels = isMobile ? 15 : 35 // Gap between cards
 
@@ -191,7 +191,7 @@ export default function FeatureSlider({
 
                 {/* Dot indicators - Only on center card */}
                 {isCenter && (
-                  <div className="mt-auto pt-4 sm:pt-6 md:pt-8 flex justify-center gap-1.5 sm:gap-2">
+                  <div className="mt-auto pt-2 sm:pt-3 md:pt-4 flex justify-center gap-1.5 sm:gap-2">
                     {slides.map((_, idx) => (
                       <button
                         key={idx}
