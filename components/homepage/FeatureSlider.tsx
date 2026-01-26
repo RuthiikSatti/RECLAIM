@@ -139,7 +139,7 @@ export default function FeatureSlider({
 
   return (
     <section
-      className="relative w-full py-6 sm:py-8 md:py-10 bg-ume-cream overflow-hidden"
+      className="relative w-full py-2 sm:py-3 md:py-4 bg-ume-cream overflow-hidden"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       role="region"
@@ -147,7 +147,7 @@ export default function FeatureSlider({
     >
       <div className="max-w-7xl mx-auto px-2 sm:px-4 md:px-6">
         {/* Cards Container */}
-        <div className="relative flex items-center justify-center min-h-[280px] sm:min-h-[320px] md:min-h-[380px]">
+        <div className="relative flex items-center justify-center min-h-[180px] sm:min-h-[200px] md:min-h-[220px]">
 
           {/* All cards rendered with absolute positioning */}
           {slides.map((slide, index) => {
