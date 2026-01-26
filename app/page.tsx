@@ -41,7 +41,7 @@ export default async function Home({
       <main className={`min-h-screen bg-ume-bg ${debugForceMobile ? 'hidden' : 'hidden md:block'}`}>
         {/* Hero Section - Split layout with dark indigo left, image right */}
         <Hero
-          backgroundImage="/placeholders/hero-students.png"
+          backgroundImage="/placeholders/hero-main.png"
           subtitle="For students, by students"
           ctaText="Browse Marketplace"
           ctaHref="/marketplace"

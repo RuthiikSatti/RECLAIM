@@ -20,7 +20,7 @@ export default function MobileHome() {
       <main className="min-h-screen">
         {/* Hero Section - Split layout */}
         <Hero
-          backgroundImage="/placeholders/hero-students.png"
+          backgroundImage="/placeholders/hero-main.png"
           subtitle="For students, by students"
           ctaText="Browse Marketplace"
           ctaHref="/marketplace"

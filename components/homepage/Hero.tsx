@@ -63,6 +63,7 @@ export default function Hero({
           className="object-cover object-center"
           priority
           quality={90}
+          sizes="(min-width: 1024px) 65vw, 60vw"
         />
       </div>
 
