@@ -96,7 +96,7 @@ export default function FeatureSlider({
     // Side cards are more rectangular (wider than tall)
     const centerWidth = isMobile ? 280 : 460
     const sideWidth = isMobile ? 160 : 260  // Wider
-    const centerHeight = isMobile ? 200 : 260  // Reduced height for tighter layout
+    const centerHeight = isMobile ? 160 : 200  // Compact height for tight layout
     const sideHeight = isMobile ? 120 : 180  // Shorter - more rectangular
     const gapPixels = isMobile ? 15 : 35 // Gap between cards
 
@@ -159,7 +159,7 @@ export default function FeatureSlider({
               <div
                 key={slide.id}
                 className={`absolute flex flex-col justify-center rounded-2xl sm:rounded-3xl border-2 border-ume-indigo cursor-pointer ${
-                  isCenter ? 'bg-ume-cream shadow-2xl' : 'bg-white hover:opacity-95'
+                  isCenter ? 'bg-ume-cream shadow-2xl relative' : 'bg-white hover:opacity-95'
                 }`}
                 style={cardStyles}
                 onClick={() => {
@@ -189,9 +189,9 @@ export default function FeatureSlider({
                   {slide.subtitle}
                 </p>
 
-                {/* Dot indicators - Only on center card */}
+                {/* Dot indicators - Only on center card, positioned absolutely */}
                 {isCenter && (
-                  <div className="mt-auto pt-2 sm:pt-3 md:pt-4 flex justify-center gap-1.5 sm:gap-2">
+                  <div className="absolute bottom-3 sm:bottom-4 left-0 right-0 flex justify-center gap-1.5 sm:gap-2">
                     {slides.map((_, idx) => (
                       <button
                         key={idx}
