@@ -70,3 +70,23 @@ export async function createServiceClient() {
     }
   )
 }
+
+// Service role client for background tasks (no cookies needed)
+// Use this for fire-and-forget operations like notifications
+import { createClient as createSupabaseClient } from '@supabase/supabase-js'
+
+export function createBackgroundServiceClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+  if (!supabaseUrl || !serviceRoleKey) {
+    throw new Error('Missing Supabase environment variables for background service client')
+  }
+
+  return createSupabaseClient(supabaseUrl, serviceRoleKey, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false
+    }
+  })
+}

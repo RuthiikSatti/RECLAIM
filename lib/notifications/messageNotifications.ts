@@ -10,7 +10,7 @@
  *   - Skip if daily email limit reached (280/day to stay under Brevo's 300)
  */
 
-import { createServiceClient } from '@/lib/supabase/server'
+import { createBackgroundServiceClient } from '@/lib/supabase/server'
 import { createNotification } from './createNotification'
 import { sendEmail } from '@/lib/email/sendEmail'
 
@@ -37,7 +37,7 @@ export async function handleMessageNotifications(data: MessageNotificationData):
     await createInAppNotification(data)
 
     // 2. Check if email should be sent and send if conditions are met
-    const supabase = await createServiceClient()
+    const supabase = createBackgroundServiceClient()
     const shouldEmail = await shouldSendEmailNotification(supabase, data)
 
     if (shouldEmail) {
@@ -73,7 +73,7 @@ async function createInAppNotification(data: MessageNotificationData): Promise<v
  * Check all conditions to determine if email should be sent
  */
 async function shouldSendEmailNotification(
-  supabase: Awaited<ReturnType<typeof createServiceClient>>,
+  supabase: ReturnType<typeof createBackgroundServiceClient>,
   data: MessageNotificationData
 ): Promise<boolean> {
   // Check 1: Is recipient recently active?
@@ -134,7 +134,7 @@ async function shouldSendEmailNotification(
  * Send email notification and update tracking
  */
 async function sendMessageEmailNotification(
-  supabase: Awaited<ReturnType<typeof createServiceClient>>,
+  supabase: ReturnType<typeof createBackgroundServiceClient>,
   data: MessageNotificationData
 ): Promise<void> {
   // Get recipient email
