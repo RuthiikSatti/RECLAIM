@@ -3,7 +3,7 @@
  * Create in-app notifications for users
  */
 
-import { createServiceClient } from '@/lib/supabase/server'
+import { createServiceClient, createBackgroundServiceClient } from '@/lib/supabase/server'
 
 export interface NotificationData {
   userId: string
@@ -17,10 +17,11 @@ export interface NotificationData {
 
 /**
  * Create a notification in the database
+ * Uses background service client to work in fire-and-forget contexts
  */
 export async function createNotification(data: NotificationData) {
   try {
-    const supabase = await createServiceClient()
+    const supabase = createBackgroundServiceClient()
 
     const { data: notification, error } = await supabase
       .from('notifications')
