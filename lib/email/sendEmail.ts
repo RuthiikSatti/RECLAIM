@@ -141,43 +141,66 @@ export async function sendEmail(options: EmailOptions) {
     }
   }
 
-  try {
-    // Check if Brevo is configured
-    if (!process.env.BREVO_API_KEY) {
-      console.error('[EMAIL] BREVO_API_KEY not configured - email not sent')
-      console.error('[EMAIL] Payload:', JSON.stringify(payload, null, 2))
-      return {
-        success: false,
-        error: 'BREVO_API_KEY not configured. Add it to environment variables to enable emails.'
+  // Check if Brevo is configured
+  if (!process.env.BREVO_API_KEY) {
+    console.error('[EMAIL] BREVO_API_KEY not configured - email not sent')
+    console.error('[EMAIL] Payload:', JSON.stringify(payload, null, 2))
+    return {
+      success: false,
+      error: 'BREVO_API_KEY not configured. Add it to environment variables to enable emails.'
+    }
+  }
+
+  console.log('[EMAIL] Sending email via Brevo...')
+  console.log('[EMAIL] From:', `${senderName} <${senderEmail}>`)
+  console.log('[EMAIL] To:', recipients.join(', '))
+  console.log('[EMAIL] Reply-To:', replyToEmail)
+  console.log('[EMAIL] Subject:', options.subject)
+
+  const sendSmtpEmail = new Brevo.SendSmtpEmail()
+  sendSmtpEmail.sender = payload.sender
+  sendSmtpEmail.to = payload.to
+  sendSmtpEmail.subject = options.subject
+  sendSmtpEmail.htmlContent = options.html
+  sendSmtpEmail.replyTo = payload.replyTo
+
+  // Retry logic for transient network errors (socket hang up, etc.)
+  const maxRetries = 3
+  let lastError: any = null
+
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      console.log(`[EMAIL] Attempt ${attempt}/${maxRetries}...`)
+      const response = await apiInstance.sendTransacEmail(sendSmtpEmail)
+
+      console.log('[EMAIL] Sent successfully!')
+      console.log('[EMAIL] Response:', JSON.stringify(response.body, null, 2))
+      return { success: true, data: response.body }
+    } catch (error: any) {
+      lastError = error
+      const isRetryable = error.message?.includes('socket hang up') ||
+                          error.message?.includes('ECONNRESET') ||
+                          error.message?.includes('ETIMEDOUT') ||
+                          error.code === 'ECONNRESET'
+
+      if (isRetryable && attempt < maxRetries) {
+        console.warn(`[EMAIL] Attempt ${attempt} failed with retryable error: ${error.message}`)
+        console.warn(`[EMAIL] Retrying in ${attempt * 500}ms...`)
+        await new Promise(resolve => setTimeout(resolve, attempt * 500))
+      } else {
+        break
       }
     }
+  }
 
-    console.log('[EMAIL] Sending email via Brevo...')
-    console.log('[EMAIL] From:', `${senderName} <${senderEmail}>`)
-    console.log('[EMAIL] To:', recipients.join(', '))
-    console.log('[EMAIL] Reply-To:', replyToEmail)
-    console.log('[EMAIL] Subject:', options.subject)
-
-    const sendSmtpEmail = new Brevo.SendSmtpEmail()
-    sendSmtpEmail.sender = payload.sender
-    sendSmtpEmail.to = payload.to
-    sendSmtpEmail.subject = options.subject
-    sendSmtpEmail.htmlContent = options.html
-    sendSmtpEmail.replyTo = payload.replyTo
-
-    const response = await apiInstance.sendTransacEmail(sendSmtpEmail)
-
-    console.log('[EMAIL] Sent successfully!')
-    console.log('[EMAIL] Response:', JSON.stringify(response.body, null, 2))
-    return { success: true, data: response.body }
-  } catch (error: any) {
-    console.error('[EMAIL] Failed to send email')
-    console.error('[EMAIL] Error:', error.message)
-    console.error('[EMAIL] Payload:', JSON.stringify(payload, null, 2))
-    if (error.response?.body) {
-      console.error('[EMAIL] API Response:', JSON.stringify(error.response.body, null, 2))
-    }
-    return { success: false, error: error.message }
+  // All retries failed
+  console.error('[EMAIL] Failed to send email after all retries')
+  console.error('[EMAIL] Error:', lastError?.message)
+  console.error('[EMAIL] Payload:', JSON.stringify(payload, null, 2))
+  if (lastError?.response?.body) {
+    console.error('[EMAIL] API Response:', JSON.stringify(lastError.response.body, null, 2))
+  }
+  return { success: false, error: lastError?.message || 'Unknown error' }
   }
 }
 
