@@ -1,0 +1,24 @@
+{
+  "name": "UME - University Marketplace",
+  "short_name": "UME",
+  "description": "Buy and sell within your university community",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1e1b4b",
+  "theme_color": "#1e1b4b",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "categories": ["shopping", "education"],
+  "shortcuts": [
+    {
+      "name": "Messages",
+      "url": "/messages",
+      "description": "View your messages"
+    },
+    {
+      "name": "Sell Item",
+      "url": "/sell",
+      "description": "List a new item for sale"
+    }
+  ]
+}

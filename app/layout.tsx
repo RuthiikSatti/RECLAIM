@@ -7,6 +7,7 @@ import HeaderWrapper from "@/components/HeaderWrapper";
 import MobileHeaderWrapper from "@/components/MobileHeaderWrapper";
 import SimpleFooter from "@/components/homepage/SimpleFooter";
 import MobileFooter from "@/components/MobileFooter";
+import PushNotificationWrapper from "@/components/push/PushNotificationWrapper";
 
 // Load Google Fonts using next/font (prevents CORB issues)
 // Using Work Sans as a free alternative to BR Shape (geometric sans-serif)
@@ -27,6 +28,12 @@ const archivoBlack = Archivo_Black({
 export const metadata: Metadata = {
   title: "UME - University Market Exchange",
   description: "Buy and sell items safely within your university community",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "UME",
+  },
 };
 
 export const viewport = {
@@ -48,6 +55,7 @@ export default function RootLayout({
         {children}
         <SimpleFooter />
         <MobileFooter />
+        <PushNotificationWrapper />
       </body>
     </html>
   );

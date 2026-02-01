@@ -1,9 +1,10 @@
 /**
  * Message Notifications
- * Handle in-app and email notifications for new messages
+ * Handle in-app, email, and push notifications for new messages
  *
  * Features:
  * - Always creates in-app notification
+ * - Sends push notification to all subscribed devices (bypasses email issues)
  * - Conditionally sends email via Brevo with smart rate limiting:
  *   - Skip if recipient is active (within 5 minutes)
  *   - Skip if already emailed for this conversation (until recipient is active again)
@@ -13,6 +14,7 @@
 import { createBackgroundServiceClient } from '@/lib/supabase/server'
 import { createNotification } from './createNotification'
 import { sendEmail } from '@/lib/email/sendEmail'
+import { sendMessagePushNotification } from '@/lib/push/webPush'
 
 // Configuration
 const ACTIVITY_THRESHOLD_MINUTES = 5 // User considered "active" if seen within this time
@@ -36,7 +38,21 @@ export async function handleMessageNotifications(data: MessageNotificationData):
     // 1. Always create in-app notification
     await createInAppNotification(data)
 
-    // 2. Check if email should be sent and send if conditions are met
+    // 2. Send push notification (if user has subscribed)
+    // Push notifications bypass .edu email filtering issues
+    try {
+      await sendMessagePushNotification({
+        receiverId: data.receiverId,
+        senderName: data.senderName,
+        listingTitle: data.listingTitle,
+        messagePreview: data.messagePreview,
+        listingId: data.listingId,
+      })
+    } catch (pushError) {
+      console.error('[MessageNotifications] Error sending push notification:', pushError)
+    }
+
+    // 3. Check if email should be sent and send if conditions are met
     const supabase = createBackgroundServiceClient()
     const shouldEmail = await shouldSendEmailNotification(supabase, data)
 
