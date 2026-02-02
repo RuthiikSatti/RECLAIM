@@ -88,20 +88,20 @@ export default function CategoryGrid() {
         <div className="bg-white rounded-3xl p-4 sm:p-6 lg:p-8 shadow-sm">
           {/* Mobile: Horizontal scroll */}
           <div className="md:hidden overflow-x-auto scrollbar-hide">
-            <div className="flex gap-4 justify-start">
+            <div className="flex gap-3 justify-start">
               {categories.map((category) => (
                 <Link
                   key={category.id}
                   href={category.href}
                   className="flex flex-col items-center group focus:outline-none rounded-lg p-2 flex-shrink-0"
-                  style={{ width: '72px' }}
+                  style={{ width: '80px' }}
                 >
                   {/* Icon */}
                   <div className="w-12 h-12 flex items-center justify-center mb-2 text-ume-indigo group-hover:text-ume-pink group-hover:scale-110 transition-all duration-200">
                     <CategoryIcon category={category.categoryKey} size={40} />
                   </div>
-                  {/* Label */}
-                  <span className="text-[10px] font-medium text-ume-indigo text-center group-hover:text-ume-pink whitespace-nowrap transition-colors duration-200">
+                  {/* Label - allow wrapping on small screens */}
+                  <span className="text-[10px] font-medium text-ume-indigo text-center group-hover:text-ume-pink transition-colors duration-200 leading-tight">
                     {category.name}
                   </span>
                 </Link>

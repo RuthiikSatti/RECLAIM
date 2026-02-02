@@ -54,7 +54,7 @@ export default function NewsletterSignup() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
               disabled={status === 'loading'}
-              className="flex-1 px-6 py-4 border-2 border-gray-800 rounded-full text-sm bg-white focus:outline-none focus:ring-4 focus:ring-ume-indigo/30 focus:border-ume-indigo disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 px-6 py-4 border-2 border-gray-800 rounded-full text-sm text-black bg-white focus:outline-none focus:ring-4 focus:ring-ume-indigo/30 focus:border-ume-indigo disabled:opacity-50 disabled:cursor-not-allowed"
               aria-label="Email address"
             />
             <button
