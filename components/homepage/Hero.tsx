@@ -32,10 +32,10 @@ export default function Hero({
       <div className="w-full md:w-[40%] lg:w-[35%] bg-transparent md:bg-ume-indigo flex flex-col justify-center px-8 md:px-12 lg:px-16 py-12 relative z-10">
         {/* Headline */}
         <h1 className="text-left mb-2">
-          <span className="block text-white font-black text-3xl xs:text-4xl sm:text-5xl md:text-4xl lg:text-5xl uppercase tracking-tight leading-tight">
+          <span className="block text-white font-black text-4xl sm:text-5xl md:text-4xl lg:text-5xl xl:text-6xl uppercase tracking-tight leading-tight">
             YOUR UNIVERSITY
           </span>
-          <span className="block text-ume-indigo md:text-ume-pink font-black text-3xl xs:text-4xl sm:text-5xl md:text-4xl lg:text-5xl uppercase tracking-tight leading-tight">
+          <span className="block text-ume-indigo md:text-ume-pink font-black text-4xl sm:text-5xl md:text-4xl lg:text-5xl xl:text-6xl uppercase tracking-tight leading-tight">
             MARKETPLACE
           </span>
         </h1>
