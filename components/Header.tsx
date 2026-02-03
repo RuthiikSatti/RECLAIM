@@ -17,7 +17,7 @@ export default function Header({ unreadMessages = 0, cartItemCount = 0, userAvat
   return (
     <>
     <header className="hidden md:block bg-white border-b border-gray-200 sticky top-0 z-50">
-      <div className="px-4 md:px-12 py-3 md:py-6">
+      <div className="px-4 md:px-12 py-2 md:py-3">
         <div className="flex items-center justify-between">
           {/* Left - Logo + Subheading */}
           <div className="flex items-center gap-3">
