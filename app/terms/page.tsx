@@ -1,37 +1,33 @@
+import type { Metadata } from 'next'
+import Link from 'next/link'
+
+export const metadata: Metadata = {
+  title: 'Terms of Service - UME',
+  description: 'UME Terms of Service',
+}
+
 export default function TermsOfServicePage() {
   return (
-    <div className="min-h-screen bg-ume-bg">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h1 className="heading-primary mb-8">TERMS OF SERVICE</h1>
-
-        <div className="bg-white rounded-lg shadow-md p-8 text-center">
-          <div className="py-12">
-            <svg
-              className="w-24 h-24 mx-auto mb-6 text-ume-indigo"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1.5}
-                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-              />
+    <div className="min-h-screen bg-ume-bg flex items-center justify-center px-4">
+      <div className="max-w-md w-full space-y-8">
+        <div className="text-center">
+          <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-gray-100 mb-4">
+            <svg className="h-6 w-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
-            <h2 className="text-2xl font-bold text-ume-indigo mb-4">
-              Terms & Conditions Coming Soon
-            </h2>
-            <p className="text-lg text-gray-600 max-w-md mx-auto">
-              We're currently finalizing our Terms of Service. Please check back soon for the complete terms and conditions.
-            </p>
-            <p className="mt-6 text-sm text-gray-500">
-              Questions? Contact us at{' '}
-              <a href="mailto:umelife.official@gmail.com" className="text-ume-pink hover:underline">
-                umelife.official@gmail.com
-              </a>
-            </p>
           </div>
+          <h2 className="text-3xl font-bold text-ume-indigo mb-2">
+            TERMS OF SERVICE
+          </h2>
+          <p className="text-sm text-gray-600 mb-6">
+            Our terms of service are currently being updated. Please check back later for more information.
+          </p>
+          <Link
+            href="/"
+            className="inline-block text-sm font-medium text-ume-indigo hover:underline"
+          >
+            Back to home
+          </Link>
         </div>
       </div>
     </div>
