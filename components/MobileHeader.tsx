@@ -26,7 +26,7 @@ export default function MobileHeader({
     <>
       {/* MOBILE COMPACT HEADER - Only visible on mobile */}
       <header className="md:hidden sticky top-0 z-50 bg-white border-b border-gray-200">
-        <div className="px-3 py-2.5">
+        <div className="px-3 py-1.5">
           {/* Top Row: Logo + Icons */}
           <div className="flex items-center justify-between">
             {/* Logo - UME with U and E in indigo, M in pink */}
@@ -35,9 +35,9 @@ export default function MobileHeader({
               className="flex items-baseline"
               style={{ fontFamily: "'Archivo Black', sans-serif" }}
             >
-              <span className="text-lg font-black tracking-[-0.03em] text-ume-indigo">U</span>
-              <span className="text-lg font-black tracking-[-0.03em] text-ume-pink">M</span>
-              <span className="text-lg font-black tracking-[-0.03em] text-ume-pink">E</span>
+              <span className="text-[28px] font-black tracking-[-0.03em] text-ume-indigo">U</span>
+              <span className="text-[28px] font-black tracking-[-0.03em] text-ume-pink">M</span>
+              <span className="text-[28px] font-black tracking-[-0.03em] text-ume-pink">E</span>
             </Link>
 
             {/* Icons */}

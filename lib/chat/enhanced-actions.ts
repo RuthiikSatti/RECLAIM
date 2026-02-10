@@ -161,18 +161,21 @@ export async function sendMessageEnhanced(
     }
 
     // Trigger notifications (in-app + conditional email)
-    // Fire and forget - don't block the response
-    handleMessageNotifications({
-      messageId: data.id,
-      senderId: user.id,
-      senderName: data.sender?.display_name || data.sender?.username || 'Someone',
-      receiverId,
-      listingId,
-      listingTitle: data.listing?.title || 'a listing',
-      messagePreview: body.trim(),
-    }).catch(err => {
+    // Must await to ensure email sends before serverless function terminates
+    try {
+      await handleMessageNotifications({
+        messageId: data.id,
+        senderId: user.id,
+        senderName: data.sender?.display_name || data.sender?.username || 'Someone',
+        receiverId,
+        listingId,
+        listingTitle: data.listing?.title || 'a listing',
+        messagePreview: body.trim(),
+      })
+    } catch (err) {
+      // Don't fail the message send if notifications fail
       console.error('Error handling message notifications:', err)
-    })
+    }
 
     return {
       message: {

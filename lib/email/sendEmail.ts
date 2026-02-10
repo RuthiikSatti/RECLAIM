@@ -20,16 +20,10 @@
  * - Emails will be logged to /tmp/email-test-log.json (or temp dir on Windows)
  */
 
-import * as Brevo from '@getbrevo/brevo'
+// Note: We use direct fetch API instead of Brevo SDK for faster execution in serverless
 import * as fs from 'fs'
 import * as path from 'path'
 import * as os from 'os'
-
-// Initialize Brevo API client
-const apiInstance = new Brevo.TransactionalEmailsApi()
-if (process.env.BREVO_API_KEY) {
-  apiInstance.setApiKey(Brevo.TransactionalEmailsApiApiKeys.apiKey, process.env.BREVO_API_KEY)
-}
 
 // Test mode log file path
 const EMAIL_TEST_LOG_PATH = path.join(os.tmpdir(), 'email-test-log.json')
@@ -110,7 +104,7 @@ function logEmailToTestFile(entry: EmailLogEntry): void {
 export async function sendEmail(options: EmailOptions) {
   // Build payload for logging
   const senderEmail = process.env.BREVO_SENDER_EMAIL || 'no-reply@ume-life.com'
-  const senderName = 'UME Support'
+  const senderName = process.env.BREVO_SENDER_NAME || 'UME Marketplace'
   const replyToEmail = options.replyTo || process.env.SUPPORT_EMAIL || 'umelife.official@gmail.com'
   const recipients = Array.isArray(options.to) ? options.to : [options.to]
 
@@ -141,42 +135,49 @@ export async function sendEmail(options: EmailOptions) {
     }
   }
 
-  try {
-    // Check if Brevo is configured
-    if (!process.env.BREVO_API_KEY) {
-      console.error('[EMAIL] BREVO_API_KEY not configured - email not sent')
-      console.error('[EMAIL] Payload:', JSON.stringify(payload, null, 2))
-      return {
-        success: false,
-        error: 'BREVO_API_KEY not configured. Add it to environment variables to enable emails.'
-      }
-    }
-
-    console.log('[EMAIL] Sending email via Brevo...')
-    console.log('[EMAIL] From:', `${senderName} <${senderEmail}>`)
-    console.log('[EMAIL] To:', recipients.join(', '))
-    console.log('[EMAIL] Reply-To:', replyToEmail)
-    console.log('[EMAIL] Subject:', options.subject)
-
-    const sendSmtpEmail = new Brevo.SendSmtpEmail()
-    sendSmtpEmail.sender = payload.sender
-    sendSmtpEmail.to = payload.to
-    sendSmtpEmail.subject = options.subject
-    sendSmtpEmail.htmlContent = options.html
-    sendSmtpEmail.replyTo = payload.replyTo
-
-    const response = await apiInstance.sendTransacEmail(sendSmtpEmail)
-
-    console.log('[EMAIL] Sent successfully!')
-    console.log('[EMAIL] Response:', JSON.stringify(response.body, null, 2))
-    return { success: true, data: response.body }
-  } catch (error: any) {
-    console.error('[EMAIL] Failed to send email')
-    console.error('[EMAIL] Error:', error.message)
+  // Check if Brevo is configured
+  if (!process.env.BREVO_API_KEY) {
+    console.error('[EMAIL] BREVO_API_KEY not configured - email not sent')
     console.error('[EMAIL] Payload:', JSON.stringify(payload, null, 2))
-    if (error.response?.body) {
-      console.error('[EMAIL] API Response:', JSON.stringify(error.response.body, null, 2))
+    return {
+      success: false,
+      error: 'BREVO_API_KEY not configured. Add it to environment variables to enable emails.'
     }
+  }
+
+  console.log('[EMAIL] Sending email via Brevo...')
+  console.log('[EMAIL] To:', recipients.join(', '))
+  console.log('[EMAIL] Subject:', options.subject)
+
+  // Use direct fetch API for faster execution in serverless (SDK can be slow)
+  try {
+    const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: {
+        'accept': 'application/json',
+        'api-key': process.env.BREVO_API_KEY!,
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        sender: payload.sender,
+        to: payload.to,
+        subject: options.subject,
+        htmlContent: options.html,
+        replyTo: payload.replyTo,
+      }),
+    })
+
+    if (response.ok) {
+      const data = await response.json()
+      console.log('[EMAIL] Sent successfully! MessageId:', data.messageId)
+      return { success: true, data }
+    } else {
+      const errorData = await response.json().catch(() => ({}))
+      console.error('[EMAIL] Failed:', response.status, errorData)
+      return { success: false, error: errorData.message || `HTTP ${response.status}` }
+    }
+  } catch (error: any) {
+    console.error('[EMAIL] Network error:', error.message)
     return { success: false, error: error.message }
   }
 }

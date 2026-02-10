@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 
 export const metadata: Metadata = {
   title: 'About Us - UME',
@@ -56,30 +57,45 @@ export default function AboutPage() {
             FOR STUDENTS, BY STUDENTS
           </h2>
 
-          {/* Three Pillars with Icons */}
+          {/* Three Pillars with Images */}
           <div className="grid md:grid-cols-3 gap-8">
             {/* Affordable */}
             <div className="flex flex-col items-center">
-              <div className="bg-gray-200 rounded-lg w-48 h-48 mb-4 flex items-center justify-center">
-                <p className="text-gray-400 text-sm">Affordable icon</p>
+              <div className="relative w-48 h-48 mb-4 rounded-lg overflow-hidden">
+                <Image
+                  src="/about-affordable.jpg"
+                  alt="Affordable"
+                  fill
+                  className="object-cover"
+                />
               </div>
               <h3 className="text-xl font-bold text-ume-indigo">Affordable</h3>
             </div>
 
-            {/* Sustainable */}
-            <div className="flex flex-col items-center">
-              <div className="bg-gray-200 rounded-lg w-48 h-48 mb-4 flex items-center justify-center">
-                <p className="text-gray-400 text-sm">Sustainable icon</p>
-              </div>
-              <h3 className="text-xl font-bold text-ume-indigo">Sustainable</h3>
-            </div>
-
             {/* Connected */}
             <div className="flex flex-col items-center">
-              <div className="bg-gray-200 rounded-lg w-48 h-48 mb-4 flex items-center justify-center">
-                <p className="text-gray-400 text-sm">Connected icon</p>
+              <div className="relative w-48 h-48 mb-4 rounded-lg overflow-hidden">
+                <Image
+                  src="/about-connected.jpg"
+                  alt="Connected"
+                  fill
+                  className="object-cover"
+                />
               </div>
               <h3 className="text-xl font-bold text-ume-indigo">Connected</h3>
+            </div>
+
+            {/* Sustainable */}
+            <div className="flex flex-col items-center">
+              <div className="relative w-48 h-48 mb-4 rounded-lg overflow-hidden">
+                <Image
+                  src="/about-sustainable.jpg"
+                  alt="Sustainable"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <h3 className="text-xl font-bold text-ume-indigo">Sustainable</h3>
             </div>
           </div>
         </div>

@@ -58,6 +58,7 @@ export async function POST(request: Request) {
       email,
       password,
       options: {
+        emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/login`,
         data: {
           username: username,
           college_name: collegeName.trim(),

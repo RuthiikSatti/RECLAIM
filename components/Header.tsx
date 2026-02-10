@@ -17,15 +17,15 @@ export default function Header({ unreadMessages = 0, cartItemCount = 0, userAvat
   return (
     <>
     <header className="hidden md:block bg-white border-b border-gray-200 sticky top-0 z-50">
-      <div className="px-4 md:px-12 py-3 md:py-6">
+      <div className="px-4 md:px-12 py-2 md:py-3">
         <div className="flex items-center justify-between">
           {/* Left - Logo + Subheading */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             {/* UME Logo - U and E in indigo, M in pink */}
             <Link href="/" className="flex items-baseline hover:opacity-80 transition-opacity" style={{ fontFamily: "'Archivo Black', sans-serif" }}>
-              <span className="text-[28px] font-black tracking-[-0.03em] text-ume-indigo">U</span>
-              <span className="text-[28px] font-black tracking-[-0.03em] text-ume-pink">M</span>
-              <span className="text-[28px] font-black tracking-[-0.03em] text-ume-pink">E</span>
+              <span className="text-[42px] font-black tracking-[-0.03em] text-ume-indigo">U</span>
+              <span className="text-[42px] font-black tracking-[-0.03em] text-ume-pink">M</span>
+              <span className="text-[42px] font-black tracking-[-0.03em] text-ume-pink">E</span>
             </Link>
             <span className="text-[11px] font-medium tracking-wide uppercase text-ume-indigo ml-1" style={{ fontFamily: "'Archivo Black', sans-serif" }}>
               UNIVERSITY MARKET<br />EXCHANGE

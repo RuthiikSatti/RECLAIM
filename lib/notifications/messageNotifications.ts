@@ -1,9 +1,10 @@
 /**
  * Message Notifications
- * Handle in-app and email notifications for new messages
+ * Handle in-app, email, and push notifications for new messages
  *
  * Features:
  * - Always creates in-app notification
+ * - Sends push notification to all subscribed devices (bypasses email issues)
  * - Conditionally sends email via Brevo with smart rate limiting:
  *   - Skip if recipient is active (within 5 minutes)
  *   - Skip if already emailed for this conversation (until recipient is active again)
@@ -13,6 +14,7 @@
 import { createBackgroundServiceClient } from '@/lib/supabase/server'
 import { createNotification } from './createNotification'
 import { sendEmail } from '@/lib/email/sendEmail'
+import { sendMessagePushNotification } from '@/lib/push/webPush'
 
 // Configuration
 const ACTIVITY_THRESHOLD_MINUTES = 5 // User considered "active" if seen within this time
@@ -36,7 +38,21 @@ export async function handleMessageNotifications(data: MessageNotificationData):
     // 1. Always create in-app notification
     await createInAppNotification(data)
 
-    // 2. Check if email should be sent and send if conditions are met
+    // 2. Send push notification (if user has subscribed)
+    // Push notifications bypass .edu email filtering issues
+    try {
+      await sendMessagePushNotification({
+        receiverId: data.receiverId,
+        senderName: data.senderName,
+        listingTitle: data.listingTitle,
+        messagePreview: data.messagePreview,
+        listingId: data.listingId,
+      })
+    } catch (pushError) {
+      console.error('[MessageNotifications] Error sending push notification:', pushError)
+    }
+
+    // 3. Check if email should be sent and send if conditions are met
     const supabase = createBackgroundServiceClient()
     const shouldEmail = await shouldSendEmailNotification(supabase, data)
 
@@ -77,11 +93,15 @@ async function shouldSendEmailNotification(
   data: MessageNotificationData
 ): Promise<boolean> {
   // Check 1: Is recipient recently active?
-  const { data: isActive } = await supabase
+  const { data: isActive, error: activeError } = await supabase
     .rpc('is_user_active', {
       p_user_id: data.receiverId,
       p_threshold_minutes: ACTIVITY_THRESHOLD_MINUTES
     })
+
+  if (activeError) {
+    console.error('[MessageNotifications] Error checking user activity:', activeError)
+  }
 
   if (isActive) {
     console.log('[MessageNotifications] Recipient is active, skipping email')
@@ -89,27 +109,42 @@ async function shouldSendEmailNotification(
   }
 
   // Check 2: Get recipient's last_active and conversation's email_notified_at
-  const { data: recipient } = await supabase
+  const { data: recipient, error: recipientError } = await supabase
     .from('users')
     .select('last_active, email')
     .eq('id', data.receiverId)
     .single()
+
+  if (recipientError) {
+    console.error('[MessageNotifications] Error getting recipient:', recipientError)
+  }
 
   if (!recipient?.email) {
     console.log('[MessageNotifications] Recipient has no email, skipping')
     return false
   }
 
+  console.log(`[MessageNotifications] Recipient email: ${recipient.email}, last_active: ${recipient.last_active}`)
+
   // Check 3: Have we already emailed for this conversation since recipient was last active?
-  const { data: conversation } = await supabase
+  // Query by listing_id and both participants to be specific
+  const { data: conversations, error: convError } = await supabase
     .from('conversations')
     .select('email_notified_at')
     .eq('listing_id', data.listingId)
-    .single()
+
+  if (convError) {
+    console.error('[MessageNotifications] Error getting conversation:', convError)
+  }
+
+  // Find the conversation for this sender/receiver pair
+  const conversation = conversations?.[0] // Take first match for now
 
   if (conversation?.email_notified_at) {
     const emailedAt = new Date(conversation.email_notified_at).getTime()
     const lastActive = new Date(recipient.last_active).getTime()
+
+    console.log(`[MessageNotifications] Email was sent at ${conversation.email_notified_at}, last_active: ${recipient.last_active}`)
 
     // If we emailed AFTER recipient's last activity, skip
     if (emailedAt > lastActive) {
@@ -120,13 +155,20 @@ async function shouldSendEmailNotification(
 
   // Check 4: Daily rate limit
   const today = new Date().toISOString().split('T')[0]
-  const { data: currentCount } = await supabase.rpc('get_email_count', { p_date: today })
+  const { data: currentCount, error: countError } = await supabase.rpc('get_email_count', { p_date: today })
+
+  if (countError) {
+    console.error('[MessageNotifications] Error getting email count:', countError)
+  }
+
+  console.log(`[MessageNotifications] Daily email count: ${currentCount || 0}/${DAILY_EMAIL_LIMIT}`)
 
   if ((currentCount || 0) >= DAILY_EMAIL_LIMIT) {
     console.log('[MessageNotifications] Daily email limit reached, skipping')
     return false
   }
 
+  console.log('[MessageNotifications] All checks passed, will send email')
   return true
 }
 
@@ -137,18 +179,36 @@ async function sendMessageEmailNotification(
   supabase: ReturnType<typeof createBackgroundServiceClient>,
   data: MessageNotificationData
 ): Promise<void> {
+  console.log('[MessageNotifications] Starting email send process...')
+
   // Get recipient email
-  const { data: recipient } = await supabase
+  const { data: recipient, error: recipientError } = await supabase
     .from('users')
     .select('email, display_name')
     .eq('id', data.receiverId)
     .single()
 
-  if (!recipient?.email) return
+  if (recipientError) {
+    console.error('[MessageNotifications] Error getting recipient for email:', recipientError)
+    return
+  }
+
+  if (!recipient?.email) {
+    console.log('[MessageNotifications] No email found for recipient')
+    return
+  }
+
+  console.log(`[MessageNotifications] Sending email to: ${recipient.email}`)
 
   // Increment daily count first (atomic)
   const today = new Date().toISOString().split('T')[0]
-  const { data: newCount } = await supabase.rpc('increment_email_count', { p_date: today })
+  const { data: newCount, error: countError } = await supabase.rpc('increment_email_count', { p_date: today })
+
+  if (countError) {
+    console.error('[MessageNotifications] Error incrementing email count:', countError)
+  }
+
+  console.log(`[MessageNotifications] New email count for today: ${newCount}`)
 
   // Double-check limit wasn't exceeded by race condition
   if ((newCount || 0) > DAILY_EMAIL_LIMIT) {
@@ -160,29 +220,41 @@ async function sendMessageEmailNotification(
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://ume-life.com'
   const conversationLink = `${baseUrl}/messages?listing=${data.listingId}`
 
+  console.log('[MessageNotifications] Calling sendEmail...')
+
   // Send email
-  const result = await sendEmail({
-    to: recipient.email,
-    subject: `New message from ${data.senderName} on UME`,
-    html: generateMessageEmailHtml({
-      recipientName: recipient.display_name || 'there',
-      senderName: data.senderName,
-      listingTitle: data.listingTitle,
-      messagePreview: data.messagePreview,
-      conversationLink,
-    }),
-  })
+  try {
+    const result = await sendEmail({
+      to: recipient.email,
+      subject: `New message from ${data.senderName} on UME`,
+      html: generateMessageEmailHtml({
+        recipientName: recipient.display_name || 'there',
+        senderName: data.senderName,
+        listingTitle: data.listingTitle,
+        messagePreview: data.messagePreview,
+        conversationLink,
+      }),
+    })
 
-  if (result.success) {
-    // Update conversation to mark email sent
-    await supabase
-      .from('conversations')
-      .update({ email_notified_at: new Date().toISOString() })
-      .eq('listing_id', data.listingId)
+    console.log('[MessageNotifications] sendEmail result:', JSON.stringify(result))
 
-    console.log(`[MessageNotifications] Email sent to ${recipient.email}`)
-  } else {
-    console.error('[MessageNotifications] Failed to send email:', result.error)
+    if (result.success) {
+      // Update conversation to mark email sent
+      const { error: updateError } = await supabase
+        .from('conversations')
+        .update({ email_notified_at: new Date().toISOString() })
+        .eq('listing_id', data.listingId)
+
+      if (updateError) {
+        console.error('[MessageNotifications] Error updating conversation email_notified_at:', updateError)
+      } else {
+        console.log(`[MessageNotifications] Email sent successfully to ${recipient.email}`)
+      }
+    } else {
+      console.error('[MessageNotifications] sendEmail returned failure:', result.error)
+    }
+  } catch (error) {
+    console.error('[MessageNotifications] Exception during sendEmail:', error)
   }
 }
 

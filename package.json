@@ -31,7 +31,8 @@
     "phosphor-react": "^1.4.1",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
-    "stripe": "^19.3.1"
+    "stripe": "^19.3.1",
+    "web-push": "^3.6.7"
   },
   "devDependencies": {
     "@playwright/test": "^1.57.0",
@@ -39,6 +40,7 @@
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/web-push": "^3.6.4",
     "autoprefixer": "^10.4.20",
     "eslint": "^9",
     "eslint-config-next": "^15.5.7",

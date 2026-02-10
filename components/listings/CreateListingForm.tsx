@@ -129,7 +129,7 @@ export default function CreateListingForm() {
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Images
+          Images <span className="text-red-500">*</span>
         </label>
         <input
           type="file"
@@ -139,6 +139,9 @@ export default function CreateListingForm() {
           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
         />
         {uploading && <p className="text-sm text-gray-600 mt-2">Uploading...</p>}
+        {imageUrls.length === 0 && !uploading && (
+          <p className="text-sm text-gray-500 mt-2">At least one image is required to create a listing</p>
+        )}
         {imageUrls.length > 0 && (
           <div className="mt-4 grid grid-cols-3 gap-2">
             {imageUrls.map((url, i) => (
