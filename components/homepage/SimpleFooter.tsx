@@ -27,7 +27,7 @@ export default function SimpleFooter() {
             href="/contact"
             className="text-sm text-white hover:text-ume-pink transition-colors focus:outline-none focus:underline"
           >
-            Contact
+            Contact Us
           </Link>
           <Link
             href="/privacy"
