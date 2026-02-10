@@ -43,12 +43,8 @@ export default function ValentinePage() {
         }}
       >
         <h1 style={{ color: '#ff4d6d', fontSize: '2.5rem' }}>
-          I knew you'd say yes! 🏗️✨🎾
+          I knew you'd say yes!
         </h1>
-        <p style={{ fontSize: '1.5rem', color: '#590d22' }}>
-          Let's cook that dinner after your matches. See you at 8!
-        </p>
-        <div style={{ fontSize: '5rem' }}>❤️🚀🏆</div>
       </div>
     )
   }
@@ -68,7 +64,7 @@ export default function ValentinePage() {
       }}
     >
       <h1 style={{ color: '#ff4d6d', fontSize: '2.5rem', marginBottom: '20px' }}>
-        Bryndís, will you be my Valentine? 🏗️❤️
+        Bryndís, will you be my Valentine?
       </h1>
       <div style={{ display: 'flex', gap: '20px', alignItems: 'center', justifyContent: 'center' }}>
         <button
