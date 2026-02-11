@@ -32,9 +32,14 @@ export default function AboutPage() {
         {/* Our Values Section - Picture + Text */}
         <div className="mb-20">
           <div className="grid md:grid-cols-2 gap-8 items-center">
-            {/* Placeholder for picture - left side */}
-            <div className="bg-gray-200 rounded-lg aspect-square flex items-center justify-center">
-              <p className="text-gray-400 text-sm">Image placeholder</p>
+            {/* Founders Picture - left side */}
+            <div className="relative w-full aspect-square rounded-lg overflow-hidden">
+              <Image
+                src="/about-founders.png"
+                alt="UME Founders"
+                fill
+                className="object-cover"
+              />
             </div>
 
             {/* Our Values Text - right side */}
