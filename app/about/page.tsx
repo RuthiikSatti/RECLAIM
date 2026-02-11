@@ -35,7 +35,7 @@ export default function AboutPage() {
             {/* Founders Picture - left side */}
             <div className="relative w-full aspect-square rounded-lg overflow-hidden">
               <Image
-                src="/about-founders.png"
+                src="/about-founders.jpg"
                 alt="UME Founders"
                 fill
                 className="object-cover"
