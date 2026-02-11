@@ -48,7 +48,7 @@ export default async function AdminPage() {
             </h1>
             <p className="text-black">Review and manage reported listings</p>
           </div>
-          <a
+          <a 
             href="/api/admin/export-reports"
             className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
           >
@@ -70,8 +70,7 @@ export default async function AdminPage() {
             <div className="bg-white rounded-lg shadow-md p-8 text-center">
               <p className="text-black">No reports to review</p>
             </div>
-          )}
-
+          )} 
           {reports.map((report: any) => (
             <ReportCard key={report.id} report={report} />
           ))}
